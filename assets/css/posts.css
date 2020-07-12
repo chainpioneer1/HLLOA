@@ -1,0 +1,118 @@
+
+.tab-container .tab-item[data-type="1"] {
+    -webkit-border-radius: 0 14px 14px 0;
+    -moz-border-radius: 0 14px 14px 0;
+    border-radius: 0 14px 14px 0;
+}
+
+.content-table .content-item > div {
+    width: 376px;
+    height: 221px;
+    background-color: white;
+    padding: 13px 12px 12px 12px;
+    border-radius: 24px;
+}
+
+.content-table .content-item > div > div {
+    width: 100%;
+    height: 100%;
+    border-radius: 18px;
+    background: rgba(161, 161, 161, 1);
+}
+
+.content-table .content-item > div > div > img {
+    object-fit: contain;
+    width: 100%;
+    height: 100%;
+    border-radius: 18px;
+}
+
+.content-table .content-item > div > div .project-btns {
+    margin: 0;
+    /*background: rgba(103, 106, 232, 0.9);*/
+    bottom: 0;
+    position: absolute !important;
+    display: block !important;
+    width: 100%;
+    border-bottom-left-radius: 18px;
+    border-bottom-right-radius: 18px;
+    color: white !important;
+    opacity: 0;
+}
+
+.content-table .content-item > div > div:hover .project-btns {
+    opacity: 1;
+}
+
+.content-item[data-type="0"] > div {
+    width: 768px;
+    height: 100px;
+}
+
+.content-item[data-type="0"] > div > div {
+    background: white;
+}
+
+.content-item[data-type="0"] .item-info {
+    background: white;
+}
+
+.content-item[data-type="0"] > div > .item-info > div {
+    display: inline-block;
+    vertical-align: top;
+    color: #344563;
+}
+
+.content-item[data-type="0"] .item-info-left {
+    width: 140px;
+    height: 36px;
+    font-size: 20px;
+    line-height: 36px;
+    border-right: 1px solid #344563;
+}
+
+.content-item[data-type="0"] .item-info-right {
+    width: 590px;
+    height: 100%;
+    text-align: left;
+    padding: 0 20px;
+}
+
+.content-item[data-type="0"] .item-info-right div {
+    font-size: 16px;
+    line-height: 1.5;
+    overflow: hidden;
+    white-space: normal;
+    word-break: break-all;
+    -ms-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+}
+
+.content-item[data-type="0"] .item-info-right div:first-child {
+    font-size: 26px;
+    font-weight: bold;
+    padding-bottom: 5px;
+}
+
+.content-item[data-type="0"] .item-info-right div:last-child {
+    height: 60px;
+}
+
+.content-table table th,
+.content-table table td {
+    text-align: left;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    padding: 0 0 0 50px;
+}
+
+.content-table table td {
+    cursor: pointer;
+}
+
+.content-table table tbody tr:hover {
+    background: rgba(250,250,250,1);
+    color: #5E66E2;
+}

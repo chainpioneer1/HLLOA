@@ -1,0 +1,51 @@
+.avatar-area{
+    position: relative;
+    width: 100%;
+    height: auto;
+    text-align: left;
+}
+.avatar-area > div{
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 15px;
+}
+
+.avatar-area label{
+    font-size: 38px;
+}
+.avatar-area .btn-uploader {
+    display: inline-block;
+    width: 150px;
+    height: 150px;
+    border: none;
+}
+
+.avatar-area .btn-uploader > div {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    -webkit-border-radius: 150px;
+    -moz-border-radius: 150px;
+    border-radius: 150px;
+    border: 6px solid rgba(97, 105, 231, 1);
+    background-color: rgba(97, 105, 231, 1);
+    -webkit-background-size: cover;
+    background-size: cover;
+}
+
+div.plus-btn{
+    display: none!important;
+}
+.edit-container .input-area{
+    width: 24%;
+    text-align: left;
+}
+.input-area label{
+    font-size: 18px;
+}
+.input-area label:last-child{
+    width: 165px;
+    text-align: left;
+    font-weight: 500;
+}

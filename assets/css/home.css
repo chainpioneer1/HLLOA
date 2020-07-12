@@ -1,0 +1,313 @@
+.base-container > .content-area-item2x {
+    margin-top: 0px;
+    width: 785px;
+    float: left;
+}
+.show-more{
+    float: right;
+    color: #5E66E2;
+    padding: 15px 30px 0 0;
+    cursor: pointer;
+}
+.show-more:hover{
+    color: #9292f8;
+}
+.base-container > .content-area-item2x:nth-child(1) {
+    padding-right: 9px;
+}
+
+.base-container > .content-area-item2x:nth-child(2) {
+    padding-left: 9px;
+}
+
+.content-area-item2x > div {
+    width: 100%;
+    background: transparent;
+    margin-bottom: 0;
+    padding: 9px 0;
+}
+
+.post-title{
+    font-size: 28px ;
+}
+
+.content-area-item2x > div.message-item {
+    cursor: pointer;
+}
+
+.content-area-item2x > div.message-item:hover {
+    padding: 2px 0 16px;
+}
+
+.content-area-item2x > div > .content-area {
+    width: 100%;
+    background: white;
+    -webkit-box-shadow: 0px 20px 30px 0px rgba(230, 231, 239, 1);
+    -moz-box-shadow: 0px 20px 30px 0px rgba(230, 231, 239, 1);
+    box-shadow: 0px 20px 30px 0px rgba(230, 231, 239, 1);
+}
+
+.content-area-item2x > div.message-item:hover > .content-area {
+    -webkit-box-shadow: 0px 20px 30px 0px rgb(220, 221, 229);
+    -moz-box-shadow: 0px 20px 30px 0px rgb(220, 221, 229);
+    box-shadow: 0px 20px 30px 0px rgb(211, 212, 220);
+}
+
+
+.item2x-big {
+    height: 370px;
+    padding: 14px;
+}
+
+.item2x-small > .item2x-small-left {
+    float: left;
+    line-height: 45px;
+    margin: 30px 0 14px 46px;
+    padding-right: 29px;
+    font-size: 38px;
+    border-right: 2px solid #8691A3;
+}
+
+.item2x-small > .item2x-small-middle {
+    float: left;
+    margin: 40px 0 0px 29px;
+}
+
+.item2x-small > .item2x-small-middle > div {
+    width: 460px;
+    overflow: hidden;
+    white-space: nowrap;
+    word-break: keep-all;
+    -ms-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+}
+
+.item2x-small-right-top {
+    font-size: 30px;
+    line-height: 1;
+    margin-bottom: 0px;
+    font-weight: bold;
+}
+
+.item2x-small-right-bottom {
+    font-size: 16px;
+    line-height: 1;
+}
+
+.item2x-small > .item2x-small-right {
+    float: right;
+    font-size: 16px;
+    line-height: 1;
+    color: #5E66E2;
+    padding: 12px 36px;
+}
+
+.item2x-small > .item2x-small-right > span {
+    cursor: pointer;
+}
+
+.item2x-big > .item2x-big-right {
+    float: right;
+    height: 100%;
+    width: 611px;
+    background: #e2e8fd;
+    border-radius: 18px;
+    overflow: hidden;
+    padding: 0;
+}
+
+.item2x-big .item2x-big-right > img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.item2x-big > .item2x-big-left {
+    float: right;
+    width: 137px;
+    height: 100%;
+}
+
+.item2x-big > .item2x-big-left > img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 7px 20px 0 0;
+}
+
+.content-table > span {
+    font-size: 26px;
+    color: #344563;
+    padding-bottom: 5px;
+
+}
+
+.content-table .content-item {
+    /*-webkit-box-shadow: 0px 20px 30px 0px rgba(230, 231, 239, 1);*/
+    /*-moz-box-shadow: 0px 20px 30px 0px rgba(230, 231, 239, 1);*/
+    /*box-shadow: 0px 20px 30px 0px rgba(230, 231, 239, 1);*/
+}
+
+.content-table .content-item > div {
+    background: white;
+    padding: 32px 0 0 0;
+    width: 245px;
+    height: 252px;
+    -webkit-box-shadow: 0px 20px 30px 0px rgba(230, 231, 239, .4);
+    -moz-box-shadow: 0px 20px 30px 0px rgba(230, 231, 239, .4);
+    box-shadow: 0px 20px 30px 0px rgba(230, 231, 239, .4);
+}
+
+/*.content-table .content-item:hover > div {*/
+/*    -webkit-box-shadow: 0px 20px 30px 0px rgba(230, 231, 239, .7);*/
+/*    -moz-box-shadow: 0px 20px 30px 0px rgba(230, 231, 239, .7);*/
+/*    box-shadow: 0px 20px 30px 0px rgba(230, 231, 239, .7);*/
+/*}*/
+
+.content-table .content-item > div > img {
+    width: 110px;
+    height: 110px;
+    -webkit-border-radius: 150px;
+    -moz-border-radius: 150px;
+    border-radius: 150px;
+    object-fit: cover;
+    background-color: rgba(0, 0, 0, .05);
+}
+
+.content-table .content-item > div > div.content-item-no {
+    position: absolute;
+    left: 0;
+    top: 19px;
+    width: 60px;
+    height: auto;
+    padding: 2px 10px 2px 0;
+    margin: 0;
+    font-size: 16px;
+    background-image: url(../../assets/images/home/bg-no.png);
+    -webkit-background-size: contain;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    color: white;
+    letter-spacing: 1px;
+}
+
+.content-item-name {
+    font-size: 16px;
+    line-height: 14px;
+    color: rgba(94, 108, 132, 1);
+    padding: 11px 0;
+}
+
+.content-item-action {
+    padding-left: 40px;
+}
+
+.content-item-action > div {
+    width: 170px;
+    height: 44px;
+    background-image: url('../../assets/images/home/triangle-button.png');
+    background-repeat: no-repeat;
+}
+
+.content-item-action > div > label {
+    font-size: 38px;
+    line-height: 36px;
+    padding-top: 5px;
+}
+
+.modal-body {
+    max-width: 436px;
+    padding-left: 35px;
+    padding-right: 35px;
+}
+
+.modal-body > div {
+    font-size: 16px;
+    font-weight: 400;
+    color: rgba(94, 108, 132, 1);
+    line-height: 28px;
+    text-align: left;
+}
+
+.owl-carousel {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+.owl-nav {
+    position: absolute;
+    left: -50px;
+    width: calc(100% + 100px);
+    top: 85px;
+    display: flex;
+    padding: 0 22px;
+}
+
+.owl-nav > div {
+    flex: auto;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.owl-nav > div > img {
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    padding: 5px;
+    background-color: transparent;
+}
+
+.owl-nav > div > img:hover {
+    background-color: rgba(255, 255, 255, .8);
+}
+
+.owl-nav > div:last-child {
+    justify-content: flex-end;
+}
+
+.owl-carousel .owl-item {
+    float: none;
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+}
+
+.owl-carousel .owl-stage-outer {
+    z-index: 10;
+    width: 100%;
+    height: 100%;
+}
+
+.owl-carousel .owl-stage {
+    height: 100%;
+}
+
+.owl-carousel .owl-dots {
+    top: auto;
+    bottom: 27px;
+    width: 100%;
+    height: auto;
+    position: absolute;
+    text-align: center;
+    z-index: 100;
+}
+
+.owl-dot {
+    position: relative;
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+    background: rgba(216, 216, 216, .5);
+    margin: 0 4px;
+}
+
+.owl-dot.active {
+    background: rgba(216, 216, 216, 1);
+}

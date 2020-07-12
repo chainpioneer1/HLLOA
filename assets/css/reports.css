@@ -1,0 +1,481 @@
+/*       */
+.content-table {
+    background-color: white;
+}
+
+.report-part-title {
+    color: white;
+    font-size: 24px;
+    display: inline-block;
+    position: relative;
+    width: auto;
+    margin-top: 40px;
+    margin-bottom: 15px;
+    padding: 15px 40px 15px 30px;
+    background-image: url(../images/icon/title-bg-red.png);
+    background-position: right;
+    background-size: auto 100%;
+
+}
+
+/*div.report-part-title::after{*/
+/*    content: "";*/
+/*    position: absolute;*/
+/*    left: calc(100% - 1px);*/
+/*    top: 50%;*/
+/*    margin-top: -32px;*/
+/*    border: 33px solid transparent;*/
+/*    border-left: 1em solid #ff6a73;*/
+/*    right: -1em;*/
+/*}*/
+
+.report-container {
+    width: 100%;
+    background-color: white;
+    padding-bottom: 20px;
+}
+
+.grid-item {
+    width: 770px;
+    padding: 15px 0px 15px 30px;
+}
+
+.grid-item > div {
+    margin: 0;
+    padding: 0;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    border-radius: 20px;
+    overflow: hidden;
+    -webkit-box-shadow: 5px 5px 12px rgba(0, 0, 0, .2);
+    -moz-box-shadow: 5px 5px 12px rgba(0, 0, 0, .2);
+    box-shadow: 5px 5px 12px rgba(0, 0, 0, .2);
+}
+
+.report-header {
+    position: relative;
+    width: 100%;
+    height: 80px;
+    background-color: #6067e9;
+    color: white;
+    padding: 5px 0;
+}
+
+.report-header > div {
+    position: relative;
+    display: inline-block;
+    width: auto;
+    height: 100%;
+    margin: 0;
+    vertical-align: middle;
+}
+
+div.report-no {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 20px 0 10px;
+    font-size: 28px;
+    background-image: url(../images/icon/no-bg-white.png);
+    background-position: right;
+    background-size: auto 100%;
+    color: black;
+}
+
+div.report-avatar {
+    width: 63px;
+    height: 63px;
+    margin: 0 15px;
+    background-color: white;
+    background-image: url(../images/icon-profile.png);
+    background-size: 100% 100%;
+    background-position: center;
+    -webkit-border-radius: 100px;
+    -moz-border-radius: 100px;
+    border-radius: 100px;
+    border: 2px solid white;
+    color: black;
+    cursor: pointer;
+}
+
+div.report-avatar:hover {
+    border: 2px solid #979bff;
+}
+
+div.report-info {
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.report-info > div:first-child {
+    font-size: 22px;
+    padding-bottom: 5px;
+}
+
+div.report-date {
+    float: right;
+    padding-right: 30px;
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+
+div.report-date.mine {
+    width: 65%;
+    font-size: 24px;
+    justify-content: center;
+    align-items: center;
+}
+
+div.report-edit {
+    width: 22%;
+    height: calc(100% + 10px);
+    top: -5px;
+    float: right;
+    font-size: 20px;
+    padding-left: 60px;
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-image: url(../images/icon/report-edit-bg.png);
+    background-position: left;
+    background-size: auto 100%;
+    color: black;
+    cursor: pointer;
+    -webkit-transition: all .2s;
+    -moz-transition: all .2s;
+    -ms-transition: all .2s;
+    -o-transition: all .2s;
+    transition: all .2s;
+}
+
+div.report-edit:hover {
+    color: #ffffff;
+}
+
+.report-body {
+    padding: 0 20px 10px;
+    height: 250px;
+    overflow-y: auto;
+    width: 100%;
+}
+
+.report-body > div {
+    border-bottom: 1px solid rgba(0, 0, 0, .1);
+    /*display: flex;*/
+    /*min-height: 70px;*/
+    padding: 0 20px;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.report-body > div > div {
+    display: inline-block;
+    vertical-align: middle;
+    width: 85%;
+    font-size: 18px;
+    line-height: 1.5;
+    height: auto;
+}
+
+.report-body > div > div:first-child {
+    padding: 20px 0px;
+}
+
+.report-body > div > div span {
+    color: #fd6a72;
+}
+
+.report-body > div > div:last-child {
+    width: 12%;
+    height: 70px;
+    background-color: transparent;
+    background-size: auto;
+    background-repeat: no-repeat;
+    background-position: 40px center;
+}
+
+.report-body > div[data-status="1"] > div:last-child {
+    background-image: url(../images/icon/uncheck.png);
+}
+
+.report-body > div[data-status="2"] > div:last-child {
+    background-image: url(../images/icon/check.png);
+}
+
+.content-title {
+    font-size: 24px;
+}
+
+div.edit-container[data-type="add"] {
+    padding: 20px 100px;
+    min-height: 500px;
+    overflow-y: auto;
+    max-height: 620px;
+}
+
+.edit-container .input-area {
+    display: flex;
+    width: 100%;
+}
+
+div.btn-circle[data-type="add"] {
+    font-size: 18px;
+    height: fit-content;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.report-add-container {
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.edit-container.report-add .input-area label:first-child {
+    padding-top: 10px;
+}
+
+.input-area div.report-add-item {
+    margin: 5px 0;
+    display: inline-flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+.input-area div.report-add-item[data-written="1"] {
+    pointer-events: none;
+}
+
+.report-add-item > div {
+    display: inline-flex;
+    padding: 0;
+    margin: 0;
+    width: 40px;
+    height: 40px;
+    background-color: #ced3fd;
+    justify-content: center;
+    align-items: center;
+}
+.input-area div.report-add-item[data-written="1"] > div{
+    background-color: #e8e8e8;
+}
+.edit-container .input-area textarea {
+    min-height: 45px;
+    padding: 0 10px;
+    line-height: 40px;
+    height: 45px;
+    resize: none;
+    overfhow: hidden;
+}
+
+.edit-container .input-area textarea[readonly] {
+    pointer-events: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.report-add-item > div:first-child {
+    border-top-left-radius: 7px;
+    border-bottom-left-radius: 7px;
+}
+
+.report-add-item > div:last-child {
+    border-top-right-radius: 7px;
+    border-bottom-right-radius: 7px;
+    color: white;
+    cursor: pointer;
+}
+
+.report-add-item > div:last-child:hover {
+    color: black;
+}
+
+.report-add-item:first-child > div:last-child {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/*div.edit-area[data-type="edit"]{*/
+/*    position: fixed;*/
+/*    left: 50%;*/
+/*    top: 50%;*/
+/*}*/
+div.content-table tr:hover {
+    background: #fbfbfc;
+}
+
+.edit-area .content-table {
+    min-height: 600px;
+    max-height: 700px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+}
+
+.edit-area table tbody td {
+    position: relative;
+}
+
+.edit-area table tbody td:nth-child(2) {
+    text-align: left;
+}
+
+.edit-area table thead tr th {
+    position: sticky;
+    background-color: rgba(245, 246, 252, 1);
+    top: 0;
+    z-index: 3;
+}
+
+/*.edit-area table tbody td input[type="text"],*/
+.edit-area table tbody td textarea {
+    width: 500px;
+    height: 36px;
+    min-height: 36px;
+    padding: 6px 20px;
+    line-height: 1.5;
+    background-color: #eff3fc;
+    border: none;
+    outline: none;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    border-radius: 20px;
+    resize: none;
+    overfhow: hidden;
+    vertical-align: middle;
+    display: inline-block;
+}
+
+.edit-area table tbody td span {
+    color: transparent;
+    padding-left: 10px;
+}
+
+/*     switch checkbox area */
+input[type=checkbox].ace.ace-switch {
+    position: absolute;
+    z-index: 1;
+    width: 60px;
+    height: 24px;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    cursor: pointer;
+    outline: 0;
+    padding: 0;
+    margin: 0;
+}
+
+input[type=checkbox].ace.ace-switch + .lbl {
+    position: relative;
+    display: inline-block;
+    line-height: 24px;
+    min-width: 18px;
+    font-weight: 400;
+    cursor: pointer;
+    margin: 0;
+    padding: 0;
+    min-height: 24px;
+}
+
+
+input[type=checkbox].ace.ace-switch + .lbl::before {
+    font-weight: 600;
+    font-size: 24px;
+    content: "\a0\a0\a0\a0\a0\a0\a0\a0\a0";
+    width: 56px;
+    height: 24px;
+    line-height: 24px;
+    overflow: hidden;
+    -webkit-border-radius: 100px;
+    -moz-border-radius: 100px;
+    border-radius: 100px;
+    background-color: #ff6a73;
+    top: 1px;
+    padding: 0;
+    margin: 0;
+}
+
+input[type=checkbox].ace.ace-switch:checked + .lbl::before {
+    background-color: #26cdb3;
+}
+
+input[type=checkbox].ace.ace-switch + .lbl::after {
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    content: "\f00d";
+    color: #ff6a73;
+    background-color: #FFF;
+    border-radius: 100%;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+    position: absolute;
+    top: -1px;
+    left: 36px;
+    -webkit-transition: left .2s;
+    -o-transition: left .2s;
+    transition: left .2s;
+}
+
+input[type=checkbox].ace.ace-switch:checked + .lbl::after {
+    left: 1px;
+    content: "\f00c";
+    color: #26cdb3;
+}
+
+.pagination > li > a, .pagination > li > span {
+    padding: 7px;
+}
+
+/* ************* custom scroll bar ********** */
+.report-body::-webkit-scrollbar {
+    width: 15px;
+    color: #34c621;
+}
+
+/* Track bar Background */
+.report-body::-webkit-scrollbar-track {
+    /*box-shadow:inset 2px 2px 1px rgba(52,150,182,1);*/
+    /*background: rgba(33, 135, 114, 0.3);*/
+    /*background-image: url(../images/lib/scroll-bg.png);*/
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 70% 100%;
+    border-radius: calc(2vw);
+    background-color: #ecf0fa;
+}
+
+/* Handle */
+.report-body::-webkit-scrollbar-thumb {
+    border-radius: calc(2vw);
+    /*min-height: 72px;*/
+    overflow: hidden;
+    /*background-image: url(../images/lib/scroll-thumb.png), url(../images/lib/scroll-thumb-bg.png);*/
+    /*background-color: rgba(0,0,0,.1);*/
+    background-repeat: no-repeat;
+    background-size: 100% auto, 50% 100% !important;
+    background-position: center;
+    cursor: pointer;
+    background-color: #cfd4fe;
+    border: 1px solid #6067e9;
+}
+
+/*!* Handle on hover *!*/
+.report-body::-webkit-scrollbar-thumb:hover {
+    cursor: pointer;
+}

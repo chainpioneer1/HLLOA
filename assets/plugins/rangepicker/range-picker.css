@@ -1,0 +1,329 @@
+div.range-selector {
+    position: relative;
+    margin: 0 !important;
+    font-size: 16px !important;
+}
+
+div.range-selector > div.input-group-addon {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: auto;
+    width: auto;
+    height: 35px;
+    margin: 0;
+    border: none;
+    -webkit-border-radius: 0 30px 30px 0!important;
+    -moz-border-radius: 0 30px 30px 0!important;
+    border-radius: 0 30px 30px 0!important;
+}
+
+.range-selector input {
+    /*padding: 0 50px 0 0!important;*/
+    width: 240px !important;
+
+}
+
+div.month-selector {
+    position: relative;
+    margin: 0 !important;
+    font-size: 14px !important;
+}
+
+div.month-selector > div.input-group-addon {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: auto;
+    width: auto;
+    height: 35px;
+    margin: 0;
+    border: none;
+    -webkit-border-radius: 0 30px 30px 0!important;
+    -moz-border-radius: 0 30px 30px 0!important;
+    border-radius: 0 30px 30px 0!important;
+}
+
+.month-selector input {
+    /*padding: 0 50px 0 0!important;*/
+    width: 240px !important;
+
+}
+
+.rangePicker {
+    opacity: 0;
+    transition: 0.12s ease-out;
+    transition-property: margin, padding, opacity;
+    pointer-events: none;
+}
+
+.rangePicker *{
+    pointer-events: none!important;
+}
+
+.rangePicker > .wrap {
+    position: relative;
+    min-width: 200px;
+    white-space: nowrap;
+    background: #FFF;
+    overflow: hidden;
+    /*max-height: 0;*/
+    transition: 0.12s ease-out;
+    transition-property: margin, padding, max-height;
+    -webkit-box-shadow: 0px 20px 30px 0px rgba(230, 231, 239, 1);
+    -moz-box-shadow: 0px 20px 30px 0px rgba(230, 231, 239, 1);
+    box-shadow: 0px 20px 30px 0px rgba(230, 231, 239, 1);
+}
+
+.rangePicker::before {
+    /*content: '\25B2';*/
+    position: absolute;
+    z-index: 1;
+    top: -15px;
+    left: 10px;
+    font-size: 20px;
+    text-shadow: 0 -2px 1px rgba(0, 0, 0, 0.2);
+    color: #FFF;
+    transform: scaleX(1.5)
+}
+
+.rangePicker.show {
+    z-index: 999;
+    bottom: auto;
+    margin-top: 10px;
+    opacity: 1;
+    pointer-events: auto;
+}
+.rangePicker.show * {
+    pointer-events: auto!important;
+}
+
+.rangePicker.show > .wrap {
+    /*max-height: 180px*/
+}
+
+.rangePicker.show.custom > .wrap {
+    /*padding: 0 430px 98px 0*/
+}
+
+.rangePicker.RTL::before {
+    left: auto;
+    right: 10px
+}
+
+.rangePicker.RTL.show.custom > .wrap {
+    padding: 0 0 98px 430px;
+    margin-left: -430px
+}
+
+.rangePicker.RTL > .wrap > .preset > button {
+    text-align: right
+}
+
+.rangePicker.RTL > .wrap > .preset > button[value="custom"]::after {
+    content: '\25C2';
+    right: auto;
+    left: 5px
+}
+
+.rangePicker.RTL > .wrap > .custom {
+    left: 0;
+    right: auto;
+    direction: rtl
+}
+
+.rangePicker.RTL > .wrap > .custom > .calendar > strong {
+    text-align: right
+}
+
+.rangePicker.RTL > .wrap > .custom > .calendar.from {
+    float: right
+}
+
+.rangePicker > .wrap > .custom > .calendar button, .rangePicker > .wrap > .preset button {
+    border-radius: 50px;
+    font-size: 12px;
+    line-height: 16px;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    color: #888;
+    text-align: center;
+    -webkit-transition: all .12s;
+    -moz-transition: all .12s;
+    -ms-transition: all .12s;
+    -o-transition: all .12s;
+    transition: all .12s;
+    pointer-events: auto;
+}
+
+.rangePicker > .wrap > .custom > .calendar button.selected,
+.rangePicker > .wrap > .preset button.selected {
+    background-color: rgb(98, 107, 255);
+    color: #fff;
+    outline: none;
+    -webkit-box-shadow: 0px 6px 12px 0px rgba(218, 220, 247, 1);
+    -moz-box-shadow: 0px 6px 12px 0px rgba(218, 220, 247, 1);
+    box-shadow: 0px 6px 12px 0px rgba(218, 220, 247, 1);
+}
+
+.rangePicker > .wrap > .custom > .calendar button:hover,
+.rangePicker > .wrap > .preset button:hover {
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.rangePicker > .wrap > .custom > .calendar button[disabled],
+.rangePicker > .wrap > .preset button[disabled] {
+    border-color: transparent;
+    background: none;
+    box-shadow: none;
+    opacity: .2;
+    cursor: default;
+    color: inherit;
+    font-size: 12px;
+    pointer-events: none;
+}
+
+.rangePicker > .wrap .preset {
+    display: none;
+    text-transform: capitalize;
+    min-width: 110px;
+    padding: 3px;
+    width: 200px;
+    box-shadow: 0 100px #FFF;
+    position: relative;
+    z-index: 1;
+    background: #FFF;
+    box-sizing: border-box
+}
+
+.rangePicker > .wrap .preset button {
+    display: block;
+    width: 100%;
+    margin: 0;
+    background: none;
+    padding: 4px 8px;
+    text-align: left;
+    position: relative
+}
+
+.rangePicker > .wrap .preset button[value="custom"]::after {
+    content: '\25B8';
+    position: absolute;
+    right: 5px;
+    font-size: 21px;
+    opacity: 0.7
+}
+
+.rangePicker > .wrap .custom {
+    /*position: absolute;*/
+    top: 0;
+    right: 0;
+    padding: 6px;
+    transition: 0.4s cubic-bezier(0.77, 0.11, 0.22, 1)
+}
+
+.rangePicker > .wrap .custom > .calendar {
+    display: inline-block;
+    margin: 25px 3px 0;
+    width: 260px;
+    background: transparent;
+    padding: 7px;
+    text-align: center;
+}
+
+.rangePicker > .wrap .custom strong {
+    display: block;
+    margin: -30px 0 10px
+}
+
+.rangePicker > .wrap .custom strong span {
+    text-transform: capitalize;
+    opacity: 0.9;
+    font-weight: normal;
+    display: inline-block;
+    margin-left: 6px;
+    font-size: 16px;
+}
+
+.rangePicker > .wrap .custom strong span:before {
+    content: '-';
+    margin-right: 6px
+}
+
+.rangePicker > .wrap .custom .from strong:before {
+    content: '从'
+}
+
+.rangePicker > .wrap .custom .to strong:before {
+    content: '到'
+}
+
+.rangePicker footer {
+    display: block;
+    padding: 5px 20px;
+    overflow: hidden;
+    transition: 0.2s ease-out
+}
+
+.rangePicker footer > div {
+    display: block;
+    font-size: 10px;
+    font-weight: 400;
+    color: rgba(94, 102, 226, 1);
+    line-height: 10px;
+}
+
+.rangePicker footer button {
+    float: right;
+    font-size: 12px;
+    padding: 0 25px;
+    line-height: 2;
+}
+
+.rangePicker .set ~ footer {
+    max-height: 0;
+    padding: 0 5px;
+    border-color: transparent
+}
+
+.rangePicker select {
+    font-size: 16px;
+    margin-bottom: 7px;
+    width: 40%;
+    -webkit-border-radius: 24px;
+    -moz-border-radius: 24px;
+    border-radius: 24px;
+    outline: none;
+    border: none;
+    padding: 3px 15px;
+    background-color: rgba(239, 243, 251, 1);
+
+}
+
+.rangePicker .calendar.from > select::after {
+    content: '从 - '
+}
+
+.rangePicker .calendar.to > select::after {
+    content: '到 - '
+}
+
+.rangePicker .wrap {
+    display: inline-block;
+    -webkit-border-radius: 26px;
+    -moz-border-radius: 26px;
+    border-radius: 26px;
+}
+
+.rangePicker .months button {
+    background: none;
+    float: left;
+    width: 12%;
+    margin: 1% 2%;
+    padding: 2.3% 0;
+    text-transform: capitalize;
+    text-align: center;
+}

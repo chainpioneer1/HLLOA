@@ -1,0 +1,136 @@
+/* ----------------------------- */
+.base-container{
+    top:100px;
+    left:0;
+    width: 1920px;
+    padding: 0;
+}
+
+.base-container > div{
+    padding: 0;
+    height: 980px;
+}
+
+.home-bg {
+    position: relative;
+    width: 1920px;
+    height: 1000px;
+    background: url(../images/bg-signin.png);
+}
+
+.login-bg {
+    position: absolute;
+    left: 1067px;
+    top: 241px;
+    width: 500px;
+    height: 400px;
+    background: rgba(255, 255, 255, 1);
+    border-radius: 24px;
+    text-align: center;
+}
+
+.login-bg div {
+    position: relative;
+    width: 100%;
+    height: auto;
+    font-size: 32px;
+    color: #616AE8;
+    text-align: center;
+    padding: 0;
+    padding-top: 40px;
+}
+
+form {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    color: white;
+}
+
+input {
+    position: absolute;
+    outline: none;
+    border: none;
+    background: #F6F7FC;
+    color: black;
+    padding: 0 5px;
+    border-radius: 0;
+    -webkit-transition: all .2s ease-in-out;
+    -moz-transition: all .2s ease-in-out;
+    -ms-transition: all .2s ease-in-out;
+    -o-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+}
+
+.login-bg input, .login-btn {
+    position: relative;
+    display: inline-block;
+    font-size: 18px;
+    line-height: normal;
+    width:334px;
+    height:48px;
+    border-radius:24px;
+    text-align: left;
+    padding: 0 20px;
+    margin: 10px 0 5px;
+    border: 1px solid transparent;
+    text-decoration: none;
+}
+
+.login-bg input::placeholder{
+    font-size: 18px;
+}
+
+.login-bg input:focus{
+    border: 1px solid #616AE8;
+    background: white;
+}
+
+.login-btn{
+    text-align: center;
+    line-height: 48px;
+    font-size: 26px;
+    margin: 20px 0 5px;
+}
+
+.auto-login {
+    top: 85px;
+    left: 35px;
+    width: auto;
+    height: auto;
+    color: #888;
+    line-height: 35px;
+    font-size: 14px;
+}
+
+.auto-login .checkbox {
+    width: 10px;
+    height: 10px;
+    border: 1px solid #bbb;
+    display: inline-block;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+div.login-err {
+    font-size: 16px;
+    color: rgba(230, 68, 63, 1);
+    text-align: center;
+    pointer-events: none;
+    padding-top: 13px;
+    opacity: 0;
+    -webkit-transition: all .2s;
+    -moz-transition: all .2s;
+    -ms-transition: all .2s;
+    -o-transition: all .2s;
+    transition: all .2s;
+}
+
+.login-logo {
+    top: 22%;
+    left: 35%;
+    width: 30%;
+    height: 23%;
+    background: url(../images/logo.png);
+}
