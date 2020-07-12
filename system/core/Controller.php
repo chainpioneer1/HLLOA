@@ -77,9 +77,7 @@ class CI_Controller {
 
 		$this->load =& load_class('Loader', 'core');
 		$this->load->initialize();
-
 		log_message('info', 'Controller Class Initialized');
-
 	}
 
 	// --------------------------------------------------------------------
@@ -94,51 +92,5 @@ class CI_Controller {
 	{
 		return self::$instance;
 	}
-
-
-    /**
-     * This function used provide the pagination resources
-     * @param {string} $link : This is page link
-     * @param {number} $count : This is page count
-     * @param {number} $perPage : This is records per page limit
-     * @return {mixed} $result : This is array of records and pagination data
-     */
-    function paginationCompress($link, $count, $perPage = 10, $segment = SEGMENT)
-    {
-        $this->load->library('pagination');
-
-        $config ['base_url'] = base_url() . $link;
-        $config ['total_rows'] = $count;
-        $config ['uri_segment'] = $segment;
-        $config ['per_page'] = $perPage;
-        $config ['num_links'] = 6;
-        $config ['full_tag_open'] = '<nav><ul class="pagination">';
-        $config ['full_tag_close'] = '</ul></nav>';
-        $config ['first_tag_open'] = '<li class="arrow">';
-        $config ['first_link'] = '首页';
-        $config ['first_tag_close'] = '</li>';
-        $config ['prev_link'] = '上一页';
-        $config ['prev_tag_open'] = '<li class="arrow">';
-        $config ['prev_tag_close'] = '</li>';
-        $config ['next_link'] = '下一页';
-        $config ['next_tag_open'] = '<li class="arrow">';
-        $config ['next_tag_close'] = '</li>';
-        $config ['cur_tag_open'] = '<li class="active"><a href="javascript:;">';
-        $config ['cur_tag_close'] = '</a></li>';
-        $config ['num_tag_open'] = '<li>';
-        $config ['num_tag_close'] = '</li>';
-        $config ['last_tag_open'] = '<li class="arrow">';
-        $config ['last_link'] = '尾页';
-        $config ['last_tag_close'] = '</li>';
-
-        $this->pagination->initialize($config);
-        $page = $config['per_page'];
-        $segment = $this->uri->segment($segment);
-
-        return array(
-            "cntPerPage" => $page,
-            "pageId" => $segment
-        );
-    }
 
 }
