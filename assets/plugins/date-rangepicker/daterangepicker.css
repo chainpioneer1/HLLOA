@@ -11,9 +11,9 @@
     border: 0;
     line-height: 25px;
     padding-left: 10px;
-    /*font-size: 12px;*/
-    /*font-family: Arial, sans-serif;*/
-    /*font-weight: bold;*/
+    font-size: 12px;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
     cursor: pointer;
     color: #303030;
     position: relative;
@@ -26,10 +26,10 @@
     border: 1px solid transparent;
     background-color: white;
     padding: 5px 12px 0;
-    /*font-size: 12px;*/
+    font-size: 12px;
     line-height: 20px;
     color: #aaa;
-    /*font-family: Arial, sans-serif;*/
+    font-family: Arial, sans-serif;
     -webkit-box-shadow: 0px 20px 30px 0px rgba(230, 231, 239, 1);
     box-shadow: 0px 20px 30px 0px rgba(230, 231, 239, 1);
     -webkit-box-sizing: initial;

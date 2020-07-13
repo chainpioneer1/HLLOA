@@ -101,7 +101,7 @@ class Tasks extends CI_Controller
             $progress = $unit->progress;
             $bgStr = 'url(' . base_url('assets/images/task/bg-task.png') . ')';
 
-            $output .= '<div class="content-item"><div style="background-image:' . $bgStr . ';">';
+            $output .= '<div class="content-item"><div style="background:' . $bgStr . ';">';
             $output .= '<div class="btn-transparent" '
                 . ' data-id="' . $unit->id . '" '
                 . ' onclick="viewItem(this);"></div>';
@@ -228,7 +228,7 @@ class Tasks extends CI_Controller
             $progress = $unit->progress;
             $bgStr = 'url(' . base_url('assets/images/task/bg-task.png') . ')';
 
-            $output .= '<div class="content-item"><div style="background-image:' . $bgStr . ';">';
+            $output .= '<div class="content-item"><div style="background:' . $bgStr . ';">';
             $output .= '<div class="btn-transparent" '
                 . ' data-id="' . $unit->id . '" '
                 . ' onclick="viewItem(this);"></div>';

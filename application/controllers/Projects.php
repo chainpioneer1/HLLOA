@@ -106,7 +106,7 @@ class Projects extends CI_Controller
             $progress = $unit->progress;
             $bgStr = 'url(' . base_url('assets/images/project/bg' . ($unit->id % 11 + 1) . '.jpg') . ')';
 
-            $output .= '<div class="content-item"><div style="background-image:' . $bgStr . ';">';
+            $output .= '<div class="content-item"><div style="background:' . $bgStr . ';">';
             $output .= '<div class="btn-transparent" '
                 . ' data-pid="' . $unit->pid . '" '
                 . ' onclick="viewItem(this);"></div>';
@@ -274,7 +274,7 @@ class Projects extends CI_Controller
             }
             $task_score = 0;
 
-            $output .= '<div class="content-item"><div style="background-image:' . $bgStr . ';">';
+            $output .= '<div class="content-item"><div style="background:' . $bgStr . ';">';
             $output .= '<div class="btn-transparent" '
                 . ' data-id="' . $unit->id . '" '
                 . ' onclick="viewItem(this);"></div>';
@@ -407,7 +407,7 @@ class Projects extends CI_Controller
             }
             $projScore = round(($unit->total_score - $task_score) * 100) / 100;
 
-            $output .= '<div class="content-item"><div style="background-image:' . $bgStr . ';">';
+            $output .= '<div class="content-item"><div style="background:' . $bgStr . ';">';
             $output .= '<div class="btn-transparent" '
                 . ' data-id="' . $unit->id . '" '
                 . ' onclick="viewItem(this);"></div>';
