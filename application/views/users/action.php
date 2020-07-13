@@ -41,11 +41,6 @@
             </div>
         </div>
     </form>
-    <form class="useraction-form" action="" method="post" hidden style="display:none;">
-        <input name="search_keyword" style="display: none!important;" value="<?= $search_keyword; ?>"/>
-        <input name="range_from" style="display: none!important;" value="<?= $range_from; ?>"/>
-        <input name="range_to" style="display: none!important;" value="<?= $range_to; ?>"/>
-    </form>
     <div class="content-area">
         <div class="content-title">绩效列表
             <div>
@@ -153,6 +148,11 @@
             <tbody></tbody>
         </table>
     </div>
+    <form class="useraction-form" action="" method="post" hidden style="display:none;">
+        <input name="search_keyword" style="display: none!important;" value="<?= $search_keyword; ?>"/>
+        <input name="range_from" style="display: none!important;" value="<?= $range_from; ?>"/>
+        <input name="range_to" style="display: none!important;" value="<?= $range_to; ?>"/>
+    </form>
 </div>
 
 <div class="scripts">

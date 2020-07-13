@@ -26,7 +26,9 @@ div.content-pagination {
 }
 
 .content-table .content-item > div {
-    background-color: transparent;
+    background-color: white;
+    background-repeat: no-repeat;
+    background-size: 100% auto;
     color: #5E6C84;
     width: 245px;
     height: auto;

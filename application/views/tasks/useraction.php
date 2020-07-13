@@ -3,6 +3,9 @@
     <div class="nav-position-title"></div>
     <form class="search-form"
           action="<?= base_url($apiRoot); ?>" method="post">
+        <input name="search_keyword" style="display: none!important;" value="<?= $search_keyword; ?>"/>
+        <input name="range_from" style="display: none!important;" value="<?= $range_from; ?>"/>
+        <input name="range_to" style="display: none!important;" value="<?= $range_to; ?>"/>
         <!--        <div class="tab-container">-->
         <!--            <div class="tab-item" data-progress="-1">全部任务-->
         <!--                <div class="tab-number">9</div>-->
@@ -41,7 +44,9 @@
         <div class="content-title"><?= $menu == 0 ? '当前任务情况' : '完成任务列表'; ?>
             <div>
                 <!--                <div class="btn-circle btn-blue" onclick="editItem();"><i class="fa fa-plus"></i>新增任务</div>-->
-
+                <div style="margin-right: 20px;">
+                    <div class="btn-circle btn-blue" onclick="downloadItems();"><i class="fa fa-download"></i> 导出列表</div>
+                </div>
                 <div class="btn-circle btn-grey btn-fontgrey" onclick="goToPreviousPage()"><i
                             class="fa fa-angle-left"></i>
                 </div>
@@ -223,6 +228,13 @@
         <input name="range_from" style="display: none!important;" value="<?= $range_from; ?>"/>
         <input name="range_to" style="display: none!important;" value="<?= $range_to; ?>"/>
     </form>
+
+    <div class="exportTbl" style="display: none;">
+        <table id="exportTbl" data-file="Table">
+            <thead></thead>
+            <tbody></tbody>
+        </table>
+    </div>
 </div>
 
 
@@ -290,13 +302,13 @@
                     for (var i in _progressCnt) suff += _progressCnt[i];
                     if (suff > 999) suff = '999<sup>+</sup>';
                     elem.find('.tab-number').html(suff);
-                    elem.find('.tab-number').attr('data-value',suff);
+                    elem.find('.tab-number').attr('data-value', suff);
                     return;
                 }
                 var suff = parseInt(_progressCnt[idx - 1]);
                 if (suff > 999) suff = '999<sup>+</sup>';
                 elem.find('.tab-number').html(suff);
-                elem.find('.tab-number').attr('data-value',suff);
+                elem.find('.tab-number').attr('data-value', suff);
             })
 
             $('input[name="_progress"]').val(_progress);
@@ -509,4 +521,130 @@
         }
 
     </script>
+
+
+    <!--    Excel Downloading Parts -->
+    <!--    <script src="--><? //= base_url('assets/js/export_table/jquery-3.3.1.js') ?><!--"></script>-->
+    <script src="<?= base_url('assets/js/export_table/jquery.dataTables.min.js') ?>"></script>
+    <script src="<?= base_url('assets/js/export_table/dataTables.buttons.min.js') ?>"></script>
+    <script src="<?= base_url('assets/js/export_table/jszip.min.js') ?>"></script>
+    <script src="<?= base_url('assets/js/export_table/pdfmake.min.js') ?>"></script>
+    <script src="<?= base_url('assets/js/export_table/vfs_fonts.js') ?>"></script>
+    <script src="<?= base_url('assets/js/export_table/buttons.html5.min.js') ?>"></script>
+    <script>
+        function downloadItems() {
+            if (_isProcessing) return;
+            _isProcessing = true;
+            var frmData = new FormData($('.search-form')[0]);
+            var ajaxURL = $('.search-form').attr('action');
+            ajaxURL = ajaxURL.replace(/useraction/g, 'downloadUserAction');
+            $.ajax({
+                type: "post",
+                url: ajaxURL,
+                contentType: false,
+                cache: false,
+                processData: false,
+                data: frmData,
+                success: function (res) {
+                    try {
+                        res = JSON.parse(res)
+                    } catch (e) {
+                        alert(JSON.stringify(e));
+                        return;
+                    }
+                    if (res.status == 'success') {
+                        var headers = ['序号', '任务编号', '任务名称', '任务负责人', '所属项目',
+                            '项目负责人', '任务分值', '任务状态', '发布时间', '接收时间', '提交时间', '验收时间', '截止时间'];
+                        var datas = [];
+                        var retData = res.data;
+                        var progressStr = ["未接收", "进行中", "待验收", "已完成"];
+                        for (var i = 0; i < retData.length; i++) {
+                            var item = retData[i];
+                            datas.push([
+                                i + 1,
+                                item.no,
+                                item.title,
+                                item.worker,
+                                item.project,
+                                item.project_worker,
+                                item.score,
+                                progressStr[item.progress],
+                                (item.published_at ? item.published_at : '- -'),
+                                (item.started_at ? item.started_at : '- -'),
+                                (item.provided_at ? item.provided_at : '- -'),
+                                (item.completed_at ? item.completed_at : '- -'),
+                                (item.deadline ? item.deadline : '- -')
+                            ]);
+                        }
+                        initTableData(headers, datas);
+                        prepareExport2Excel('绩效统计 - 完成任务列表');
+                        export2Excel();
+                    } else { //failed
+                        alert(res.data);
+                    }
+                    _isProcessing = false;
+                },
+                fail: function () {
+                    _isProcessing = false;
+                }
+            });
+        }
+
+        function initTableData(headerList, dataList) {
+            if (!headerList) headerList = [];
+            if (!dataList) dataList = [];
+            var headerHtml = '';
+            headerHtml += '<tr>';
+            for (var i = 0; i < headerList.length; i++) {
+                var item = headerList[i];
+                headerHtml += '<th>' + item + '</th>';
+            }
+            headerHtml += '</tr>';
+
+            var dataHtml = '';
+            for (var i = 0; i < dataList.length; i++) {
+                var item = dataList[i];
+                dataHtml += '<tr>';
+                for (var j = 0; j < headerList.length; j++) {
+                    dataHtml += '<td>' + item[j] + '</td>';
+                }
+                dataHtml += '</tr>';
+            }
+            if (headerHtml == '') headerHtml = '<tr><th></th></tr>';
+            if (dataHtml == '') dataHtml = '<tr><td></td></tr>';
+            $('.exportTbl').html(
+                '<table id="exportTbl" data-file="统计数据">' +
+                '<thead>' + headerHtml + '</thead>' +
+                '<tbody>' + dataHtml + '</tbody>' +
+                '</table>'
+            );
+        }
+
+        function prepareExport2Excel(title) {
+            if (!title) title = $('#exportTbl').attr('data-file');
+            $('#exportTbl').DataTable({
+                dom: 'Bfrtip',
+                // buttons: ['copyHtml5', 'excelHtml5', 'csvHtml5', 'pdfHtml5']
+                buttons: [{
+                    extend: 'excelHtml5',
+                    text: 'Export Excel',
+                    extension: '.xlsx',
+                    autoFilter: true,
+                    filename: title
+                }]
+            });
+        }
+
+        function export2Excel(table) {
+            setTimeout(function () {
+                if (!table)
+                    $('.exportTbl .dt-button.buttons-excel').click();
+                else
+                    table.buttons.exportData({})
+            }, 5);
+        }
+
+        $('.scripts').remove();
+    </script>
+    <!--    Excel Downloading Parts end-->
 </div>

@@ -101,7 +101,7 @@ class Tasks extends CI_Controller
             $progress = $unit->progress;
             $bgStr = 'url(' . base_url('assets/images/task/bg-task.png') . ')';
 
-            $output .= '<div class="content-item"><div style="background:' . $bgStr . ';">';
+            $output .= '<div class="content-item"><div style="background-image:' . $bgStr . ';">';
             $output .= '<div class="btn-transparent" '
                 . ' data-id="' . $unit->id . '" '
                 . ' onclick="viewItem(this);"></div>';
@@ -228,7 +228,7 @@ class Tasks extends CI_Controller
             $progress = $unit->progress;
             $bgStr = 'url(' . base_url('assets/images/task/bg-task.png') . ')';
 
-            $output .= '<div class="content-item"><div style="background:' . $bgStr . ';">';
+            $output .= '<div class="content-item"><div style="background-image:' . $bgStr . ';">';
             $output .= '<div class="btn-transparent" '
                 . ' data-id="' . $unit->id . '" '
                 . ' onclick="viewItem(this);"></div>';
@@ -640,6 +640,97 @@ class Tasks extends CI_Controller
         } else {
             $this->load->view('_layout_main', $this->data);
         }
+    }
+
+    public function downloadUserAction($menu = 1, $worker = 0)
+    {
+        $ret = array(
+            'data' => '',
+            'status' => 'fail'
+        );
+
+        $progress = 3;
+
+        $apiRoot = 'tasks/useraction';
+        $this->data['mainModel'] = $model = 'tbl_tasks';
+        $this->data["subview"] = $apiRoot;
+
+        $this->data['userList'] = $this->users_m->getItems();
+
+        $this->data['menu'] = $menu;
+        if ($menu == 0) {
+            $this->data['title'] = '首页';
+            $progress = -1;
+        }
+        $this->data['worker'] = $worker;
+        $this->data['progress'] = $progress;
+
+        $filter = array();
+
+        if ($progress != -1) $filter[$model . '.progress'] = $progress;
+        if ($worker == 0) {
+            redirect(base_url('users/action'));
+            return;
+        }
+        $filter[$model . '.worker_id'] = $worker;
+
+        $userId = $this->session->userdata('_userid');
+        $roleId = $this->session->userdata('_role_id');
+        $partId = $this->session->userdata('_part_id');
+        $isBoss = $this->userpart_m->get_where(array('boss_id' => $userId));
+
+        $filter = array();
+
+        $filter['range_from'] = date('Y-m-01 00:00:00');
+        $filter['range_to'] = date('Y-m-01 00:00:00', strtotime('+1 months'));
+        $startNo = 0;
+        if ($this->uri->segment(5) != '') $startNo = $this->uri->segment(5);
+        if ($_POST) {
+            $this->session->unset_userdata('filter');
+            $_POST['range_from'] != '' && $filter['range_from'] = $_POST['range_from'];
+            $_POST['range_to'] != '' && $filter['range_to'] = $_POST['range_to'];
+            $filter['queryStr'] = $_POST['search_keyword'];
+            $this->session->set_userdata('filter', $filter);
+        }
+
+        $queryStr = array(
+            'range_from' => $filter['range_from'],
+            'range_to' => $filter['range_to'],
+        );
+        $filterStr = " tbl_union.completed_at >= '{$filter['range_from']}' ";
+        $filterStr .= " and tbl_union.completed_at < '{$filter['range_to']}'";
+
+        $filterStr .= " and ( tbl_union.worker_id = " . $worker . " ) ";
+        if ($progress != -1) $filterStr .= " and tbl_union.progress = " . $progress;
+
+        $this->data['search_keyword'] = $filter['queryStr'] . '';
+        $this->data['range_from'] = $filter['range_from'] . '';
+        $this->data['range_to'] = $filter['range_to'] . '';
+        unset($filter['range_from']);
+        unset($filter['range_to']);
+
+        if ($this->uri->segment(5) == '') $this->session->unset_userdata('filter');
+
+        $list = $this->mainModel->getActionItemsByPage($filterStr, 0, 1000, $queryStr);
+        $resultList = array();
+        foreach ($list as $item) {
+            $project_worker = $this->users_m->get_where(array('id' => $item->project_worker_id));
+            if ($project_worker != null) $project_worker = $project_worker[0]->name;
+            else $project_worker = '';
+            $item->project_worker = $project_worker;
+            if ($item->task_title == '管理:') {
+                $item->task_title .= $item->project;
+                $item->id .= 'g';
+                $item->no .= '_M';
+            }
+            $item->title = $item->task_title;
+            $item->score = $item->user_score;
+        }
+        $this->data["list"] = $list;
+
+        $ret['data'] = $resultList = $list;
+        $ret['status'] = 'success';
+        echo json_encode($ret);
     }
 
     public function output_content_useraction($items, $startNo = 0)
