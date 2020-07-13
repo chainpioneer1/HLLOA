@@ -621,6 +621,7 @@ class Tasks extends CI_Controller
             if ($item->task_title == '管理:') {
                 $item->task_title .= $item->project;
                 $item->id .= 'g';
+                $item->no .= '_M';
             }
             $item->title = $item->task_title;
             $item->score = $item->user_score;
