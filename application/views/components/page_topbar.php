@@ -3,7 +3,7 @@
     <div class="topbar-profile">
         <div class="profile-item btn-blue" data-type="avatar" style="background: url(<?= base_url($this->session->userdata('_avatar')); ?>)"></div>
         <div class="profile-item" data-type="username"><?= $this->session->userdata('_name'); ?></div>
-        <div class="profile-item btn-fontgrey" data-type="logout"><i class="fa fa-power-off"></i></div>
+<!--        <div class="profile-item btn-fontgrey" data-type="logout"><i class="fa fa-power-off"></i></div>-->
     </div>
 </div>
 <div class="page-profile-menu">
@@ -11,6 +11,7 @@
     <div class="profile-menuitem" data-target="userprices/mine">我的工资</div>
     <div class="profile-menuitem" data-target="reports/mine">我的日报</div>
     <div class="profile-menuitem" data-target="users/change">修改密码</div>
+    <div class="profile-menuitem" data-target="signin/signout" data-type="1">退出登录</div>
 </div>
 <div class="scripts">
     <script>
@@ -44,7 +45,8 @@
             });
             $('.profile-menuitem').on('click', function () {
                 var that = $(this);
-                location.href = baseURL + that.attr('data-target');
+                if(that.attr('data-type')=='1') location.replace(baseURL + that.attr('data-target'));
+                else location.href = baseURL + that.attr('data-target');
             })
         })
 
