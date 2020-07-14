@@ -53,10 +53,29 @@ function makeDateString(dateVal, lang) {
         makeNDigit(dateVal.getDate());
 }
 
+function makeTimeString(dateVal, lang) {
+    if (!lang) lang = 'en';
+    if (!dateVal) dateVal = new Date();
+    if (lang == 'cn') {
+        return dateVal.getFullYear() + '年' +
+            makeNDigit(dateVal.getMonth() + 1) + '月' +
+            makeNDigit(dateVal.getDate()) + '日 ' +
+            makeNDigit(dateVal.getHours()) + ':' +
+            makeNDigit(dateVal.getMinutes()) + ':' +
+            makeNDigit(dateVal.getSeconds());
+    }
+    return dateVal.getFullYear() + '-' +
+        makeNDigit(dateVal.getMonth() + 1) + '-' +
+        makeNDigit(dateVal.getDate()) + ' ' +
+        makeNDigit(dateVal.getHours()) + ':' +
+        makeNDigit(dateVal.getMinutes()) + ':' +
+        makeNDigit(dateVal.getSeconds());
+}
+
 function makeDateObject(dateStr) {
     var dateObj = new Date();
-    if(dateStr == undefined) return dateObj;
-    if(typeof dateStr == 'number') return new Date(dateStr);
+    if (dateStr == undefined) return dateObj;
+    if (typeof dateStr == 'number') return new Date(dateStr);
     dateStr = dateStr.replace(/-/g, '/');
     dateObj = new Date(dateStr);
     return dateObj;
@@ -80,6 +99,7 @@ function isHoliday(date) {
     }
     return isHoliday;
 }
+
 ////////////// textarea auto sizing height
 
 function autoResize(element) {
@@ -261,6 +281,7 @@ function setPreviousPart(value) {
     sessionStorage.setItem(key, value);
     return value;
 }
+
 function setSearchKeyword(value) {
     var key = 'search_keyword';
     if (value == undefined) {
