@@ -553,6 +553,7 @@ div.side-menuitem[data-id="16"][data-sel="1"] .icon {
     overflow: hidden;
     border: 1px solid #ddd;
     border-top: none;
+    background-color: white;
 }
 
 .page-profile-menu .profile-menuitem {
