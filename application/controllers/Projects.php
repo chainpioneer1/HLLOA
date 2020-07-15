@@ -90,7 +90,7 @@ class Projects extends CI_Controller
         }
         $this->data['taskList'] = $this->tasks_m->get_where_in('project_id', $projIds);
 
-        if (!$this->checkRole(6)) {
+        if (!$this->checkRole(15)) {
             $this->load->view('_layout_error', $this->data);
         } else {
             $this->load->view('_layout_main', $this->data);
