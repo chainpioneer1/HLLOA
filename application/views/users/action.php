@@ -402,8 +402,9 @@
         function downloadTotalItems() {
             if (_isProcessing) return;
             _isProcessing = true;
+            $('.modal-container[data-type="modal"]').fadeIn('fast');
+            $(".uploading-progress").fadeIn('fast');
             var frmData = new FormData($('.search-form')[0]);
-
             $.ajax({
                 type: "post",
                 url: _apiRoot + "downloadActionDetail",
@@ -503,9 +504,13 @@
                         alert(res.data);
                     }
                     _isProcessing = false;
+                    $('.modal-container[data-type="modal"]').fadeOut('fast');
+                    $(".uploading-progress").fadeOut('fast');
                 },
                 fail: function () {
                     _isProcessing = false;
+                    $('.modal-container[data-type="modal"]').fadeOut('fast');
+                    $(".uploading-progress").fadeOut('fast');
                 }
             });
         }

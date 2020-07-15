@@ -19,7 +19,7 @@
     </div>
     <div class="uploading-progress" style="width: 200px;">
         <div class="modal-body">
-            <div class="">上传中</div>
+            <div class="">处理中</div>
             <img src="<?= base_url('assets/images/ajax-loader.gif') ?>"/>
             <div class="progress-val">30%</div>
         </div>
