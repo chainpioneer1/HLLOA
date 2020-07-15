@@ -64,7 +64,7 @@
                 <div class="tab-number">999<sup>+</sup></div>
             </div>
             <input style="display:none;" name="_progress"/>
-            <?php if ($progress == 0) { ?>
+            <?php if (false && $progress == 0) { ?>
                 <div class="tab-search" style="justify-content: flex-start;padding-left: 15px;">
                     <div class="input-area">
                         <div class="btn-circle btn-blue" style="font-size: 16px;" onclick="editItem();">
@@ -113,20 +113,20 @@
                 <label name="worker"></label>
                 <label>项目负责人</label>
             </div>
-            <div class="input-area title-score">
+            <div class="input-area title-score" data-type="old">
                 <label name="total_score_val"></label>
                 <label>各负责人分数</label>
             </div>
-            <br>
+            <br data-type="old"/>
             <div class="input-area title-score">
                 <label name="total_score_remained"></label>
                 <label>(分) 项目剩余分数</label>
             </div>
-            <div class="input-area title-score">
+            <div class="input-area title-score" data-type="old">
                 <label name="worker" style="opacity: 0"></label>
                 <label style="opacity: 0">项目负责人</label>
             </div>
-            <div class="input-area title-score">
+            <div class="input-area title-score" data-type="old">
                 <label name="total_score_val_remained"></label>
                 <label>各负责人已用分数</label>
             </div>
@@ -136,17 +136,10 @@
                 <label name="title"></label>
             </div>
             <div class="input-area">
-                <label>项目金额:</label>
-                <label name="init_price"></label>
-            </div>
-            <div class="input-area">
-                <label>合同金额:</label>
-                <label name="work_price"></label>
-            </div>
-            <div class="input-area">
                 <label>项目发布时间:</label>
                 <label name="published_at"></label>
             </div>
+            <br>
             <?php if ($progress > 0) { ?>
                 <div class="input-area">
                     <label>项目开始时间:</label>
@@ -178,7 +171,7 @@
         <div class="edit-container" style="border:none;padding:0 80px;">
             <?php if ($progress == 0) { ?>
                 <div class="input-area" style="margin: 0;text-align: center;">
-                    <div class="btn-rect btn-blue" name="btns" style="width: 210px;" onclick="deleteItem(this);">删除
+                    <div class="btn-rect btn-blue" name="btns" style="width: 210px;" onclick="editItem(this);">指派人员
                     </div>
                 </div>
             <?php } else { ?>
@@ -188,10 +181,10 @@
                 </div>
             <?php } ?>
             <?php if ($progress == 0 || $progress == 1) { ?>
-                <div class="input-area" style="margin: 0;text-align: center;">
-                    <div class="btn-rect btn-blue" name="btns" style="width: 210px;" onclick="editItem(this);">编辑项目
-                    </div>
-                </div>
+                <!--                <div class="input-area" style="margin: 0;text-align: center;">-->
+                <!--                    <div class="btn-rect btn-blue" name="btns" style="width: 210px;" onclick="editItem(this);">编辑项目-->
+                <!--                    </div>-->
+                <!--                </div>-->
             <?php } else if ($progress == 2) { ?>
                 <div class="input-area" style="margin: 0;text-align: center;">
                     <div class="btn-rect btn-blue" name="btns" style="width: 210px;" onclick="completeItem(this);">
@@ -204,7 +197,7 @@
     <div class="edit-area" data-type="edit">
         <div class="content-title"><span></span>
             <div>
-                <?php if ($progress != 0) { ?>
+                <?php if (true || $progress != 0) { ?>
                     <div style="text-align: right; margin-right: 50px;font-size: 20px;">
                         项目编号: <label name="no"></label>
                     </div>
@@ -215,85 +208,24 @@
         </div>
         <form class="edit-form" action="" method="post">
             <div class="edit-container">
-                <?php if ($progress != 0) { ?>
-                    <div class="input-area">
-                        <label name="total_score"></label>
-                        <label>(分) 项目总分</label>
-                    </div>
-                    <div class="input-area">
-                        <label name="worker"></label>
-                        <label>项目负责人</label>
-                        <div class="tree-multi-parent" data-name="worker_id" style="display:none;"></div>
-                    </div><br>
-                <?php } else { ?>
-                    <div class="input-area">
-                        <label>项目编号:</label>
-                        <input name="no" placeholder="请输入项目编号" type="text"/>
-                    </div>
-                <?php } ?>
-                <div class="input-area">
-                    <label>项目名称:</label>
-                    <?php if ($progress == 0) { ?>
-                        <input name="title" placeholder="请输入项目名称" type="text"/>
-                    <?php } else { ?>
-                        <label name="title" style="min-width: 295px;text-align: left;"></label>
-                    <?php } ?>
-                </div>
+                <div class="input-area title-score">
+                    <label name="total_score" style="font-weight: normal;"></label>
+                    <label>(分) 项目总分</label>
+                </div><br>
                 <?php if ($progress == 0) { ?>
+                    <div class="input-area">
+                        <label>项目名称:</label>
+                        <label name="title"  style="font-weight: normal;width: 295px;text-align: left;"></label>
+                    </div><br>
                     <div class="input-area">
                         <label>项目负责人:</label>
                         <div class="tree-multi-parent" data-name="worker_id"></div>
                     </div>
-                <?php } ?>
-                <div class="input-area">
-                    <label>项目金额:</label>
-                    <?php if ($progress == 0 || $progress == 1) { ?>
-                        <input name="init_price" placeholder="请输入项目金额" type="number"/>
-                        <div class="input-group-addon">￥</div>
-                    <?php } else { ?>
-                        <label name="init_price"></label>
-                    <?php } ?>
-                </div>
-                <div class="input-area">
-                    <label>合同金额:</label>
-                    <?php if ($progress == 0 || $progress == 1) { ?>
-                        <input name="work_price" placeholder="请输入合同金额" type="number"/>
-                        <div class="input-group-addon">￥</div>
-                    <?php } else { ?>
-                        <label name="work_price"></label>
-                    <?php } ?>
-                </div>
-                <?php if ($progress == 0 || $progress == 1) { ?>
-                    <div class="input-area">
-                        <label>项目截止日期:</label>
-                        <input class="date-picker" name="deadline" placeholder="请选择日期" type="text"
-                               data-date-format="YYYY-MM-DD hh:mm:ss"/>
-                        <div class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></div>
-                    </div><br>
-                    <div class="input-area">
-                        <label>项目总分:</label>
-                        <input name="total_score" placeholder="请输入项目总分" type="number"/>
+                    <div class="input-area textarea">
+                        <label>项目描述:</label>
+                        <textarea name="description" placeholder="请输入内容"></textarea>
                     </div>
-                    <div class="input-area">
-                        <label>各负责人分数:</label>
-                        <input name="total_score_val" placeholder="请使用英文;分隔分数" type="text"/>
-                    </div><br>
-                <?php } else { ?>
-                    <div class="input-area">
-                        <label>项目开始日期:</label>
-                        <label name="started_at"></label>
-                    </div><br>
-                    <div class="input-area" style="width: auto;">
-                        <label style="vertical-align: middle;">项目截止日期:</label>
-                        <input class="date-picker" name="deadline" placeholder="请选择日期" type="text"
-                               data-date-format="YYYY-MM-DD hh:mm:ss"/>
-                        <div class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></div>
-                    </div><br>
                 <?php } ?>
-                <div class="input-area textarea">
-                    <label>项目描述:</label>
-                    <textarea name="description" placeholder="请输入内容"></textarea>
-                </div>
             </div>
         </form>
         <div class="edit-container" style="border:none;padding:0 125px;">
@@ -396,7 +328,7 @@
                 $('.base-container .nav-position-title').html(_navTitle);
                 editElem.fadeOut('fast');
             });
-            var headerTitle = '项目简介';
+            var headerTitle = '项目详情';
             var that = $(elem);
             var pid = that.attr('data-pid');
             var mainItem = _mainList.filter(function (a) {
@@ -405,11 +337,15 @@
             if (mainItem.length > 0) {
                 mainItem = mainItem[0];
                 _editItemId = mainItem.pid;
+
+                var worker = mainItem.worker;
+                if (worker) worker = worker.replace(/,/g, ';');
+                else worker = '';
+                if(worker.indexOf(';')>-1) editElem.find('*[data-type="old"]').show();
+                else editElem.find('*[data-type="old"]').hide();
                 editElem.find('label[name="no"]').html(mainItem.no);
                 editElem.find('label[name="title"]').html(mainItem.title);
-                editElem.find('label[name="worker"]').html(mainItem.worker.replace(/,/g, ';'));
-                editElem.find('label[name="init_price"]').html('￥' + mainItem.init_price);
-                editElem.find('label[name="work_price"]').html('￥' + mainItem.work_price);
+                editElem.find('label[name="worker"]').html(worker);
                 editElem.find('label[name="started_at"]').html(mainItem.started_at);
                 editElem.find('label[name="published_at"]').html(mainItem.published_at);
                 editElem.find('label[name="provided_at"]').html(mainItem.provided_at);
@@ -467,10 +403,10 @@
                     var bg = (curUsers.length ? '#ff4800' : '#5f68e6');
                     var content_html = '<div class="tree-multi-search" data-width="315">' +
                         '<select name="worker_id[]" placeholder="请选择"></select>' +
-                        '</div>' +
-                        '<i class="fa fa-user-' + type + '" ' +
-                        ' style="background:' + bg + ';"' +
-                        ' onclick="appendUser(this)"></i>';
+                        '</div>';
+                        // '<i class="fa fa-user-' + type + '" ' +
+                        // ' style="background:' + bg + ';"' +
+                        // ' onclick="appendUser(this)"></i>';
                     parentElem.append(content_html);
                     var newElem = parentElem.find('select[name="worker_id[]"]');
                     newElem = $(newElem[newElem.length - 1]);
@@ -512,7 +448,9 @@
                 });
                 if (mainItem.length > 0) {
                     mainItem = mainItem[0];
-                    var workers = mainItem.worker_ids.split(',');
+                    var workers = mainItem.worker_ids;
+                    if(workers) workers = workers.split(',');
+                    else workers = [0];
                     for (var i = 0; i < workers.length; i++) {
                         appendUser();
                         var workerElem = workerParent.find('select[name="worker_id[]"]');
@@ -521,27 +459,16 @@
                     }
 
                     _editItemId = mainItem.pid;
-                    editElem.find('input[name="no"]').val(mainItem.no);
-                    editElem.find('input[name="title"]').val(mainItem.title);
-                    editElem.find('input[name="init_price"]').val(mainItem.init_price);
-                    editElem.find('input[name="work_price"]').val(mainItem.work_price);
                     editElem.find('input[name="total_score"]').val(mainItem.total_score);
                     editElem.find('input[name="total_score_val"]').val(mainItem.total_score_val.replace(/,/g, ';'));
 
                     editElem.find('label[name="no"]').html(mainItem.no);
                     editElem.find('label[name="title"]').html(mainItem.title);
                     editElem.find('label[name="worker"]').html(mainItem.worker);
-                    editElem.find('label[name="init_price"]').html('￥' + mainItem.init_price);
-                    editElem.find('label[name="work_price"]').html('￥' + mainItem.work_price);
-                    editElem.find('label[name="started_at"]').html(mainItem.started_at);
-                    editElem.find('label[name="published_at"]').html(mainItem.published_at);
                     editElem.find('label[name="total_score"]').html(mainItem.total_score);
                     editElem.find('label[name="total_score_val"]').html(mainItem.total_score_val);
 
-                    editElem.find('input[name="deadline"]').val(mainItem.deadline);
                     editElem.find('textarea[name="description"]').val(mainItem.description);
-
-                    editElem.find('input[name="deadline"]').handleDtpicker('setDate', makeDateObject(mainItem.deadline));
 
                     tree_multi_search();
                 }
@@ -557,7 +484,6 @@
 
         function editPerform(elem) {
             var that = $(elem);
-            console.log(_editItemId);
             var projItem = [];
             if (_editItemId > 0) {
                 var projItem = _mainList.filter(function (a) {
@@ -565,13 +491,13 @@
                 })[0];
             }
             if (_editItemId == 0 || projItem.progress == 0) {
-                var noElem = that.find('input[name="no"]');
-                var titleElem = that.find('input[name="title"]');
-                var initPriceElem = that.find('input[name="init_price"]');
-                var workPriceElem = that.find('input[name="work_price"]');
+                // var noElem = that.find('input[name="no"]');
+                // var titleElem = that.find('input[name="title"]');
+                // var initPriceElem = that.find('input[name="init_price"]');
+                // var workPriceElem = that.find('input[name="work_price"]');
                 var workerElem = that.find('select[name="worker_id[]"]');
-                var scoreElem = that.find('input[name="total_score_val"]');
-                var totalScore = parseFloat(that.find('input[name="total_score"]').val()).toFixed(2);
+                // var scoreElem = that.find('input[name="total_score_val"]');
+                // var totalScore = parseFloat(that.find('input[name="total_score"]').val()).toFixed(2);
 
                 var isWorkerExist = true;
                 var workerArr = [];
@@ -581,35 +507,35 @@
                 }
                 workerArr = removeDuplicated(workerArr);
 
-                var isScoreExist = true;
-                scoreElem = scoreElem.val().split(';');
-                var scoreVal = 0;
-                for (var i = 0; i < scoreElem.length; i++) {
-                    if (!scoreElem[i]) isScoreExist = false;
-                    scoreVal += scoreElem[i] * 1;
-                }
-                scoreVal = scoreVal.toFixed(2);
+                // var isScoreExist = true;
+                // scoreElem = scoreElem.val().split(';');
+                // var scoreVal = 0;
+                // for (var i = 0; i < scoreElem.length; i++) {
+                //     if (!scoreElem[i]) isScoreExist = false;
+                //     scoreVal += scoreElem[i] * 1;
+                // }
+                // scoreVal = scoreVal.toFixed(2);
 
                 var warn = '';
-                if (!noElem.val()) warn = '请输入项目编号';
-                else if (!titleElem.val()) warn = '请输入项目名称';
-                else if (!initPriceElem.val()) warn = '请输入项目金额';
-                else if (!workPriceElem.val()) warn = '请输入合同金额';
-                else if (!isWorkerExist) warn = '请选择项目负责人';
-                else if (workerElem.length != workerArr.length) warn = '项目负责人重复了';
-                else if (totalScore != scoreVal) warn = '项目总分不匹配与各负责人分数信息';
-                else if (!isScoreExist) warn = '请输入各负责人分数信息';
-                else if (scoreElem.length != workerElem.length) warn = '负责人员数不匹配与分数信息';
+                // if (!noElem.val()) warn = '请输入项目编号';
+                // else if (!titleElem.val()) warn = '请输入项目名称';
+                // else if (!initPriceElem.val()) warn = '请输入项目金额';
+                // else if (!workPriceElem.val()) warn = '请输入合同金额';
+                if (!isWorkerExist) warn = '请选择项目负责人';
+                // else if (workerElem.length != workerArr.length) warn = '项目负责人重复了';
+                // else if (totalScore != scoreVal) warn = '项目总分不匹配与各负责人分数信息';
+                // else if (!isScoreExist) warn = '请输入各负责人分数信息';
+                // else if (scoreElem.length != workerElem.length) warn = '负责人员数不匹配与分数信息';
 
                 if (warn != '') {
                     showConfirm(baseURL + 'assets/images/modal/modal-confirm-top.png',
                         '', warn);
                     return;
                 }
-                noElem.val(noElem.val().trim());
-                titleElem.val(titleElem.val().trim());
-                initPriceElem.val(initPriceElem.val().trim());
-                workPriceElem.val(workPriceElem.val().trim());
+                // noElem.val(noElem.val().trim());
+                // titleElem.val(titleElem.val().trim());
+                // initPriceElem.val(initPriceElem.val().trim());
+                // workPriceElem.val(workPriceElem.val().trim());
             } else if (projItem.progress == 1) {
                 var workerElem = that.find('select[name="worker_id[]"]');
                 var initPriceElem = that.find('input[name="init_price"]');

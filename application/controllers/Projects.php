@@ -15,6 +15,7 @@ class Projects extends CI_Controller
         $this->load->model("userposition_m");
         $this->load->model("userrank_m");
         $this->load->model("userrole_m");
+        $this->load->model("contracts_m");
         $this->load->model("projects_m");
         $this->load->model("tasks_m");
         $this->lang->load('main', $language);
@@ -27,6 +28,175 @@ class Projects extends CI_Controller
     public function index()
     {
         $this->manage();
+    }
+
+    public function plan($menu = 15, $progress = 0)
+    {
+        if (!$this->checkRole()) {
+            redirect(base_url('signin'));
+            return;
+        }
+
+        $this->data['title'] = '项目统筹';
+        $this->data["subscript"] = "settings/script";
+        $this->data["subcss"] = "settings/css";
+        $apiRoot = 'projects/plan';
+        $this->data['mainModel'] = $model = 'tbl_projects';
+        $this->data["subview"] = $apiRoot;
+
+        $this->data['menu'] = $menu;
+        $this->data['userList'] = $this->users_m->getItems();
+        $this->data['contractList'] = $this->contracts_m->getItems();
+
+        $filter = array();
+        if ($this->uri->segment(3) == '') $this->session->unset_userdata('filter');
+        $this->session->userdata('filter') != '' && $filter = $this->session->userdata('filter');
+
+        $this->data['progress'] = $filter['tbl_union.progress1'] = $progress;
+        if ($_POST) {
+            $this->session->unset_userdata('filter');
+//            $_POST['_progress'] != '' && $filter[$model . '.progress'] = $_POST['_progress'];
+            $filter['queryStr'] = $_POST['search_keyword'];
+            $_POST['search_part'] != '' && $filter['tbl_union.part_id'] = $_POST['search_part'];
+            $this->session->set_userdata('filter', $filter);
+        } else {
+//            $this->session->set_userdata('filter', array($model . '.progress' => 0));
+        }
+        $queryStr = $filter['queryStr'] . '';
+        if (isset($filter['tbl_projects.pid']))
+            unset($filter['tbl_projects.pid']);
+        unset($filter['queryStr']);
+        $this->data['perPage'] = $perPage = 12;
+        $this->data['cntPage'] = $cntPage = $this->mainModel->get_group_count($filter, $queryStr);
+        $apiRoot .= "/$menu/$progress";
+        $this->data['apiRoot'] = $apiRoot;
+        $ret = $this->paginationCompress($apiRoot, $cntPage, $perPage, 5);
+        $this->data['curPage'] = $curPage = $ret['pageId'];
+        $this->data['list'] = $list = $this->mainModel->getGroupItemsByPage($filter, $ret['pageId'], $ret['cntPerPage'], $queryStr);
+        $this->data['progressCnt'] = array(
+            $this->mainModel->get_group_count(array('tbl_union.progress1' => 0), $queryStr),
+            $this->mainModel->get_group_count(array('tbl_union.progress1' => 1), $queryStr),
+            $this->mainModel->get_group_count(array('tbl_union.progress1' => 2), $queryStr),
+            $this->mainModel->get_group_count(array('tbl_union.progress1' => 3), $queryStr)
+        );
+        $this->data["tbl_content"] = $this->output_content_plan($list);
+
+        $projIds = array();
+        foreach ($list as $item) {
+            $ids = explode(',', $item->projIds);
+            foreach ($ids as $id) {
+                array_push($projIds, $id);
+            }
+        }
+        $this->data['taskList'] = $this->tasks_m->get_where_in('project_id', $projIds);
+
+        if (!$this->checkRole(6)) {
+            $this->load->view('_layout_error', $this->data);
+        } else {
+            $this->load->view('_layout_main', $this->data);
+        }
+    }
+
+    public function output_content_plan($items)
+    {
+        $userId = $this->session->userdata("_userid");
+        $output = '';
+        $i = 0;
+        foreach ($items as $unit):
+            $i++;
+            $editable = ($unit->status == 0);
+            $progress = $unit->progress;
+            $bgStr = 'url(' . base_url('assets/images/project/bg' . ($unit->id % 11 + 1) . '.jpg') . ')';
+
+            $output .= '<div class="content-item"><div style="background-image:' . $bgStr . ';">';
+            $output .= '<div class="btn-transparent" '
+                . ' data-pid="' . $unit->pid . '" '
+                . ' onclick="viewItem(this);"></div>';
+
+            $output .= '<div class="project-score">' . $unit->total_score . '</div>';
+            $output .= '<div class="project-title">' . $unit->title . '</div>';
+
+            $output .= '<div>';
+            $output .= '<label>项目负责人</label>';
+            $output .= '<label>' . str_replace(',', ';', $unit->worker) . '</label>';
+            $output .= '</div>';
+            switch ($progress) {
+                case 0:
+                    $output .= '<div>';
+                    $output .= '<label>发布时间</label>';
+                    $output .= '<label>' . $unit->published_at . '</label>';
+                    $output .= '</div>';
+                    $output .= '<div>';
+                    $output .= '<label>截止时间</label>';
+                    $output .= '<label>' . $unit->deadline . '</label>';
+                    $output .= '</div>';
+                    $output .= '<div class="project-btns">';
+                    $output .= '<div class="btn-rect btn-white" '
+                        . ' data-pid="' . $unit->pid . '"'
+                        . ' onclick="deleteItem(this);">删除项目</div>';
+                    $output .= '<div class="btn-rect btn-white"'
+                        . ' data-pid="' . $unit->pid . '"'
+                        . ' onclick="editItem(this);">编辑项目</div>';
+                    $output .= '</div>';
+                    break;
+                case 1:
+                    $output .= '<div>';
+                    $output .= '<label>新建时间</label>';
+                    $output .= '<label>' . $unit->create_time . '</label>';
+                    $output .= '</div>';
+                    $output .= '<div>';
+                    $output .= '<label>截止时间</label>';
+                    $output .= '<label>' . $unit->deadline . '</label>';
+                    $output .= '</div>';
+                    $output .= '<div class="project-btns">';
+//                    $output .= '<div class="btn-rect btn-white" '
+//                        . ' data-pid="' . $unit->pid . '"'
+//                        . ' onclick="viewTasks(this);">查看任务</div>';
+                    $output .= '<div class="btn-rect btn-white"'
+                        . ' data-pid="' . $unit->pid . '"'
+                        . ' style="width: 200px;" '
+                        . ' onclick="editItem(this);">编辑项目</div>';
+                    $output .= '</div>';
+                    break;
+                case 2:
+                    $output .= '<div>';
+                    $output .= '<label>新建时间</label>';
+                    $output .= '<label>' . $unit->create_time . '</label>';
+                    $output .= '</div>';
+                    $output .= '<div>';
+                    $output .= '<label>截止时间</label>';
+                    $output .= '<label>' . $unit->deadline . '</label>';
+                    $output .= '</div>';
+//                    $output .= '<div class="project-btns">';
+//                    $output .= '<div class="btn-rect btn-white" '
+//                        . ' data-pid="' . $unit->pid . '"'
+//                        . ' onclick="viewTasks(this);">查看任务</div>';
+//                    $output .= '<div class="btn-rect btn-white"'
+//                        . ' data-pid="' . $unit->pid . '"'
+//                        . ' onclick="completeItem(this);">确认验收</div>';
+//                    $output .= '</div>';
+                    break;
+                case 3:
+                    $output .= '<div>';
+                    $output .= '<label>新建时间</label>';
+                    $output .= '<label>' . $unit->create_time . '</label>';
+                    $output .= '</div>';
+                    $output .= '<div>';
+                    $output .= '<label>截止时间</label>';
+                    $output .= '<label>' . $unit->deadline . '</label>';
+                    $output .= '</div>';
+//                    $output .= '<div class="project-btns">';
+//                    $output .= '<div class="btn-rect btn-white" '
+//                        . ' data-pid="' . $unit->pid . '"'
+//                        . ' style="width: 200px;" '
+//                        . ' onclick="viewTasks(this);">查看任务</div>';
+//                    $output .= '</div>';
+                    break;
+            }
+
+            $output .= '</div></div>';
+        endforeach;
+        return $output;
     }
 
     public function manage($menu = 6, $progress = 0)
@@ -106,7 +276,7 @@ class Projects extends CI_Controller
             $progress = $unit->progress;
             $bgStr = 'url(' . base_url('assets/images/project/bg' . ($unit->id % 11 + 1) . '.jpg') . ')';
 
-            $output .= '<div class="content-item"><div style="background:' . $bgStr . ';">';
+            $output .= '<div class="content-item"><div style="background-image:' . $bgStr . ';">';
             $output .= '<div class="btn-transparent" '
                 . ' data-pid="' . $unit->pid . '" '
                 . ' onclick="viewItem(this);"></div>';
@@ -129,12 +299,10 @@ class Projects extends CI_Controller
                     $output .= '<label>' . $unit->deadline . '</label>';
                     $output .= '</div>';
                     $output .= '<div class="project-btns">';
-                    $output .= '<div class="btn-rect btn-white" '
-                        . ' data-pid="' . $unit->pid . '"'
-                        . ' onclick="deleteItem(this);">删除项目</div>';
                     $output .= '<div class="btn-rect btn-white"'
                         . ' data-pid="' . $unit->pid . '"'
-                        . ' onclick="editItem(this);">编辑项目</div>';
+                        . ' style="width: 200px;" '
+                        . ' onclick="editItem(this);">指派人员</div>';
                     $output .= '</div>';
                     break;
                 case 1:
@@ -149,10 +317,11 @@ class Projects extends CI_Controller
                     $output .= '<div class="project-btns">';
                     $output .= '<div class="btn-rect btn-white" '
                         . ' data-pid="' . $unit->pid . '"'
+                        . ' style="width: 200px;" '
                         . ' onclick="viewTasks(this);">查看任务</div>';
-                    $output .= '<div class="btn-rect btn-white"'
-                        . ' data-pid="' . $unit->pid . '"'
-                        . ' onclick="editItem(this);">编辑项目</div>';
+//                    $output .= '<div class="btn-rect btn-white"'
+//                        . ' data-pid="' . $unit->pid . '"'
+//                        . ' onclick="editItem(this);">编辑项目</div>';
                     $output .= '</div>';
                     break;
                 case 2:
@@ -274,7 +443,7 @@ class Projects extends CI_Controller
             }
             $task_score = 0;
 
-            $output .= '<div class="content-item"><div style="background:' . $bgStr . ';">';
+            $output .= '<div class="content-item"><div style="background-image:' . $bgStr . ';">';
             $output .= '<div class="btn-transparent" '
                 . ' data-id="' . $unit->id . '" '
                 . ' onclick="viewItem(this);"></div>';
@@ -322,7 +491,7 @@ class Projects extends CI_Controller
         return $output;
     }
 
-    public function mine($menu = 5, $progress = 0)
+    public function mine($menu = 5, $progress = 1)
     {
         if (!$this->checkRole()) {
             redirect(base_url('signin'));
@@ -407,7 +576,7 @@ class Projects extends CI_Controller
             }
             $projScore = round(($unit->total_score - $task_score) * 100) / 100;
 
-            $output .= '<div class="content-item"><div style="background:' . $bgStr . ';">';
+            $output .= '<div class="content-item"><div style="background-image:' . $bgStr . ';">';
             $output .= '<div class="btn-transparent" '
                 . ' data-id="' . $unit->id . '" '
                 . ' onclick="viewItem(this);"></div>';
@@ -451,9 +620,12 @@ class Projects extends CI_Controller
                         . ' onclick="editTasks(this);">任务管理'
                         . '<div class="task-alert"></div>'
                         . '</div>';
-                    $output .= '<div class="btn-rect btn-white"'
-                        . ' data-id="' . $unit->id . '"'
-                        . ' onclick="provideItem(this);">提交项目</div>';
+                    $output .= '<div class="btn-rect btn-white" '
+                        . ' data-id="' . $unit->id . '" '
+                        . ' onclick="editItem(this);">新增任务</div>';
+//                    $output .= '<div class="btn-rect btn-white"'
+//                        . ' data-id="' . $unit->id . '"'
+//                        . ' onclick="provideItem(this);">提交项目</div>';
                     $output .= '</div>';
                     break;
                 case 2:
@@ -494,8 +666,6 @@ class Projects extends CI_Controller
         $user_id = $this->session->userdata('_userid');
         if ($_POST) {
             $editArr = array(
-                'author_id' => $user_id,
-
                 'no' => $this->input->post('no'),
                 'title' => $this->input->post('title'),
                 'worker_id' => $this->input->post('worker_id'),
@@ -511,15 +681,25 @@ class Projects extends CI_Controller
             $id = $this->input->post('id');
             $result = 0;
             if ($id == 0) {
+                $editArr['planner_id'] = $user_id;
+                $editArr['no'] = $this->input->post('no');
+                $editArr['title'] = $this->input->post('title');
+                $editArr['contract_id'] = $this->input->post('contract_id');
+                $editArr['deadline'] = $this->input->post('deadline');
+                $editArr['price_detail'] = '[]';
                 $editArr['published_at'] = date("Y-m-d H:i:s");
                 $editArr['create_time'] = date("Y-m-d H:i:s");
+                $editArr['update_time'] = date("Y-m-d H:i:s");
                 $result = $this->mainModel->add($editArr);
+                $id = $result;
+                $this->mainModel->edit(array('pid' => $id), $id);
             } else {
                 $updateItem = $this->mainModel->get_where(array('id' => $id));
                 if ($updateItem != null) {
                     $progress = $updateItem[0]->progress;
                     if ($progress == 1 || $progress == 2) {
                         $editArr = array(
+                            'author_id' => $user_id,
                             'deadline' => $this->input->post('deadline'),
                             'description' => $this->input->post('description'),
                             'update_time' => date("Y-m-d H:i:s")
@@ -534,6 +714,105 @@ class Projects extends CI_Controller
                 ));
             }
             $ret['data'] = '操作成功';
+            $ret['status'] = 'success';
+        }
+
+        echo json_encode($ret);
+    }
+
+    public function updateProject()
+    {
+        $ret = array(
+            'data' => '操作失败',
+            'status' => 'fail'
+        );
+        if (!$this->checkRole()) {
+            $ret['data'] = '用户权限错误';
+            echo json_encode($ret);
+            return;
+        }
+        $user_id = $this->session->userdata('_userid');
+        if ($_POST) {
+            $editArr = array();
+            $id = $this->input->post('pid');
+            $result = 0;
+            if ($id == 0) {
+                $editArr['planner_id'] = $user_id;
+                $editArr['no'] = $this->input->post('no');
+                $editArr['title'] = $this->input->post('title');
+                $editArr['contract_id'] = $this->input->post('contract_id');
+                $editArr['deadline'] = $this->input->post('deadline');
+                $editArr['total_score'] = '0';
+                $editArr['price_detail'] = '[]';
+                $editArr['published_at'] = date("Y-m-d H:i:s");
+                $editArr['create_time'] = date("Y-m-d H:i:s");
+                $editArr['update_time'] = date("Y-m-d H:i:s");
+                $result = $this->mainModel->add($editArr);
+                $id = $result;
+                $this->mainModel->edit(array('pid' => $id), $id);
+            } else {
+                $updateItem = $this->mainModel->get_where(array('pid' => $id));
+                if ($updateItem != null) {
+                    $progress = $updateItem[0]->progress;
+                    if ($progress == 0) {
+                        $editArr['no'] = $this->input->post('no');
+                        $editArr['title'] = $this->input->post('title');
+                        $editArr['contract_id'] = $this->input->post('contract_id');
+                        $editArr['deadline'] = $this->input->post('deadline');
+                        $editArr['update_time'] = date("Y-m-d H:i:s");
+                    }
+                    $result = $this->mainModel->edit($editArr, $id);
+                }
+            }
+            if ($result > 0) {
+                $ret['item'] = $this->mainModel->get_where(array(
+                    'id' => $id
+                ));
+            }
+            $ret['data'] = '操作成功';
+            $ret['status'] = 'success';
+        }
+
+        echo json_encode($ret);
+    }
+
+    public function updatePriceDetail()
+    {
+        $ret = array(
+            'data' => '操作失败',
+            'status' => 'fail'
+        );
+        if (!$this->checkRole(15)) {
+            $ret['data'] = '用户权限错误';
+            echo json_encode($ret);
+            return;
+        }
+        $user_id = $this->session->userdata('_userid');
+        if ($_POST) {
+            $pid = $this->input->post('pid');
+            $updateItem = $this->mainModel->get_where(array('pid' => $pid));
+            $priceDetail = json_decode($updateItem[0]->price_detail);
+            array_push($priceDetail, array(
+                'price' => $this->input->post('price'),
+                'description' => $this->input->post('description'),
+                'created' => date('Y-m-d H:i:s')
+            ));
+            $totalScore = 0;
+            $totalPrice = 0;
+            foreach($priceDetail as $item){
+                $totalScore += $item->price / 150;
+                $totalPrice += $item->price;
+            }
+
+            $priceDetail = json_encode($priceDetail);
+            foreach ($updateItem as $item) {
+                $this->mainModel->edit(array(
+                    'price_detail' => $priceDetail,
+                    'init_price' => $totalPrice,
+                    'total_score' => $totalScore,
+                ), $item->id);
+            }
+            $ret['data'] = $priceDetail;
             $ret['status'] = 'success';
         }
 
@@ -555,16 +834,16 @@ class Projects extends CI_Controller
         if ($_POST) {
 
             $workers = $this->input->post('worker_id');
-            $totalScores = $this->input->post('total_score_val');
-            $totalScores = explode(';', $totalScores);
+//            $totalScores = $this->input->post('total_score_val');
+//            $totalScores = explode(';', $totalScores);
             $editArr = array(
                 'author_id' => $user_id,
 
-                'no' => $this->input->post('no'),
-                'title' => $this->input->post('title'),
-                'init_price' => $this->input->post('init_price'),
-                'work_price' => $this->input->post('work_price'),
-                'deadline' => $this->input->post('deadline'),
+//                'no' => $this->input->post('no'),
+//                'title' => $this->input->post('title'),
+//                'init_price' => $this->input->post('init_price'),
+//                'work_price' => $this->input->post('work_price'),
+//                'deadline' => $this->input->post('deadline'),
                 'description' => $this->input->post('description'),
                 'progress' => 0,
                 'status' => 1,
@@ -581,7 +860,7 @@ class Projects extends CI_Controller
                 foreach ($workers as $worker) {
                     $editArr['pid'] = $pid;
                     $editArr['worker_id'] = $worker;
-                    $editArr['total_score'] = $totalScores[$i];
+//                    $editArr['total_score'] = $totalScores[$i];
                     if ($i == 0) $this->mainModel->edit($editArr, $pid);
                     else $this->mainModel->add($editArr);
                     $i++;
@@ -591,6 +870,7 @@ class Projects extends CI_Controller
                 if ($updateItem != null) {
                     // update not started projects
                     if ($workers != null) {
+
                         if (count($updateItem) > count($workers)) {
                             for ($i = count($workers); $i < count($updateItem); $i++) {
                                 if ($updateItem[$i]->progress != 0) {
@@ -606,20 +886,22 @@ class Projects extends CI_Controller
                         foreach ($workers as $worker) {
                             $editArr['pid'] = $pid;
                             $editArr['worker_id'] = $worker;
-                            $editArr['total_score'] = $totalScores[$i];
+//                            $editArr['total_score'] = $totalScores[$i];
                             $editArr['published_at'] = date("Y-m-d H:i:s");
                             if ($updateItem[$i]) {
+                                $editArr['started_at'] = date("Y-m-d H:i:s");
+                                $editArr['progress'] = 1;
                                 $progress = $updateItem[$i]->progress;
-                                if (!$editArr['title']) {
-                                    $editArr = array(
-                                        'total_score' => $totalScores[$i],
-                                        'init_price' => $this->input->post('init_price'),
-                                        'work_price' => $this->input->post('work_price'),
-                                        'deadline' => $this->input->post('deadline'),
-                                        'description' => $this->input->post('description'),
-                                        'update_time' => date("Y-m-d H:i:s")
-                                    );
-                                }
+//                                if (!$editArr['title']) {
+//                                    $editArr = array(
+////                                        'total_score' => $totalScores[$i],
+////                                        'init_price' => $this->input->post('init_price'),
+////                                        'work_price' => $this->input->post('work_price'),
+////                                        'deadline' => $this->input->post('deadline'),
+//                                        'description' => $this->input->post('description'),
+//                                        'update_time' => date("Y-m-d H:i:s")
+//                                    );
+//                                }
                                 $result = $this->mainModel->edit($editArr, $updateItem[$i]->id);
                             } else {
                                 $editArr['create_time'] = date("Y-m-d H:i:s");
@@ -636,15 +918,15 @@ class Projects extends CI_Controller
                         $i = 0;
                         foreach ($updateItem as $item) {
                             $editArr['pid'] = $pid;
-                            $editArr['total_score'] = $totalScores[$i];
+//                            $editArr['total_score'] = $totalScores[$i];
                             $editArr['published_at'] = date("Y-m-d H:i:s");
                             $progress = $updateItem[$i]->progress;
                             if ($progress == 1 || $progress == 2) {
                                 $editArr = array(
-                                    'total_score' => $totalScores[$i],
-                                    'init_price' => $this->input->post('init_price'),
-                                    'work_price' => $this->input->post('work_price'),
-                                    'deadline' => $this->input->post('deadline'),
+//                                    'total_score' => $totalScores[$i],
+//                                    'init_price' => $this->input->post('init_price'),
+//                                    'work_price' => $this->input->post('work_price'),
+//                                    'deadline' => $this->input->post('deadline'),
                                     'description' => $this->input->post('description'),
                                     'update_time' => date("Y-m-d H:i:s")
                                 );

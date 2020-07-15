@@ -161,7 +161,7 @@ div.edit-container {
 .edit-area[data-type="view"] .edit-container .input-area:first-child label,
 .edit-area[data-type="view"] .edit-container .input-area:nth-child(3) label,
 .edit-area[data-type="view"] .edit-container .input-area:nth-child(2) label,
-.edit-area[data-type="view"] .edit-container .input-area.title-score label {
+.edit-area .edit-container .input-area.title-score label {
     margin-left: 0;
     vertical-align: baseline;
 }
@@ -173,7 +173,7 @@ div.edit-container {
 .edit-area[data-type="view"] .edit-container .input-area:first-child,
 .edit-area[data-type="view"] .edit-container .input-area:nth-child(3),
 .edit-area[data-type="view"] .edit-container .input-area:nth-child(2),
-.edit-area[data-type="view"] .edit-container .input-area.title-score {
+.edit-area .edit-container .input-area.title-score {
     min-width: 24%;
     width: auto;
 }
@@ -181,7 +181,7 @@ div.edit-container {
 .edit-area[data-type="view"] .edit-container .input-area:first-child label:first-child,
 .edit-area[data-type="view"] .edit-container .input-area:nth-child(3) label:first-child,
 .edit-area[data-type="view"] .edit-container .input-area:nth-child(2) label:first-child,
-.edit-area[data-type="view"] .edit-container .input-area.title-score label:first-child {
+.edit-area .edit-container .input-area.title-score label:first-child {
     margin: 0 0px 0 30px;
     font-size: 38px;
 }

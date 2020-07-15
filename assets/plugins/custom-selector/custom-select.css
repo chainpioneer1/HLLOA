@@ -316,7 +316,7 @@ div.tree-search-button button:focus {
     margin: 0;
 }
 .tree-multi-search[data-width="315"] .tree-search-selected{
-    width: 270px;
+    /*width: 270px;*/
 
 }
 

@@ -8,8 +8,18 @@
     <script src="<?= base_url('assets/js/domlib.js') ?>"></script>
 </head>
 <body style="width: calc(100vw);height:calc(100vh);">
-    <?php $this->load->view($subview); ?>
-    <?php $this->load->view("components/page_footer"); ?>
+<div class="scripts">
+    <script src="<?= base_url('assets/js/global.js') ?>"></script>
+    <script>
+        var baseURL = "<?= base_url() ?>";
+        var _global = {
+            tmrID: [0, 0, 0, 0, 0, 0]
+        };
+        var userId = '<?= $this->session->userdata('_user_id')?>';
+    </script>
+</div>
+<?php $this->load->view($subview); ?>
+<?php $this->load->view("components/page_footer"); ?>
 </body>
 </html>
 

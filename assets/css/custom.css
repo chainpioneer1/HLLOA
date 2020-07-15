@@ -895,13 +895,15 @@ div.edit-container {
     border-radius: 6px;
 }
 
-.edit-container .input-area input.date-picker {
+.edit-container .input-area input.date-picker,
+.modal-body .input-area input.date-picker {
     -webkit-border-radius: 6px !important;
     -moz-border-radius: 6px !important;
     border-radius: 6px !important;
 }
 
-.edit-container .input-area div.input-group-addon {
+.edit-container .input-area div.input-group-addon,
+.modal-body .input-area div.input-group-addon {
     position: absolute;
     top: 0;
     right: 0;
@@ -910,6 +912,9 @@ div.edit-container {
     height: 35px;
     margin: 0;
     /*border:none;*/
+}
+.modal-body .input-area div.input-group-addon {
+    top: 25px;
 }
 
 .edit-container .input-area textarea {
@@ -960,6 +965,8 @@ div.edit-container {
     -webkit-border-radius: 6px;
     -moz-border-radius: 6px;
     border-radius: 6px;
+    vertical-align: middle;
+    padding: 7px 20px;
 }
 
 .edit-area.modal-container label {
