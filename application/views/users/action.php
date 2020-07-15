@@ -44,6 +44,9 @@
     <div class="content-area">
         <div class="content-title">绩效列表
             <div>
+                <div class="btn-circle btn-blue" onclick="downloadTotalItems();" style="margin-right: 20px;"><i
+                            class="fa fa-download"></i> 导出列表和详情
+                </div>
                 <div class="btn-circle btn-blue" onclick="downloadItems();"><i class="fa fa-download"></i> 导出列表</div>
             </div>
         </div>
@@ -340,7 +343,7 @@
 
 
     <!--    Excel Downloading Parts -->
-<!--    <script src="--><?//= base_url('assets/js/export_table/jquery-3.3.1.js') ?><!--"></script>-->
+    <!--    <script src="--><? //= base_url('assets/js/export_table/jquery-3.3.1.js') ?><!--"></script>-->
     <script src="<?= base_url('assets/js/export_table/jquery.dataTables.min.js') ?>"></script>
     <script src="<?= base_url('assets/js/export_table/dataTables.buttons.min.js') ?>"></script>
     <script src="<?= base_url('assets/js/export_table/jszip.min.js') ?>"></script>
@@ -383,6 +386,117 @@
                             ]);
                         }
                         initTableData(headers, datas);
+                        prepareExport2Excel('绩效统计');
+                        export2Excel();
+                    } else { //failed
+                        alert(res.data);
+                    }
+                    _isProcessing = false;
+                },
+                fail: function () {
+                    _isProcessing = false;
+                }
+            });
+        }
+
+        function downloadTotalItems() {
+            if (_isProcessing) return;
+            _isProcessing = true;
+            var frmData = new FormData($('.search-form')[0]);
+
+            $.ajax({
+                type: "post",
+                url: _apiRoot + "downloadActionDetail",
+                contentType: false,
+                cache: false,
+                processData: false,
+                data: frmData,
+                success: function (res) {
+                    try {
+                        res = JSON.parse(res)
+                    } catch (e) {
+                        alert(JSON.stringify(e));
+                        return;
+                    }
+                    if (res.status == 'success') {
+                        var headers0 = [];
+                        var headers1 = ['排序', '姓名', '工作岗位', '所属部门', '月份', '绩效分数'];
+                        var headers2 = ['序号', '任务编号', '任务名称', '任务负责人', '所属项目', '项目负责人',
+                            '任务分值', '任务状态', '发布时间', '接收时间', '提交时间', '验收时间', '截止时间','',''];
+
+                        var progressStr = ["未接收", "进行中", "待验收", "已完成"];
+                        for (var i = 0; i < headers2.length; i++) {
+                            if (i > headers0.length - 1) headers0[i] = '';
+                            if (i > headers1.length - 1) headers1[i] = '';
+                        }
+                        var datas = [];
+                        var retData = res.data;
+                        var rr = 0;
+                        for (var i = 0; i < retData.length; i++) {
+                            var item = retData[i];
+                            rr++;
+                            datas.push([rr, '', '', '', '', '', '', '', '', '', '', '', '', '', '']);
+                            rr++;
+                            datas.push([
+                                rr, '',
+                                headers1[0],
+                                headers1[1],
+                                headers1[2],
+                                headers1[3],
+                                headers1[4],
+                                headers1[5], '', '', '', '', '', '', ''
+                            ]);
+                            rr++;
+                            datas.push([
+                                rr, '',
+                                i + 1,
+                                item.name,
+                                item.position,
+                                item.part,
+                                item.task_completed,
+                                item.user_score, '', '', '', '', '', '', ''
+                            ]);
+                            rr++;
+                            datas.push([
+                                rr, '',
+                                headers2[0],
+                                headers2[1],
+                                headers2[2],
+                                headers2[3],
+                                headers2[4],
+                                headers2[5],
+                                headers2[6],
+                                headers2[7],
+                                headers2[8],
+                                headers2[9],
+                                headers2[10],
+                                headers2[11],
+                                headers2[12]
+                            ]);
+                            var details = item.details;
+                            for (var k = 0; k < details.length; k++) {
+                                var dItem = details[k];
+                                rr++;
+                                datas.push([
+                                    rr, '',
+                                    k + 1,
+                                    dItem.no,
+                                    dItem.title,
+                                    dItem.worker,
+                                    dItem.project,
+                                    dItem.project_worker,
+                                    dItem.score,
+                                    progressStr[dItem.progress],
+                                    (dItem.published_at ? dItem.published_at : '- -'),
+                                    (dItem.started_at ? dItem.started_at : '- -'),
+                                    (dItem.provided_at ? dItem.provided_at : '- -'),
+                                    (dItem.completed_at ? dItem.completed_at : '- -'),
+                                    (dItem.deadline ? dItem.deadline : '- -')
+                                ])
+                            }
+                        }
+                        console.log(datas);
+                        initTableData(headers0, datas);
                         prepareExport2Excel('绩效统计');
                         export2Excel();
                     } else { //failed

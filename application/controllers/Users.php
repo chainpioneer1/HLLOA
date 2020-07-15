@@ -16,6 +16,7 @@ class Users extends CI_Controller
         $this->load->model("userrank_m");
         $this->load->model("userrole_m");
         $this->load->model("userprice_m");
+        $this->load->model("tasks_m");
         $this->lang->load('main', $language);
         $this->load->library("pagination");
         $this->load->library("session");
@@ -277,6 +278,76 @@ class Users extends CI_Controller
         $ret['data'] = $resultList = $list;
         $ret['status'] = 'success';
         echo json_encode($ret);
+    }
+
+    public function downloadActionDetail()
+    {
+        $ret = array(
+            'data' => '',
+            'status' => 'fail'
+        );
+
+        $this->data['apiRoot'] = $apiRoot = 'users/action';
+        $this->data["subview"] = $apiRoot;
+        $this->data['mainModel'] = 'tbl_user';
+
+        $this->data['menu'] = 3;
+
+        $userId = $this->session->userdata('_userid');
+
+        $filter = array();
+        if ($_POST) {
+            $this->session->unset_userdata('filter');
+            $filter['queryStr'] = $_POST['search_keyword'];
+            $_POST['range_from'] != '' && $filter['range_from'] = $_POST['range_from'];
+            $_POST['range_to'] != '' && $filter['range_to'] = $_POST['range_to'];
+        }
+        $queryStr = $filter['queryStr'] . '';
+        $filterStr = "'1' = '1' ";
+        $this->data["list"] = $list = $this->mainModel->getUserScoreByPage($filterStr, 0, 1000,
+            $queryStr, $filter['range_from'], $filter['range_to']);
+
+        $resultList = array();
+        foreach ($list as $item) {
+            $taskList = $this->getUserAction(3, $item->id, array(
+                'range_from' => $filter['range_from'], 'range_to' => $filter['range_to']
+            ));
+            $item->details = $taskList;
+            array_push($resultList, $item);
+        }
+        $ret['data'] = $resultList;
+        $ret['status'] = 'success';
+        echo json_encode($ret);
+    }
+
+    public function getUserAction($menu = 3, $worker = 0, $filter = array())
+    {
+        $progress = 3;
+        $model = 'tbl_tasks';
+        $queryStr = array(
+            'range_from' => $filter['range_from'],
+            'range_to' => $filter['range_to'],
+        );
+        $filterStr = " tbl_union.completed_at >= '{$filter['range_from']}' ";
+        $filterStr .= " and tbl_union.completed_at < '{$filter['range_to']}'";
+        $filterStr .= " and ( tbl_union.worker_id = " . $worker . " ) ";
+        if ($progress != -1) $filterStr .= " and tbl_union.progress = " . $progress;
+
+        $list = $this->tasks_m->getActionItemsByPage($filterStr, 0, 1000, $queryStr);
+        foreach ($list as $item) {
+            $project_worker = $this->users_m->get_where(array('id' => $item->project_worker_id));
+            if ($project_worker != null) $project_worker = $project_worker[0]->name;
+            else $project_worker = '';
+            $item->project_worker = $project_worker;
+            if ($item->task_title == '管理:') {
+                $item->task_title .= $item->project;
+                $item->id .= 'g';
+                $item->no .= '_M';
+            }
+            $item->title = $item->task_title;
+            $item->score = $item->user_score;
+        }
+        return $list;
     }
 
     public function output_content_action($items, $startNo = 0)
