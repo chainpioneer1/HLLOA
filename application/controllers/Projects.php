@@ -800,9 +800,9 @@ class Projects extends CI_Controller
             $totalScore = 0;
             $totalPrice = 0;
             foreach($priceDetail as $item){
-                $totalScore += $item->price / 150;
                 $totalPrice += $item->price;
             }
+            $totalScore = $totalPrice / 150;
 
             $priceDetail = json_encode($priceDetail);
             foreach ($updateItem as $item) {

@@ -376,7 +376,7 @@
                     '<td>' + mainItem.no + '</td>' +
                     '<td>' + mainItem.title + '</td>' +
                     '<td>' + priceTotal + '</td>' +
-                    '<td>' + mainItem.total_score + '</td>' +
+                    '<td>' + (priceTotal/150).toFixed(2) + '</td>' +
                     '<td>' + (mainItem.worker ? mainItem.worker : '') + '</td>' +
                     '<td>' + contract.title + '</td>' +
                     '<td>' + contract.no + '</td>' +

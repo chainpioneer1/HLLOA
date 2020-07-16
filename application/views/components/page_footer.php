@@ -21,7 +21,7 @@
         <div class="modal-body">
             <div class="">处理中</div>
             <img src="<?= base_url('assets/images/ajax-loader.gif') ?>"/>
-            <div class="progress-val">30%</div>
+            <div class="progress-val">100%</div>
         </div>
     </div>
 </div>
