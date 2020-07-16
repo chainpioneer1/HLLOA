@@ -47,6 +47,7 @@ class Userprices extends CI_Controller
         $userId = $this->session->userdata('_userid');
         $roleId = $this->session->userdata('_role_id');
         $partId = $this->session->userdata('_part_id');
+        $this->data['partList'] = $this->userpart_m->getItems();
         $isBoss = $this->userpart_m->get_where(array('boss_id' => $userId));
 
         $filter = array();
@@ -71,6 +72,7 @@ class Userprices extends CI_Controller
             $filter['queryStr'] = $_POST['search_keyword'];
             $_POST['range_from'] != '' && $filter['range_from'] = $_POST['range_from'];
             $_POST['range_to'] != '' && $filter['range_to'] = $_POST['range_to'];
+            $_POST['search_part'] != '' && $filter['tbl_user_part.id'] = $_POST['search_part'];
             $this->session->set_userdata('filter', $filter);
         }
         $this->session->userdata('filter') != '' && $filter = $this->session->userdata('filter');

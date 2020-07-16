@@ -67,7 +67,8 @@ class Users extends CI_Controller
         $this->data['cntPage'] = $cntPage = $this->mainModel->get_count($filter, $queryStr);
         $ret = $this->paginationCompress($apiRoot, $cntPage, $perPage, 3);
         $this->data['curPage'] = $curPage = $ret['pageId'];
-        $this->data["list"] = $this->mainModel->getItemsByPage($filter, $ret['pageId'], $ret['cntPerPage'], $queryStr);
+        $this->data["list"] = $this->mainModel->getItemsByPage($filter,
+            $ret['pageId'], $ret['cntPerPage'], $queryStr);
 
         $this->data["tbl_content"] = $this->output_content($this->data['list'], $startNo);
 

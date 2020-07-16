@@ -509,7 +509,7 @@
             fdata.append("id", _editItemId);
             fdata.append("type", _type);
             $.ajax({
-                url: _apiRoot + "updateItem",
+                url: _apiRoot + "updateContract",
                 type: "POST",
                 data: fdata,
                 contentType: false,

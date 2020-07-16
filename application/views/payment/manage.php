@@ -29,9 +29,9 @@
                 <div class="input-area">
                     <label style="margin-left: 20px;">姓名:</label>
                     <input name="search_name" placeholder="请输入内容"/>
-                    <label style="margin-left: 20px;">部门:</label>
+                    <label style="margin-left: 20px;">收支类型:</label>
                     <div class="tree-select" data-width="200">
-                        <select name="search_part"></select>
+                        <select name="search_type"></select>
                     </div>
                     <label>月份:</label>
                     <div class="range-selector">
@@ -51,45 +51,34 @@
         <input name="range_to" style="display: none!important;" value="<?= $range_to; ?>"/>
     </form>
     <div class="content-area">
-        <div class="content-title">人员列表
+        <div class="content-title">收支列表
             <div>
-                <div class="btn-circle btn-red" onclick="export2Excel();" style="margin-right: 10px;"><i
+                <div class="btn-circle btn-red" onclick="export2Excel();" style="margin-right: 20px;"><i
                             class="fa fa-download"></i> 导出数据
                 </div>
-                <!--                <div class="btn-circle btn-green" onclick="editItem();" style="margin-right: 10px;"><i class="fa fa-plus"></i> 添加信息</div>-->
-                <div class="btn-circle btn-blue" onclick="editTable(this);"><i class="fa fa-edit"></i> 编辑信息</div>
+                <div class="btn-circle btn-green" onclick="editItem();" style="margin-right: 20px;"><i
+                            class="fa fa-plus"></i> 新增收支
+                </div>
+                <div class="btn-circle btn-blue" onclick="editItem();"><i class="fa fa-plus"></i> 批量录入</div>
             </div>
         </div>
-        <div class="content-table salary" style="padding: 0;">
+        <div class="content-table" style="padding: 0;">
             <table>
                 <thead>
                 <tr>
-                    <th data-col="a">序号</th>
-                    <th data-col="b">部门</th>
-                    <th data-col="c">职务</th>
-                    <th data-col="d">姓名</th>
-                    <th data-col="e">出勤天数</th>
-                    <th data-col="f">岗位工资</th>
-                    <th data-col="g">资质补贴</th>
-                    <th data-col="h">补(扣)款</th>
-                    <th data-col="i">事假</th>
-                    <th data-col="j">事假扣款</th>
-                    <th data-col="k">病假</th>
-                    <th data-col="l">病假扣款</th>
-                    <th data-col="m">调休</th>
-                    <th data-col="n">其它假</th>
-                    <th data-col="o">应发工资</th>
-                    <th data-col="p">养老保险</th>
-                    <th data-col="q">医疗保险</th>
-                    <th data-col="r">失业保险</th>
-                    <th data-col="s">公积金</th>
-                    <th data-col="t">计税部分</th>
-                    <th data-col="u">个所税</th>
-                    <th data-col="v">实发工资</th>
-                    <th data-col="w">每月标准合格绩效分</th>
-                    <th data-col="x">本月实际合格绩效分</th>
-                    <th data-col="y">本月绩效</th>
-                    <th data-col="z">绩效奖金</th>
+                    <th>序号</th>
+                    <th>收支对象</th>
+                    <th>银行账号</th>
+                    <th>开户银行</th>
+                    <th>开户人</th>
+                    <th>收支金额（￥）</th>
+                    <th>所属项目</th>
+                    <th>项目编号</th>
+                    <th width="150">收支日期</th>
+                    <th>收支类型</th>
+                    <th>备注</th>
+                    <th width="150">录入时间</th>
+                    <th>操作</th>
                 </tr>
                 </thead>
                 <tbody><?= $tbl_content; ?></tbody>
@@ -106,7 +95,7 @@
         </div>-->
     </div>
     <div class="edit-area">
-        <div class="content-title"><span>新增人员</span>
+        <div class="content-title"><span>新增收支</span>
             <div>
                 <div class="btn-circle btn-grey" data-type="close-panel">
                     <i class="fa fa-angle-left"></i></div>
@@ -115,50 +104,42 @@
         <form class="edit-form" action="" method="post">
             <div class="edit-container">
                 <div class="input-area">
-                    <label>成员姓名:</label>
-                    <input name="name" placeholder="请输入名称" type="text"/>
+                    <label>*收支对象:</label>
+                    <input name="title" placeholder="请输入名称" type="text"/>
+                </div><br/>
+                <div class="input-area">
+                    <label>银行账号:</label>
+                    <input name="bank_account" placeholder="请输入联系人电话" type="text" maxlength="11"/>
                 </div>
                 <div class="input-area">
-                    <label>联系电话:</label>
-                    <input name="phone" placeholder="请输入联系人电话" type="text" maxlength="11"/>
+                    <label>开户银行:</label>
+                    <input name="bank_name" placeholder="请输入您的邮箱号" type="text"/>
                 </div>
                 <div class="input-area">
-                    <label>邮箱:</label>
-                    <input name="email" placeholder="请输入您的邮箱号" type="text"/>
+                    <label>开户人:</label>
+                    <input name="bank_user" placeholder="请输入您的邮箱号" type="text"/>
                 </div>
                 <div class="input-area">
-                    <label>所属部门:</label>
+                    <label>*收支金额:</label>
+                    <input name="price" placeholder="请输入您的邮箱号" type="number"/>
+                </div>
+                <div class="input-area">
+                    <label>收支类型:</label>
                     <div class="tree-select" data-width="315">
-                        <select name="part_id" placeholder="全部"></select>
+                        <select name="type"></select>
                     </div>
                 </div>
                 <div class="input-area">
-                    <label>职位:</label>
+                    <label>所属项目:</label>
                     <div class="tree-select" data-width="315">
-                        <select name="position_id"></select>
+                        <select name="project_id"></select>
                     </div>
                 </div>
                 <div class="input-area">
-                    <label>职级:</label>
-                    <div class="tree-select" data-width="315">
-                        <select name="rank_id"></select>
-                    </div>
-                </div>
-                <div class="input-area">
-                    <label>入职时间:</label>
-                    <input class="date-picker" name="entry_date" placeholder="请选择" type="text"
+                    <label>*收支日期:</label>
+                    <input class="date-picker" name="paid_date" placeholder="请选择" type="text"
                            data-date-format="YYYY-MM-DD hh:mm"/>
                     <div class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></div>
-                </div>
-                <div class="input-area">
-                    <label>登录账号:</label>
-                    <input name="account" placeholder="请输入账号"/>
-                </div>
-                <div class="input-area">
-                    <label>账号类型:</label>
-                    <div class="tree-select" data-width="315">
-                        <select name="role_id"></select>
-                    </div>
                 </div>
                 <div class="input-area textarea">
                     <label>备注信息:</label>
@@ -177,7 +158,7 @@
 
 <div class="scripts">
     <input hidden class="_mainList" value='<?= str_replace("'", "`", json_encode($list)) ?>'>
-    <input hidden class="_partList" value='<?= str_replace("'", "`", json_encode($partList)) ?>'>
+    <input hidden class="_projectList" value='<?= str_replace("'", "`", json_encode($projectList)) ?>'>
     <input hidden class="_filterInfo"
            value='<?= json_encode($this->session->userdata('filter') ?: array()) ?>'>
 
@@ -187,51 +168,27 @@
             searchConfig();
         });
 
-        var _partList = JSON.parse($('._partList').val());
+        // var _partList = JSON.parse($('._partList').val());
         // var _positionList = JSON.parse($('._positionList').val());
         // var _rankList = JSON.parse($('._rankList').val());
-        // var _roleList = JSON.parse($('._roleList').val());
+        var _projectList = JSON.parse($('._projectList').val());
         var _mainList = JSON.parse($('._mainList').val());
         var _filterInfo = JSON.parse($('._filterInfo').val());
         var _mainObj = '<?=$mainModel?>';
         var _apiRoot = baseURL + "<?=$apiRoot?>".split('/')[0] + '/';
         var _navTitle = '<?= $title; ?>';
         var _editItemId = 0;
+        var _statusList = [{id: 0, title: '主营业务收入'}, {id: 1, title: '其他业务收入'},
+            {id: 2, title: '项目成本支出'}, {id: 3, title: '费用支出'}];
 
         function searchConfig() {
-            $('.base-container .nav-position-title').html(_navTitle);
-
-
-            makeSelectElem($('select[name="search_part"]'),
-                _partList, function (e) {
-                }
-            );
+            makeSelectElem($('select[name="search_type"]'), _statusList);
 
             if (_filterInfo.queryStr) $('input[name="search_keyword"]').val(_filterInfo.queryStr);
-            if (_filterInfo['tbl_user_part.id']) $('select[name="search_part"]').val(_filterInfo['tbl_user_part.id']);
+            if (_filterInfo['tbl_payment.type']) $('select[name="search_type"]').val(_filterInfo['tbl_payment.type']);
             tree_select();
-            var rowElems = $('.content-table tr[data-id]:first-child');
-            var colElems = rowElems.find('td');
-            $('.content-table td').each(function(idx, elem){
-                elem = $(elem);
-                if(parseFloat(elem.html())==0) elem.html('');
-            });
-            colElems.each(function (idx, elem) {
-                elem = $(elem);
-                var field = elem.attr('data-col');
-                if (!field) return;
-                var elemList = $('.content-table td[data-col="' + field + '"]');
-                var sum = 0;
-                for (var i = 0; i < elemList.length; i++) {
-                    var item = $(elemList[i]);
-                    if (item.attr('data-id') == '-1') continue;
-                    if (!item.html()) continue;
-                    sum += parseFloat(item.html());
-                }
-                $('.content-table td[data-id="-1"][data-col="' + field + '"]').html(parseFloat(parseInt(sum * 100) / 100));
-            })
 
-            exportConfig();
+            $('.base-container .nav-position-title').html(_navTitle);
         }
 
         function searchItems() {
@@ -252,19 +209,8 @@
 
         function editItem(elem) {
             var editElem = $('.edit-area');
-            makeSelectElem(editElem.find('select[name="part_id"]'),
-                _partList, function (e) {
-                    var that = editElem.find('select[name="part_id"]');
-                    var id = that.val();
-                    var tmpPositions = _positionList.filter(function (a) {
-                        return a.part_id == id;
-                    });
-                    makeSelectElem(editElem.find('select[name="position_id"]'), tmpPositions);
-                }
-            );
-            makeSelectElem(editElem.find('select[name="position_id"]'), []);
-            makeSelectElem(editElem.find('select[name="rank_id"]'), _rankList);
-            makeSelectElem(editElem.find('select[name="role_id"]'), _roleList);
+            makeSelectElem(editElem.find('select[name="project_id"]'), _projectList);
+            makeSelectElem(editElem.find('select[name="type"]'), _statusList);
 
             $('div[data-type="close-panel"]').off('click');
             $('div[data-type="close-panel"]').on('click', function () {
@@ -273,15 +219,15 @@
             });
 
             if (!elem) {
-                editElem.find('.content-title span').html('新增人员');
-                $('.base-container .nav-position-title').html(_navTitle + ' ＞ 新增人员');
+                editElem.find('.content-title span').html('新增收支');
+                $('.base-container .nav-position-title').html(_navTitle + ' ＞ 新增收支');
                 editElem.find('input').val('');
                 editElem.find('select').val('');
                 editElem.find('textarea').val('');
                 _editItemId = 0;
             } else {
-                editElem.find('.content-title span').html('编辑人员信息');
-                $('.base-container .nav-position-title').html(_navTitle + ' ＞ 编辑人员信息');
+                editElem.find('.content-title span').html('编辑收支信息');
+                $('.base-container .nav-position-title').html(_navTitle + ' ＞ 编辑收支信息');
                 var that = $(elem);
                 var id = that.attr('data-id');
                 var mainItem = _mainList.filter(function (a) {
@@ -290,19 +236,21 @@
                 if (mainItem.length > 0) {
                     mainItem = mainItem[0];
                     _editItemId = mainItem.id;
-                    editElem.find('select[name="part_id"]').val(mainItem.part_id);
-                    editElem.find('select[name="part_id"]').trigger('change');
-                    editElem.find('input[name="name"]').val(mainItem.name);
-                    editElem.find('input[name="phone"]').val(mainItem.phone);
-                    editElem.find('input[name="email"]').val(mainItem.email);
-                    editElem.find('input[name="account"]').val(mainItem.account);
-                    editElem.find('input[name="entry_date"]').val(mainItem.entry_date);
-                    editElem.find('textarea[name="description"]').val(mainItem.description);
-                    editElem.find('select[name="rank_id"]').val(mainItem.rank_id);
-                    editElem.find('select[name="role_id"]').val(mainItem.role_id);
-                    editElem.find('select[name="position_id"]').val(mainItem.position_id);
+                    console.log(mainItem);
+                    editElem.find('input[name="title"]').val(mainItem.title);
 
-                    editElem.find('input[name="entry_date"]').handleDtpicker('setDate', makeDateObject(mainItem.entry_date));
+                    editElem.find('input[name="bank_name"]').val(mainItem.bank_name);
+                    editElem.find('input[name="bank_account"]').val(mainItem.bank_account);
+                    editElem.find('input[name="bank_user"]').val(mainItem.bank_user);
+
+                    editElem.find('input[name="price"]').val(mainItem.price);
+                    editElem.find('select[name="type"]').val(mainItem.type);
+                    editElem.find('select[name="project_id"]').val(mainItem.project_id);
+
+                    editElem.find('textarea[name="description"]').val(mainItem.description);
+
+                    editElem.find('input[name="paid_date"]').handleDtpicker('setDate', makeDateObject(mainItem.paid_date));
+
                     tree_select();
                 }
             }

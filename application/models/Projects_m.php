@@ -152,6 +152,16 @@ class Projects_m extends MY_Model
         return $query->result();
     }
 
+    public function get_where_field($arr = array(), $fields = array())
+    {
+        $this->db->select($fields);
+        $this->db->from($this->_table_name);
+        $this->db->where($arr)
+            ->order_by($this->_order_by);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function get_where_in($key, $arr = array())
     {
         if ($arr == array()) return $arr;
