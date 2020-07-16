@@ -516,6 +516,8 @@
 
         function goToPreviousPage() {
             $('input[name="search_keyword"]').val(setPreviousKeyword());
+            $('input[name="range_from"]').val(setRangeFrom());
+            $('input[name="range_to"]').val(setRangeTo());
             $('.useraction-form').attr('action', setSearchKeyword());
             $('.useraction-form').submit();
         }

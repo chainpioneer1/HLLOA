@@ -193,7 +193,16 @@
         function viewItem(elem) {
             var that = $(elem);
             var id = that.attr('data-id');
+            var fromDate = that.attr('data-from-date').split(/-/g);
+            var rangeFrom = fromDate[0]+'-'+makeNDigit(fromDate[1])+'-01 00:00:00';
+            var rangeTo = makeDateObject(rangeFrom);
+            rangeTo.setMonth(rangeTo.getMonth()+1);
+            rangeTo = makeTimeString(rangeTo);
             setSearchKeyword(window.location);
+            setRangeFrom('<?= $range_from ?>');
+            setRangeTo('<?= $range_to ?>');
+            $('input[name="range_from"]').val(rangeFrom);
+            $('input[name="range_to"]').val(rangeTo);
             $('.useraction-form').attr('action', baseURL + 'tasks/useraction/3/' + id);
             $('.useraction-form').submit();
         }

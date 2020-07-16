@@ -231,6 +231,54 @@ class Users extends CI_Controller
         }
     }
 
+    public function output_content_action($items, $startNo = 0)
+    {
+        $userId = $this->session->userdata("_userid");
+        $statusStr = ["离职", "在职"];
+        $output = '';
+        $i = 0;
+        foreach ($items as $unit):
+            $i++;
+            $startNo++;
+            $editable = ($unit->status == 0);
+            $avatar = base_url('assets/images/icon-profile.png');
+            $colorStyle = '';
+            $score = $unit->user_score;
+            $standard = $unit->standard_factor;
+            $profit = floatval($unit->rank_factor);
+            if ($score > $standard - 5) {
+                $profit *= floatval($score - $standard);
+            } else {
+                $profit *= floatval($score - ($standard - 5));
+            }
+
+            if ($unit->avatar) {
+                $avatar = base_url() . $unit->avatar;
+                $colorStyle = 'background-color: white;';
+            }
+            $output .= '<tr>';
+            $output .= '<td>' . sprintf("%02d", $startNo) . '</td>';
+            $output .= '<td><div class="user-avatar" '
+                . ' style="background-image:url(' . $avatar . ');' . $colorStyle . '">'
+                . '</div></td>';
+            $output .= '<td>' . $unit->name . '</td>';
+            $output .= '<td>' . $unit->position . '</td>';
+            $output .= '<td>' . $unit->part . '</td>';
+            $output .= '<td>' . $unit->task_completed . '</td>';
+            $output .= '<td>' . $score . '</td>';
+//            $output .= '<td>' . $standard . '</td>';
+//            $output .= '<td>' . $profit . '</td>';
+            $output .= '<td>';
+            $output .= '<div class="btn-rect btn-orange" onclick="viewItem(this);"'
+                . ' data-id="' . $unit->id . '" '
+                . ' data-from-date="' . $unit->task_completed . '" '
+                . '>本月任务详情</div>';
+            $output .= '</td>';
+            $output .= '</tr>';
+        endforeach;
+        return $output;
+    }
+
     public function downloadAction()
     {
         $ret = array(
@@ -310,9 +358,7 @@ class Users extends CI_Controller
 
         $resultList = array();
         foreach ($list as $item) {
-            $taskList = $this->getUserAction(3, $item->id, array(
-                'range_from' => $filter['range_from'], 'range_to' => $filter['range_to']
-            ));
+            $taskList = $this->getUserAction(3, $item->id, $item->task_completed);
             $item->details = $taskList;
             array_push($resultList, $item);
         }
@@ -321,10 +367,13 @@ class Users extends CI_Controller
         echo json_encode($ret);
     }
 
-    public function getUserAction($menu = 3, $worker = 0, $filter = array())
+    public function getUserAction($menu = 3, $worker = 0, $rangeFrom)
     {
         $progress = 3;
         $model = 'tbl_tasks';
+        $filter = array();
+        $filter['range_from'] = $this->users_m->add_date($rangeFrom, 0);
+        $filter['range_to'] = $this->users_m->add_date($rangeFrom, 1);
         $queryStr = array(
             'range_from' => $filter['range_from'],
             'range_to' => $filter['range_to'],
@@ -349,53 +398,6 @@ class Users extends CI_Controller
             $item->score = $item->user_score;
         }
         return $list;
-    }
-
-    public function output_content_action($items, $startNo = 0)
-    {
-        $userId = $this->session->userdata("_userid");
-        $statusStr = ["离职", "在职"];
-        $output = '';
-        $i = 0;
-        foreach ($items as $unit):
-            $i++;
-            $startNo++;
-            $editable = ($unit->status == 0);
-            $avatar = base_url('assets/images/icon-profile.png');
-            $colorStyle = '';
-            $score = $unit->user_score;
-            $standard = $unit->standard_factor;
-            $profit = floatval($unit->rank_factor);
-            if ($score > $standard - 5) {
-                $profit *= floatval($score - $standard);
-            } else {
-                $profit *= floatval($score - ($standard - 5));
-            }
-
-            if ($unit->avatar) {
-                $avatar = base_url() . $unit->avatar;
-                $colorStyle = 'background-color: white;';
-            }
-            $output .= '<tr>';
-            $output .= '<td>' . sprintf("%02d", $startNo) . '</td>';
-            $output .= '<td><div class="user-avatar" '
-                . ' style="background-image:url(' . $avatar . ');' . $colorStyle . '">'
-                . '</div></td>';
-            $output .= '<td>' . $unit->name . '</td>';
-            $output .= '<td>' . $unit->position . '</td>';
-            $output .= '<td>' . $unit->part . '</td>';
-            $output .= '<td>' . $unit->task_completed . '</td>';
-            $output .= '<td>' . $score . '</td>';
-//            $output .= '<td>' . $standard . '</td>';
-//            $output .= '<td>' . $profit . '</td>';
-            $output .= '<td>';
-            $output .= '<div class="btn-rect btn-orange" onclick="viewItem(this);"'
-                . ' data-id="' . $unit->id . '" '
-                . '>本月任务详情</div>';
-            $output .= '</td>';
-            $output .= '</tr>';
-        endforeach;
-        return $output;
     }
 
     public function profile()

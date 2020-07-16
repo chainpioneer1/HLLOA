@@ -164,7 +164,7 @@ class Users_m extends MY_Model
             if ($i > 0) $unionQuery .= " union ";
             $unionQuery .= " (" . $this->db->get_compiled_select() . ") ";
         }
-        $unionQuery.=") as tbl_all";
+        $unionQuery .= ") as tbl_all";
         $this->db->select('*');
         $this->db->from($unionQuery);
         $this->db->order_by("tbl_all.task_completed desc");
@@ -219,7 +219,7 @@ class Users_m extends MY_Model
             if ($i > 0) $unionQuery .= " union \n";
             $unionQuery .= " (" . $this->db->get_compiled_select() . ")";
         }
-        $unionQuery.=") as tbl_all";
+        $unionQuery .= ") as tbl_all";
         $this->db->select('*');
         $this->db->from($unionQuery);
         $this->db->order_by("tbl_all.task_completed desc");
@@ -228,7 +228,7 @@ class Users_m extends MY_Model
         return $query->num_rows();
     }
 
-    function add_date($orgDate, $mth)
+    function add_date($orgDate, $mth = 0)
     {
         $cd = strtotime($orgDate);
         $retDAY = date('Y-m-d H:i:s',

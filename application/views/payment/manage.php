@@ -339,6 +339,32 @@
             );
         }
 
+        function deleteItem(elem) {
+            var that = $(elem);
+            var id = that.attr('data-id');
+            showConfirm(baseURL + 'assets/images/modal/modal-confirm-top.png',
+                '', '您确定要删除这个收支录入吗?', function () {
+                    $.ajax({
+                        type: "post",
+                        url: _apiRoot + "deleteItem",
+                        dataType: "json",
+                        data: {id: id},
+                        success: function (res) {
+                            if (res.status == 'success') {
+                                showNotify('<i class="fa fa-check"></i> 删除成功');
+                                setTimeout(function () {
+                                    location.reload();
+                                }, 1000);
+                                // location.reload();
+                            } else { //failed
+                                alert(res.data);
+                            }
+                        }
+                    });
+                }
+            );
+        }
+
     </script>
     <!--    Excel Downloading Parts -->
     <!--    <script src="--><? //= base_url('assets/plugins/export_table/jquery-3.3.1.js') ?><!--"></script>-->

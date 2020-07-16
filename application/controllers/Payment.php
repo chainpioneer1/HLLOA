@@ -445,6 +445,7 @@ class Payment extends CI_Controller
         echo json_encode($ret);
     }
 
+
     public function updateItem()
     {
         $ret = array(
@@ -583,7 +584,7 @@ class Payment extends CI_Controller
                 echo json_encode($ret);
                 return;
             }
-            $result = $this->mainModel->delete($id);
+            $result = $this->payment_m->delete($id);
             $ret['data'] = '操作成功';
             $ret['status'] = 'success';
         }
