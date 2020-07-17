@@ -346,14 +346,15 @@
                 if (!mainItem.worker) editElem.find('.input-area:nth-child(2)').hide();
 
                 var project_worker = _userList.filter(function (a) {
-                    return a.id = mainItem.project_worker_id;
+                    return a.id == mainItem.project_worker_id;
                 })
+                console.log(project_worker, mainItem.project_worker_id);
                 if (project_worker.length > 0) project_worker = project_worker[0];
                 else project_worker = {name: ''};
                 mainItem.project_worker = project_worker;
 
                 var project_author = _userList.filter(function (a) {
-                    return a.id = mainItem.project_author_id;
+                    return a.id == mainItem.project_author_id;
                 })
                 if (project_author.length > 0) project_author = project_worker[0];
                 else project_author = {name: ''};
