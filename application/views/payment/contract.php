@@ -425,7 +425,7 @@
                                 });
                                 $('.content-area table td > div.btn-rect[data-id="'+_editItemId+'"]')
                                     .parent().parent().find('.paid_price')
-                                    .html(res.data.paid_price);
+                                    .html((res.data.paid_price*1).toFixed(2));
                                 makeDetailTable(_editItemId);
                                 showNotify('<i class="fa fa-check"></i> 添加记录成功');
                                 // location.reload();
