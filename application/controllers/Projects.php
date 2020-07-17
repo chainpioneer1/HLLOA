@@ -790,29 +790,29 @@ class Projects extends CI_Controller
         $user_id = $this->session->userdata('_userid');
         if ($_POST) {
             $pid = $this->input->post('pid');
-            $updateItem = $this->mainModel->get_where(array('pid' => $pid));
-            $priceDetail = json_decode($updateItem[0]->price_detail);
-            array_push($priceDetail, array(
+            $oldItem = $this->mainModel->get_where(array('pid' => $pid));
+            $priceDetail = json_decode($oldItem[0]->price_detail);
+            array_push($priceDetail, [
                 'price' => $this->input->post('price'),
                 'description' => $this->input->post('description'),
                 'created' => date('Y-m-d H:i:s')
-            ));
+            ]);
+            $priceDetail = json_decode(json_encode($priceDetail));
             $totalScore = 0;
             $totalPrice = 0;
-            foreach($priceDetail as $item){
-                $totalPrice += $item->price;
+            foreach ($priceDetail as $item) {
+                $totalPrice += floatval($item->price);
             }
-            $totalScore = $totalPrice / 150;
-
+            $totalScore = intval($totalPrice / 150 * 100) / 100;
             $priceDetail = json_encode($priceDetail);
-            foreach ($updateItem as $item) {
+            foreach ($oldItem as $item) {
                 $this->mainModel->edit(array(
                     'price_detail' => $priceDetail,
                     'init_price' => $totalPrice,
                     'total_score' => $totalScore,
                 ), $item->id);
             }
-            $ret['data'] = $priceDetail;
+            $ret['data'] = array('price_detail' => $priceDetail, 'total_score' => $totalScore);
             $ret['status'] = 'success';
         }
 

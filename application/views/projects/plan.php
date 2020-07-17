@@ -376,7 +376,7 @@
                     '<td>' + mainItem.no + '</td>' +
                     '<td>' + mainItem.title + '</td>' +
                     '<td>' + priceTotal + '</td>' +
-                    '<td>' + (priceTotal/150).toFixed(2) + '</td>' +
+                    '<td>' + (priceTotal / 150).toFixed(2) + '</td>' +
                     '<td>' + (mainItem.worker ? mainItem.worker : '') + '</td>' +
                     '<td>' + contract.title + '</td>' +
                     '<td>' + contract.no + '</td>' +
@@ -439,9 +439,11 @@
                             if (res.status == 'success') {
                                 _mainList.filter(function (a) {
                                     if (a.pid == pid) {
-                                        a.price_detail = res.data;
+                                        a.price_detail = res.data.price_detail;
+                                        a.total_score = res.data.total_score;
                                     }
                                 });
+                                $('.btn-transparent[data-pid="' + _editItemId + '"]').next().html((res.data.total_score * 1).toFixed(2));
                                 makeDetailTable(pid);
                                 showNotify('<i class="fa fa-check"></i> 添加计划成功');
                                 // location.reload();
