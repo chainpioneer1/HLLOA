@@ -741,7 +741,8 @@ class Projects extends CI_Controller
                 $editArr['no'] = $this->input->post('no');
                 $editArr['title'] = $this->input->post('title');
                 $editArr['contract_id'] = $this->input->post('contract_id');
-                $editArr['deadline'] = $this->input->post('deadline');
+                if ($this->input->post('deadline'))
+                    $editArr['deadline'] = $this->input->post('deadline');
                 $editArr['total_score'] = '0';
                 $editArr['price_detail'] = '[]';
                 $editArr['published_at'] = date("Y-m-d H:i:s");
@@ -754,14 +755,15 @@ class Projects extends CI_Controller
                 $updateItem = $this->mainModel->get_where(array('pid' => $id));
                 if ($updateItem != null) {
                     $progress = $updateItem[0]->progress;
-                    if ($progress == 0) {
+                    if ($progress == 0 || $progress == 1) {
                         $editArr['no'] = $this->input->post('no');
                         $editArr['title'] = $this->input->post('title');
-                        $editArr['contract_id'] = $this->input->post('contract_id');
+                        if ($this->input->post('contract_id'))
+                            $editArr['contract_id'] = $this->input->post('contract_id');
                         $editArr['deadline'] = $this->input->post('deadline');
                         $editArr['update_time'] = date("Y-m-d H:i:s");
                     }
-                    $result = $this->mainModel->edit($editArr, $id);
+                    if ($editArr) $result = $this->mainModel->edit($editArr, $id);
                 }
             }
             if ($result > 0) {

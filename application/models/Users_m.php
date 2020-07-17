@@ -40,6 +40,7 @@ class Users_m extends MY_Model
     public function getItemsByPage($arr = array(), $pageId, $cntPerPage, $queryStr = '')
     {
         $this->db->select("{$this->_table_name}.*");
+        $this->db->select("{$this->_table_name}.id as id");
         $this->db->select("concat( '', '', {$this->_table_name}.name) as name");
         $this->db->select("project_score as user_score");
         $this->db->select("tbl_user_part.title as part");
