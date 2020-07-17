@@ -309,10 +309,10 @@
             editElem.fadeIn('fast');
         }
 
-        function showData(elem){
+        function showData(elem) {
             var that = $(elem);
             var id = that.attr('data-id');
-            window.open(baseURL + 'payment/viewData/'+id);
+            window.open(baseURL + 'payment/viewData/' + id);
         }
 
         function makeDetailTable(id) {
@@ -350,7 +350,7 @@
                 var statusStr = _statusList.filter(function (a) {
                     return a.id == mainItem.progress;
                 });
-                if(statusStr.length) statusStr = statusStr[0].title;
+                if (statusStr.length) statusStr = statusStr[0].title;
                 else statusStr = '';
                 var summary_html = '<tr>' +
                     '<td>' + mainItem.no + '</td>' +
@@ -419,9 +419,13 @@
                             if (res.status == 'success') {
                                 _mainList.filter(function (a) {
                                     if (a.id == _editItemId) {
-                                        a.price_detail = res.data;
+                                        a.price_detail = res.data.price_detail;
+                                        a.paid_price = res.data.paid_price;
                                     }
                                 });
+                                $('.content-area td .btn-rect[data-id="29]"')
+                                    .parent().parent().find('.paid_price')
+                                    .html(res.data.paid_price);
                                 makeDetailTable(_editItemId);
                                 showNotify('<i class="fa fa-check"></i> 添加记录成功');
                                 // location.reload();
@@ -487,7 +491,7 @@
                     editElem.find('input[type="file"]').val('');
                     var ext = getFiletypeFromURL(mainItem.data);
                     editElem.find('.doc_preview').removeAttr('data-type');
-                    if(ext == 'pdf') editElem.find('.doc_preview').attr('data-type', ext);
+                    if (ext == 'pdf') editElem.find('.doc_preview').attr('data-type', ext);
                     editElem.find('.doc_preview').attr('data-sel', 1);
                 }
             }
@@ -585,46 +589,46 @@
 
         $('input[type="file"]')
             .on('click', function (object) {
-            var that = $(this);
-            var name = that.attr('name');
-            that.val('');
-            that.parent().find('div[data-name="' + name + '"]').removeAttr('data-sel');
-        })
+                var that = $(this);
+                var name = that.attr('name');
+                that.val('');
+                that.parent().find('div[data-name="' + name + '"]').removeAttr('data-sel');
+            })
             .on('change', function () {
-            var name = $(this).attr('name');
-            var totalStr = this.files[0].name;
-            var realNameStr = getFilenameFromURL(totalStr);
-            var type = getFiletypeFromURL(realNameStr);
-            if (name == 'imgFile') {
-                if (type != 'jpg' && type != 'jpeg'
-                    && type != 'png' && type != 'bmp' && type != 'gif') {
-                    alert('图片格式不正确..');
-                    return;
+                var name = $(this).attr('name');
+                var totalStr = this.files[0].name;
+                var realNameStr = getFilenameFromURL(totalStr);
+                var type = getFiletypeFromURL(realNameStr);
+                if (name == 'imgFile') {
+                    if (type != 'jpg' && type != 'jpeg'
+                        && type != 'png' && type != 'bmp' && type != 'gif') {
+                        alert('图片格式不正确..');
+                        return;
+                    }
+                } else if (name == 'docFile') {
+                    if (type != 'doc' && type != 'docx' && type != 'pdf') {
+                        alert('文档格式不正确..');
+                        return;
+                    }
+                    var previewer = $('div.doc_preview[data-name="' + name + '"]');
+                    previewer.attr('data-sel', 1);
+                    previewer.attr('data-type', type);
+                } else {
+                    if (type != 'jpg' && type != 'jpeg' && type != 'png' && type != 'bmp' && type != 'gif'
+                        && type != 'docx' && type != 'doc'
+                        && type != 'ppt' && type != 'pptx'
+                        && type != 'pdf'
+                        && type != 'html' && type != 'htm'
+                        && type != 'mp4' && type != 'mp3'
+                        && type != 'zip') {
+                        alert('课程内容格式不正确..');
+                        return;
+                    }
                 }
-            } else if (name == 'docFile') {
-                if (type != 'doc' && type != 'docx' && type != 'pdf') {
-                    alert('文档格式不正确..');
-                    return;
-                }
-                var previewer = $('div.doc_preview[data-name="' + name + '"]');
-                previewer.attr('data-sel', 1);
-                previewer.attr('data-type', type);
-            } else {
-                if (type != 'jpg' && type != 'jpeg' && type != 'png' && type != 'bmp' && type != 'gif'
-                    && type != 'docx' && type != 'doc'
-                    && type != 'ppt' && type != 'pptx'
-                    && type != 'pdf'
-                    && type != 'html' && type != 'htm'
-                    && type != 'mp4' && type != 'mp3'
-                    && type != 'zip') {
-                    alert('课程内容格式不正确..');
-                    return;
-                }
-            }
-            $('.name-view[data-name="' + name + '"]').html(realNameStr);
-            $('input[data-name="' + name + '"]').val(type);
-            preview_image(name, this.files[0]);
-        });
+                $('.name-view[data-name="' + name + '"]').html(realNameStr);
+                $('input[data-name="' + name + '"]').val(type);
+                preview_image(name, this.files[0]);
+            });
 
     </script>
 </div>

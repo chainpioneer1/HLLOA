@@ -90,7 +90,7 @@ class Payment extends CI_Controller
             $output .= '<td>' . $unit->no . '</td>';
             $output .= '<td>' . $unit->title . '</td>';
             $output .= '<td>' . $unit->total_price . '</td>';
-            $output .= '<td>' . $unit->paid_price . '</td>';
+            $output .= '<td class="paid_price">' . $unit->paid_price . '</td>';
             $output .= '<td>' . $unit->client_name . '</td>';
             $output .= '<td>' . $unit->project_worker . '</td>';
             $output .= '<td>' . $unit->expire_date . '</td>';
@@ -440,7 +440,7 @@ class Payment extends CI_Controller
                     'paid_price' => $totalPrice,
                 ), $item->id);
             }
-            $ret['data'] = $priceDetail;
+            $ret['data'] = array('price_detail' => $priceDetail, 'paid_price' => $totalPrice);
             $ret['status'] = 'success';
         }
 
