@@ -320,6 +320,7 @@
         var _progress = parseInt('<?= $progress ?>');
         var _titleStr = ['未开始', '进行中', '待验收', '已完成'];
         var _editItemId = 0;
+        var _remainedScore = 0;
 
         function searchConfig() {
             if (_filterInfo.queryStr) $('input[name="search_keyword"]').val(_filterInfo.queryStr);
@@ -484,7 +485,8 @@
                     for (var i = 0; i < allTasks.length; i++) {
                         taskScore += allTasks[i].score * 1;
                     }
-                    editElem.find('div.txt-red span').html(mainItem.total_score - taskScore);
+                    _remainedScore = Math.round((mainItem.total_score - taskScore) * 100) / 100;
+                    editElem.find('div.txt-red span').html(_remainedScore.toFixed(2));
 
                     // editElem.find('input[name="no"]').val(mainItem.no);
                     editElem.find('label[name="project"]').html(mainItem.title + ' (' + mainItem.no + ')');
@@ -515,6 +517,7 @@
             if (!noElem.val()) warn = '请输入任务编号';
             else if (!titleElem.val()) warn = '请输入任务名称';
             else if (!scoreElem.val()) warn = '请输入任务分数';
+            else if (parseFloat(scoreElem.val()) > _remainedScore) warn = '任务分数无效';
 
             if (warn != '') {
                 showConfirm(baseURL + 'assets/images/modal/modal-confirm-top.png',

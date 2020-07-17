@@ -325,7 +325,7 @@
 
                 var priceDetail = mainItem.price_detail;
                 if (priceDetail) priceDetail = JSON.parse(priceDetail);
-                else priceDetail = '[]';
+                else priceDetail = [];
                 var priceTotal = 0;
                 var detail_html = '';
                 for (var i = 0; i < priceDetail.length; i++) {
