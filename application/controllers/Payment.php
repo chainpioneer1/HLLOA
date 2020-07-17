@@ -389,6 +389,7 @@ class Payment extends CI_Controller
             }
             if ($id == 0) {
                 $editArr['price_detail'] = '[]';
+                $editArr['paid_price'] = 0;
                 $editArr['create_time'] = date("Y-m-d H:i:s");
                 $result = $this->mainModel->add($editArr);
             } else {
@@ -426,6 +427,7 @@ class Payment extends CI_Controller
                 'paid' => $this->input->post('paid'),
                 'created' => date('Y-m-d H:i:s')
             ));
+            $priceDetail = json_decode(json_encode($priceDetail));
             $totalPrice = 0;
             foreach ($priceDetail as $item) {
                 $totalPrice += $item->price;
