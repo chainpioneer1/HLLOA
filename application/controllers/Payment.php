@@ -68,7 +68,7 @@ class Payment extends CI_Controller
 
         $this->data["subview"] = $apiRoot;
 
-        if (!$this->checkRole(11)) {
+        if (!$this->checkRole(17)) {
             $this->load->view('_layout_error', $this->data);
         } else {
             $this->load->view('_layout_main', $this->data);
@@ -223,7 +223,7 @@ class Payment extends CI_Controller
         $resultList = $list;
         $this->data["tbl_content"] = $this->output_content_manage($resultList, $startNo);
 
-        if (!$this->checkRole(13)) {
+        if (!$this->checkRole(18)) {
             $this->load->view('_layout_error', $this->data);
         } else {
             $this->load->view('_layout_main', $this->data);
@@ -410,7 +410,7 @@ class Payment extends CI_Controller
             'data' => '操作失败',
             'status' => 'fail'
         );
-        if (!$this->checkRole(15)) {
+        if (!$this->checkRole(17)) {
             $ret['data'] = '用户权限错误';
             echo json_encode($ret);
             return;
