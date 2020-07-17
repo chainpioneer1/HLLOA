@@ -423,7 +423,7 @@
                                         a.paid_price = res.data.paid_price;
                                     }
                                 });
-                                $('.content-area td .btn-rect[data-id="29]"')
+                                $('.content-area table td > div.btn-rect[data-id="'+_editItemId+'"]')
                                     .parent().parent().find('.paid_price')
                                     .html(res.data.paid_price);
                                 makeDetailTable(_editItemId);
