@@ -51,8 +51,8 @@
                     <th>序号</th>
                     <th>合同编号</th>
                     <th>合同名称</th>
-                    <th>合同金额（￥）</th>
-                    <th>已回款金额（￥）</th>
+                    <th>合同金额(￥)</th>
+                    <th>已回款金额(￥)</th>
                     <th>客户名称</th>
                     <th>项目负责人</th>
                     <th>到期日期</th>
@@ -94,8 +94,8 @@
                 <tr>
                     <th>合同编号</th>
                     <th>合同名称</th>
-                    <th>合同金额（￥）</th>
-                    <th>已回款金额（￥）</th>
+                    <th>合同金额(￥)</th>
+                    <th>已回款金额(￥)</th>
                     <th>客户名称</th>
                     <th>项目负责人</th>
                     <th width="100">到期日期</th>
@@ -114,7 +114,7 @@
                     <th width="100">序号</th>
                     <th width="200">合同编号</th>
                     <th>合同名称</th>
-                    <th width="200">回款金额（￥）</th>
+                    <th width="200">回款金额(￥)</th>
                     <th width="200">回款日期</th>
                     <th width="200">创建时间</th>
                     <th width="150">创建人</th>
@@ -513,7 +513,7 @@
             fdata.append("id", _editItemId);
             fdata.append("type", _type);
             $.ajax({
-                url: _apiRoot + "updateContract",
+                url: _apiRoot + "updateItem",
                 type: "POST",
                 data: fdata,
                 contentType: false,

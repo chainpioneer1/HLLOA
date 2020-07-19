@@ -39,6 +39,9 @@
     </form>
     <div class="content-area">
         <div class="content-title">任务列表
+            <div>
+                <div class="btn-circle btn-blue" onclick="downloadItems();"><i class="fa fa-download"></i> 导出列表</div>
+            </div>
             <!--            <div>-->
             <!--                <div class="btn-circle btn-blue" onclick="editItem();"><i class="fa fa-plus"></i>新增任务</div>-->
             <!--            </div>-->
@@ -219,6 +222,12 @@
         <input name="range_from" style="display: none!important;" value="<?= $range_from; ?>"/>
         <input name="range_to" style="display: none!important;" value="<?= $range_to; ?>"/>
     </form>
+    <div class="exportTbl" style="display: none;">
+        <table id="exportTbl" data-file="Table">
+            <thead></thead>
+            <tbody></tbody>
+        </table>
+    </div>
 </div>
 
 
@@ -241,6 +250,7 @@
         var _apiRoot = baseURL + "<?=$apiRoot?>".split('/')[0] + '/';
         var _navTitle = '<?= $title; ?>';
         var _project = '<?= $project; ?>';
+        var _projectTitle = '<?= $projectTitle; ?>';
         var _progress = parseInt('<?= $progress; ?>');
         var _titleStr = ['全部', '未接收', '进行中', '待验收', '已完成'];
         var _editItemId = 0;
@@ -258,7 +268,7 @@
                     var progress = parseInt(that.attr('data-progress'));
                     if (progress !== _progress) {
                         $('input[name="_progress"]').val(progress);
-                        location.replace(_apiRoot + 'viewlist/<?= $menu ?>/<?= $project?>/' + progress);
+                        location.replace(_apiRoot + 'viewlists/<?= $menu ?>/<?= $project?>/' + progress);
                     }
                 });
                 if (idx == 0) {
@@ -487,4 +497,135 @@
         }
 
     </script>
+
+
+    <!--    Excel Downloading Parts -->
+    <!--    <script src="--><? //= base_url('assets/js/export_table/jquery-3.3.1.js') ?><!--"></script>-->
+    <script src="<?= base_url('assets/js/export_table/jquery.dataTables.min.js') ?>"></script>
+    <script src="<?= base_url('assets/js/export_table/dataTables.buttons.min.js') ?>"></script>
+    <script src="<?= base_url('assets/js/export_table/jszip.min.js') ?>"></script>
+    <script src="<?= base_url('assets/js/export_table/pdfmake.min.js') ?>"></script>
+    <script src="<?= base_url('assets/js/export_table/vfs_fonts.js') ?>"></script>
+    <script src="<?= base_url('assets/js/export_table/buttons.html5.min.js') ?>"></script>
+    <script>
+        function downloadItems() {
+            if (_isProcessing) return;
+            _isProcessing = true;
+            var frmData = new FormData($('.search-form')[0]);
+            var ajaxURL = $('.search-form').attr('action');
+            ajaxURL = ajaxURL.replace(/viewlists/g, 'downloadViewlist');
+            $.ajax({
+                type: "post",
+                url: ajaxURL,
+                contentType: false,
+                cache: false,
+                processData: false,
+                data: frmData,
+                success: function (res) {
+                    try {
+                        res = JSON.parse(res)
+                    } catch (e) {
+                        alert(JSON.stringify(e));
+                        return;
+                    }
+                    if (res.status == 'success') {
+                        var progressStr = ["未接收", "进行中", "待验收", "已完成"];
+                        var headers = [
+                            '序号', '任务编号', '任务名称', '任务负责人', '任务分值',
+                            '所属项目', '项目负责人', '任务状态',
+                            '发布时间', '接收时间', '提交时间',
+                            '验收时间', '截止时间'
+                        ];
+                        var datas = [];
+                        var retData = res.data;
+                        var scoreSum = 0;
+                        for (var i = 0; i < retData.length; i++) {
+                            var item = retData[i];
+                            scoreSum += item.score * 1;
+                            datas.push([
+                                i + 1, item.no, item.title, item.worker, item.score,
+                                item.project, item.project_worker, progressStr[item.progress],
+                                item.published_at, item.started_at, item.provided_at,
+                                item.completed_at, item.deadline
+                            ]);
+                            if (i == retData.length - 1) {
+                                datas.push([
+                                    '', '', '总计', '', Math.round(scoreSum * 100) / 100,
+                                    '', '', '',
+                                    '', '', '',
+                                    '', ''
+                                ])
+                            }
+                        }
+                        initTableData(headers, datas);
+                        prepareExport2Excel(_projectTitle + '项目 - 任务列表');
+                        export2Excel();
+                    } else { //failed
+                        alert(res.data);
+                    }
+                    _isProcessing = false;
+                },
+                fail: function () {
+                    _isProcessing = false;
+                }
+            });
+        }
+
+        function initTableData(headerList, dataList) {
+            if (!headerList) headerList = [];
+            if (!dataList) dataList = [];
+            var headerHtml = '';
+            headerHtml += '<tr>';
+            for (var i = 0; i < headerList.length; i++) {
+                var item = headerList[i];
+                headerHtml += '<th>' + item + '</th>';
+            }
+            headerHtml += '</tr>';
+
+            var dataHtml = '';
+            for (var i = 0; i < dataList.length; i++) {
+                var item = dataList[i];
+                dataHtml += '<tr>';
+                for (var j = 0; j < headerList.length; j++) {
+                    dataHtml += '<td>' + item[j] + '</td>';
+                }
+                dataHtml += '</tr>';
+            }
+            if (headerHtml == '') headerHtml = '<tr><th></th></tr>';
+            if (dataHtml == '') dataHtml = '<tr><td></td></tr>';
+            $('.exportTbl').html(
+                '<table id="exportTbl" data-file="统计数据">' +
+                '<thead>' + headerHtml + '</thead>' +
+                '<tbody>' + dataHtml + '</tbody>' +
+                '</table>'
+            );
+        }
+
+        function prepareExport2Excel(title) {
+            if (!title) title = $('#exportTbl').attr('data-file');
+            $('#exportTbl').DataTable({
+                dom: 'Bfrtip',
+                // buttons: ['copyHtml5', 'excelHtml5', 'csvHtml5', 'pdfHtml5']
+                buttons: [{
+                    extend: 'excelHtml5',
+                    text: 'Export Excel',
+                    extension: '.xlsx',
+                    autoFilter: true,
+                    filename: title
+                }]
+            });
+        }
+
+        function export2Excel(table) {
+            setTimeout(function () {
+                if (!table)
+                    $('.exportTbl .dt-button.buttons-excel').click();
+                else
+                    table.buttons.exportData({})
+            }, 5);
+        }
+
+        $('.scripts').remove();
+    </script>
+    <!--    Excel Downloading Parts end-->
 </div>

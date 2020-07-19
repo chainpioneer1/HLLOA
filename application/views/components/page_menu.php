@@ -54,16 +54,16 @@ $_permission = json_decode($this->session->userdata('_permission'));
         <div class="side-menuitem" data-id="16" data-target=""><span class="icon"></span> 财务管理</div>
     <?php }
     if ($_permission->m17 == 1) { ?>
-        <div class="side-menuitem" data-id="17" data-target="payment" data-parent="16"><span></span>合同管理</div>
+        <div class="side-menuitem" data-id="17" data-target="contracts" data-parent="16"><span></span>合同管理</div>
     <?php }
     if ($_permission->m18 == 1) { ?>
-        <div class="side-menuitem" data-id="18" data-target="payment/manage" data-parent="16"><span></span>公司收支录入</div>
+        <div class="side-menuitem" data-id="18" data-target="payment" data-parent="16"><span></span>公司收支录入</div>
     <?php }
     if ($_permission->m19 == 1) { ?>
-        <div class="side-menuitem" data-id="19" data-target="userranks" data-parent="16"><span></span>公司收支统计</div>
+        <div class="side-menuitem" data-id="19" data-target="payment/companydata" data-parent="16"><span></span>公司收支统计</div>
     <?php }
     if ($_permission->m20 == 1) { ?>
-        <div class="side-menuitem" data-id="20" data-target="users" data-parent="16"><span></span>项目收支统计</div>
+        <div class="side-menuitem" data-id="20" data-target="payment/projectdata" data-parent="16"><span></span>项目收支统计</div>
     <?php } ?>
 </div>
 <div class="scripts">

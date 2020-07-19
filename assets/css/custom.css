@@ -51,8 +51,8 @@ input[type=number] {
 }
 
 iframe {
-    border:none;
-    outline:none;
+    border: none;
+    outline: none;
     background-color: transparent;
     width: 100%;
     height: 100%;
@@ -61,6 +61,7 @@ iframe {
     -ms-user-select: none;
     user-select: none;
 }
+
 /********** input number hide spinners end **********************/
 
 .scripts {
@@ -780,6 +781,7 @@ div.content-title {
     justify-content: flex-start;
     align-items: center;
 }
+
 div.content-title > span {
     font-size: 22px;
 }
@@ -913,6 +915,7 @@ div.edit-container {
     margin: 0;
     /*border:none;*/
 }
+
 .modal-body .input-area div.input-group-addon {
     top: 25px;
 }
@@ -1356,16 +1359,17 @@ div.doc_preview {
     display: none;
 }
 
-div.doc_preview{
+div.doc_preview {
     -webkit-background-size: 49%;
     background-size: 49%;
     background-position: center;
 }
 
-.doc_preview[data-sel="1"]{
+.doc_preview[data-sel="1"] {
     background-image: url(../images/icon/icon-post-doc.png);
 }
-.doc_preview[data-sel="1"][data-type="pdf"]{
+
+.doc_preview[data-sel="1"][data-type="pdf"] {
     background-image: url(../images/icon/icon-post-pdf.png);
 }
 
@@ -1468,4 +1472,69 @@ div.doc_preview{
     border: none;
     outline: none;
     text-align: center;
+}
+
+.payment-info {
+    position: relative;
+    width: 100%;
+    display: flex;
+}
+
+.info-item {
+    position: relative;
+    flex: auto;
+    margin: 20px 15px;
+    background-image: url(../images/payment/info-bg.png);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    height: 150px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    text-align: left;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 5px 5px 15px 0 rgba(0,0,0,.3);
+}
+
+.info-item:first-child {
+    margin-left: 40px;
+}
+
+.info-item:last-child {
+    margin-right: 40px;
+}
+
+.info-item div {
+    flex: auto;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    font-size: 24px;
+}
+
+.info-item div:last-child {
+    align-items: flex-end;
+    font-size: 36px;
+}
+
+.info-item iframe {
+    border: none;
+    outline: none;
+}
+
+.info-item.info-weather,
+.info-item.info-graph{
+    background-color:white;
+    background-image: none;
+    padding: 20px;
+    flex: 50%;
+    height: 263px;
+}
+
+.info-item.info-graph{
+    flex: 55%;
+    height: 450px;
 }

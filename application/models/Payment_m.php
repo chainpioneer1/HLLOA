@@ -44,6 +44,11 @@ class Payment_m extends MY_Model
         $this->db->select("tbl_projects.id as project_id");
         $this->db->select("tbl_projects.no as project_no");
         $this->db->select("tbl_projects.title as project");
+        $this->db->select("tbl_projects.deadline as project_deadline");
+        $this->db->select("tbl_projects.completed_at as project_completed_at");
+        $this->db->select("tbl_projects.progress as project_progress");
+        $this->db->select("tbl_projects.init_price as project_price");
+        $this->db->select("tbl_contracts.total_price as contract_price");
         $this->db->where($arr);
         if ($queryStr != '') {
             $this->db->where(
@@ -56,7 +61,8 @@ class Payment_m extends MY_Model
             );
         }
         $this->db->from($this->_table_name)
-            ->join("tbl_projects", "{$this->_table_name}.project_id = tbl_projects.id", "left");
+            ->join("tbl_projects", "{$this->_table_name}.project_id = tbl_projects.id", "left")
+            ->join("tbl_contracts", "tbl_projects.contract_id = tbl_contracts.id", "left");
 //        $this->db->where("tbl_user_position.status", 1)
 //            ->where("tbl_user_part.status", 1)
 //            ->where("tbl_user_rank.status", 1);
@@ -83,7 +89,8 @@ class Payment_m extends MY_Model
             );
         }
         $this->db->from($this->_table_name)
-            ->join("tbl_projects", "{$this->_table_name}.project_id = tbl_projects.id", "left");
+            ->join("tbl_projects", "{$this->_table_name}.project_id = tbl_projects.id", "left")
+            ->join("tbl_contracts", "tbl_projects.contract_id = tbl_contracts.id", "left");
 //        $this->db->where("tbl_user_position.status", 1)
 //            ->where("tbl_user_part.status", 1)
 //            ->where("tbl_user_rank.status", 1);
@@ -91,6 +98,16 @@ class Payment_m extends MY_Model
         $this->db->order_by($this->_order_by);
         $query = $this->db->get();
         return $query->num_rows();
+    }
+
+    public function getCompanyData($arr = array())
+    {
+        $this->db->select('sum(price) as price_total, type, project_id');
+        $this->db->where($arr);
+        $this->db->from($this->_table_name);
+        $this->db->group_by("type");
+        $query = $this->db->get();
+        return $query->result();
     }
 
     function add_date($orgDate, $mth)

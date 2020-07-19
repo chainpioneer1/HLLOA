@@ -71,7 +71,7 @@
                     <th>银行账号</th>
                     <th>开户银行</th>
                     <th>开户人</th>
-                    <th>收支金额（￥）</th>
+                    <th>收支金额(￥)</th>
                     <th>所属项目</th>
                     <th>项目编号</th>
                     <th width="150">收支日期</th>
@@ -106,7 +106,8 @@
                 <div class="input-area">
                     <label>*收支对象:</label>
                     <input name="title" placeholder="请输入名称" type="text"/>
-                </div><br/>
+                </div>
+                <br/>
                 <div class="input-area">
                     <label>银行账号:</label>
                     <input name="bank_account" placeholder="请输入联系人电话" type="text" maxlength="11"/>
@@ -172,6 +173,7 @@
         // var _positionList = JSON.parse($('._positionList').val());
         // var _rankList = JSON.parse($('._rankList').val());
         var _projectList = JSON.parse($('._projectList').val());
+        if (!_projectList) _projectList = [];
         var _mainList = JSON.parse($('._mainList').val());
         var _filterInfo = JSON.parse($('._filterInfo').val());
         var _mainObj = '<?=$mainModel?>';

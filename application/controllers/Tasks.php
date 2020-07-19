@@ -361,6 +361,46 @@ class Tasks extends CI_Controller
         }
     }
 
+    public function output_content_viewlist($items, $startNo = 0, $scoreSum = 0)
+    {
+        $userId = $this->session->userdata("_userid");
+        $progressStr = ["未接收", "进行中", "待验收", "已完成"];
+        $output = '';
+        $i = 0;
+        foreach ($items as $unit):
+            $i++;
+            $startNo++;
+            $editable = ($unit->status == 0);
+            $output .= '<tr>';
+            $output .= '<td>' . sprintf("%02d", $startNo) . '</td>';
+            $output .= '<td>' . $unit->no . '</td>';
+            $output .= '<td>' . $unit->title . '</td>';
+            $output .= '<td>' . $unit->worker . '</td>';
+            $output .= '<td>' . $unit->score . '</td>';
+            $output .= '<td>' . $unit->project . '</td>';
+            $output .= '<td>' . $unit->project_worker . '</td>';
+            $output .= '<td>' . $progressStr[$unit->progress] . '</td>';
+            $output .= '<td>' . ($unit->published_at ?: '- -') . '</td>';
+            $output .= '<td>' . ($unit->started_at ?: '- -') . '</td>';
+            $output .= '<td>' . ($unit->provided_at ?: '- -') . '</td>';
+            $output .= '<td>' . ($unit->completed_at ?: '- -') . '</td>';
+            $output .= '<td>' . ($unit->deadline ?: '- -') . '</td>';
+            $output .= '<td>';
+            $output .= '<div class="btn-rect btn-green" onclick="viewItem(this);"'
+                . ' data-id="' . $unit->id . '" '
+                . '>查看</div>';
+            $output .= '</td>';
+            $output .= '</tr>';
+        endforeach;
+        $output .= '<tr class="total">'
+            . '<td colspan="4">总计</td>'
+            . '<td>' . (intval($scoreSum * 100) / 100) . '</td>'
+            . '<td colspan="9"></td>'
+            . '</tr>';
+
+        return $output;
+    }
+
     public function downloadViewlist($menu = 1, $project = 0, $progress = -1)
     {
         $ret = array(
@@ -419,46 +459,6 @@ class Tasks extends CI_Controller
         echo json_encode($ret);
     }
 
-    public function output_content_viewlist($items, $startNo = 0, $scoreSum = 0)
-    {
-        $userId = $this->session->userdata("_userid");
-        $progressStr = ["未接收", "进行中", "待验收", "已完成"];
-        $output = '';
-        $i = 0;
-        foreach ($items as $unit):
-            $i++;
-            $startNo++;
-            $editable = ($unit->status == 0);
-            $output .= '<tr>';
-            $output .= '<td>' . sprintf("%02d", $startNo) . '</td>';
-            $output .= '<td>' . $unit->no . '</td>';
-            $output .= '<td>' . $unit->title . '</td>';
-            $output .= '<td>' . $unit->worker . '</td>';
-            $output .= '<td>' . $unit->score . '</td>';
-            $output .= '<td>' . $unit->project . '</td>';
-            $output .= '<td>' . $unit->project_worker . '</td>';
-            $output .= '<td>' . $progressStr[$unit->progress] . '</td>';
-            $output .= '<td>' . ($unit->published_at ?: '- -') . '</td>';
-            $output .= '<td>' . ($unit->started_at ?: '- -') . '</td>';
-            $output .= '<td>' . ($unit->provided_at ?: '- -') . '</td>';
-            $output .= '<td>' . ($unit->completed_at ?: '- -') . '</td>';
-            $output .= '<td>' . ($unit->deadline ?: '- -') . '</td>';
-            $output .= '<td>';
-            $output .= '<div class="btn-rect btn-green" onclick="viewItem(this);"'
-                . ' data-id="' . $unit->id . '" '
-                . '>查看</div>';
-            $output .= '</td>';
-            $output .= '</tr>';
-        endforeach;
-        $output .= '<tr class="total">'
-            . '<td colspan="4">总计</td>'
-            . '<td>' . (intval($scoreSum * 100) / 100) . '</td>'
-            . '<td colspan="9"></td>'
-            . '</tr>';
-
-        return $output;
-    }
-
     public function viewlists($menu = 1, $project = 0, $progress = -1)
     {
         if (!$this->checkRole()) {
@@ -511,12 +511,17 @@ class Tasks extends CI_Controller
         $ret = $this->paginationCompress($apiRoot, $cntPage, $perPage, 6);
         $this->data['curPage'] = $curPage = $ret['pageId'];
         $list = $this->mainModel->getItemsByPage($filter, $ret['pageId'], $ret['cntPerPage'], $queryStr);
+
+        $projectTitle = '';
         foreach ($list as $item) {
             $project_worker = $this->users_m->get_where(array('id' => $item->project_worker_id));
             if ($project_worker != null) $project_worker = $project_worker[0]->name;
             else $project_worker = '';
             $item->project_worker = $project_worker;
+            if($item->project) $projectTitle = $item->project;
         }
+        $this->data['projectTitle'] = $projectTitle;
+
         $this->data["list"] = $list;
         $this->data['progressCnt'] = array(
             $this->mainModel->get_count(array("$model.progress" => 0, "tbl_projects.pid" => $project), $queryStr),
