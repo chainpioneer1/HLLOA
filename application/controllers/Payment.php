@@ -129,6 +129,8 @@ class Payment extends CI_Controller
         return $output;
     }
 
+    public function downloadMainList()
+        $this->data['title'] = '财务管理 ＞ 公司收支录入';
 
     public function companydata($progress = 0)
     {
@@ -241,14 +243,13 @@ class Payment extends CI_Controller
             $this->data['range_from'], $this->data['range_to']);
         $ret = $this->paginationCompress($apiRoot, $cntPage, $perPage, 3);
         $this->data['curPage'] = $curPage = $ret['pageId'];
-        $this->data['projectList'] = $this->projects_m->getItems();
         $this->data["list"] = $list = $this->mainModel->getItemsByPage($filterStr,
             $ret['pageId'], $ret['cntPerPage'],
             $queryStr, $this->data['range_from'], $this->data['range_to']);
         $resultList = $list;
         $this->data["tbl_content"] = $this->output_content_project($resultList, $startNo);
 
-        if (!$this->checkRole(18)) {
+        if (!$this->checkRole(20)) {
             $this->load->view('_layout_error', $this->data);
         } else {
             $this->load->view('_layout_main', $this->data);
@@ -291,6 +292,64 @@ class Payment extends CI_Controller
         endforeach;
 
         return $output;
+    }
+
+    public function downloadProjectData()
+    {
+        $ret = array(
+            'data' => '',
+            'status' => 'fail'
+        );
+
+        $this->data['title'] = '财务管理 ＞ 项目收支统计';
+        $this->data["subscript"] = "settings/script";
+        $this->data["subcss"] = "settings/css";
+        $this->data['apiRoot'] = $apiRoot = 'payment/projectdata';
+        $this->data["subview"] = $apiRoot;
+        $this->data['mainModel'] = 'tbl_payment';
+
+        $this->data['menu'] = 20;
+
+        $userId = $this->session->userdata('_userid');
+        $roleId = $this->session->userdata('_role_id');
+        $partId = $this->session->userdata('_part_id');
+
+        $filter = array();
+        if ($this->uri->segment(3) == '') $this->session->unset_userdata('filter');
+        $this->session->userdata('filter') != '' && $filter = $this->session->userdata('filter');
+
+        $filter['range_from'] = date('Y-m-01 00:00:00');
+        $filter['range_to'] = date('Y-m-01 00:00:00', strtotime('+1 months'));
+        $startNo = 0;
+        if ($_POST) {
+            $this->session->unset_userdata('filter');
+            $filter['queryStr'] = $_POST['search_keyword'];
+            $_POST['range_from'] != '' && $filter['range_from'] = $_POST['range_from'];
+            $_POST['range_to'] != '' && $filter['range_to'] = $_POST['range_to'];
+            $_POST['search_type'] != '' && $filter['tbl_payment.type'] = $_POST['search_type'];
+            $this->session->set_userdata('filter', $filter);
+        }
+        $this->session->userdata('filter') != '' && $filter = $this->session->userdata('filter');
+        $queryStr = $filter['queryStr'] . '';
+        $filterStr = " ( tbl_payment.type = 2 or tbl_payment.type = 3 ) ";
+        $filterStr .= " and tbl_payment.create_time >= '{$filter['range_from']}' ";
+        $filterStr .= " and tbl_payment.create_time < '{$filter['range_to']}' ";
+        if (isset($filter['tbl_payment.type'])) $filterStr .= " and tbl_payment.type = '{$filter['tbl_payment.type']}' ";
+        $this->data['search_keyword'] = $filter['queryStr'] . '';
+        $this->data['range_from'] = $filter['range_from'] . '';
+        $this->data['range_to'] = $filter['range_to'] . '';
+        unset($filter['queryStr']);
+        unset($filter['range_from']);
+        unset($filter['range_to']);
+
+        $this->data["list"] = $list = $this->mainModel->getItemsByPage($filterStr,
+            0, 10000,
+            $queryStr, $this->data['range_from'], $this->data['range_to']);
+        $this->data["list"] = $list;
+
+        $ret['data'] = $resultList = $list;
+        $ret['status'] = 'success';
+        echo json_encode($ret);
     }
 
     public function updateItem()

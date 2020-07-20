@@ -53,7 +53,7 @@
     <div class="content-area">
         <div class="content-title">收支列表
             <div>
-                <div class="btn-circle btn-red" onclick="export2Excel();" style="margin-right: 20px;"><i
+                <div class="btn-circle btn-red" onclick="downloadItems();" style="margin-right: 20px;"><i
                             class="fa fa-download"></i> 导出数据
                 </div>
                 <div class="btn-circle btn-green" onclick="editItem();" style="margin-right: 20px;"><i
@@ -368,32 +368,81 @@
         }
 
     </script>
+
+
     <!--    Excel Downloading Parts -->
-    <!--    <script src="--><? //= base_url('assets/plugins/export_table/jquery-3.3.1.js') ?><!--"></script>-->
-    <script src="<?= base_url('assets/plugins/export_table/jquery.dataTables.min.js') ?>"></script>
-    <script src="<?= base_url('assets/plugins/export_table/dataTables.buttons.min.js') ?>"></script>
-    <script src="<?= base_url('assets/plugins/export_table/jszip.min.js') ?>"></script>
-    <script src="<?= base_url('assets/plugins/export_table/pdfmake.min.js') ?>"></script>
-    <script src="<?= base_url('assets/plugins/export_table/vfs_fonts.js') ?>"></script>
-    <script src="<?= base_url('assets/plugins/export_table/buttons.html5.min.js') ?>"></script>
+    <!--    <script src="--><? //= base_url('assets/js/export_table/jquery-3.3.1.js') ?><!--"></script>-->
+    <script src="<?= base_url('assets/js/export_table/jquery.dataTables.min.js') ?>"></script>
+    <script src="<?= base_url('assets/js/export_table/dataTables.buttons.min.js') ?>"></script>
+    <script src="<?= base_url('assets/js/export_table/jszip.min.js') ?>"></script>
+    <script src="<?= base_url('assets/js/export_table/pdfmake.min.js') ?>"></script>
+    <script src="<?= base_url('assets/js/export_table/vfs_fonts.js') ?>"></script>
+    <script src="<?= base_url('assets/js/export_table/buttons.html5.min.js') ?>"></script>
     <script>
-        function exportConfig() {
-            var headerData = [];
-            var listData = [];
-            var headerElems = $('.content-table thead th');
-            var listElems = $('.content-table tbody tr');
-            for (var i = 0; i < headerElems.length; i++) headerData.push($(headerElems[i]).html());
-            for (var i = 0; i < listElems.length; i++) {
-                var colElems = $(listElems[i]).find('td');
-                var rowData = [];
-                if ($(listElems[i]).attr('data-id') == '-1') rowData = ['', ''];
-                for (var j = 0; j < colElems.length; j++) {
-                    rowData.push($(colElems[j]).html());
+        function downloadItems() {
+            if (_isProcessing) return;
+            _isProcessing = true;
+            var frmData = new FormData($('.search-form')[0]);
+            var ajaxURL = $('.search-form').attr('action');
+            ajaxURL = ajaxURL.replace(/index/g, 'downloadMainList');
+            $.ajax({
+                type: "post",
+                url: ajaxURL,
+                contentType: false,
+                cache: false,
+                processData: false,
+                data: frmData,
+                success: function (res) {
+                    try {
+                        res = JSON.parse(res)
+                    } catch (e) {
+                        alert(JSON.stringify(e));
+                        return;
+                    }
+                    if (res.status == 'success') {
+                        var progressStr = ["未接收", "进行中", "待验收", "已完成"];
+                        var statusStr = ["主营业务收入", "其他业务收入", "项目成本支出", "费用支出"];
+                        var headers = [
+                            '序号', '收支对象',
+                            '银行账号', '开户银行', '开户人', '收支金额(￥)',
+                            '所属项目', '项目编号',
+                            '收支日期', '收支类型', '备注',
+                            '录入时间'
+                        ];
+                        var datas = [];
+                        var retData = res.data;
+                        var scoreSum = 0;
+                        for (var i = 0; i < retData.length; i++) {
+                            var item = retData[i];
+                            scoreSum += item.score * 1;
+                            datas.push([
+                                i + 1,
+                                item.title, item.bank_account, item.bank_name, item.bank_user,
+                                item.price, item.project, item.project_no,
+                                item.paid_date, statusStr[item.type], item.description,
+                                item.create_time
+                            ]);
+                            if (i == retData.length - 1) {
+                                // datas.push([
+                                //     '', '', '总计', '', Math.round(scoreSum * 100) / 100,
+                                //     '', '', '',
+                                //     '', '', '',
+                                //     '', ''
+                                // ])
+                            }
+                        }
+                        initTableData(headers, datas);
+                        prepareExport2Excel('公司收支列表');
+                        export2Excel();
+                    } else { //failed
+                        alert(res.data);
+                    }
+                    _isProcessing = false;
+                },
+                fail: function () {
+                    _isProcessing = false;
                 }
-                listData.push(rowData);
-            }
-            initTableData(headerData, listData);
-            prepareExport2Excel()
+            });
         }
 
         function initTableData(headerList, dataList) {
@@ -419,7 +468,7 @@
             if (headerHtml == '') headerHtml = '<tr><th></th></tr>';
             if (dataHtml == '') dataHtml = '<tr><td></td></tr>';
             $('.exportTbl').html(
-                '<table id="exportTbl" data-file="工资列表">' +
+                '<table id="exportTbl" data-file="统计数据">' +
                 '<thead>' + headerHtml + '</thead>' +
                 '<tbody>' + dataHtml + '</tbody>' +
                 '</table>'
@@ -449,6 +498,8 @@
                     table.buttons.exportData({})
             }, 5);
         }
+
+        $('.scripts').remove();
     </script>
     <!--    Excel Downloading Parts end-->
 </div>

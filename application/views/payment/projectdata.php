@@ -29,10 +29,10 @@
                 <div class="input-area">
                     <label style="margin-left: 20px;">关键字:</label>
                     <input name="search_keyword" placeholder="请输入内容"/>
-<!--                    <label style="margin-left: 20px;">收支类型:</label>-->
-<!--                    <div class="tree-select" data-width="200">-->
-<!--                        <select name="search_type"></select>-->
-<!--                    </div>-->
+                    <!--                    <label style="margin-left: 20px;">收支类型:</label>-->
+                    <!--                    <div class="tree-select" data-width="200">-->
+                    <!--                        <select name="search_type"></select>-->
+                    <!--                    </div>-->
                     <label>月份:</label>
                     <div class="range-selector">
                         <input name="range_from" style="display: none!important;" value="<?= $range_from; ?>"/>
@@ -53,13 +53,13 @@
     <div class="content-area">
         <div class="content-title">项目收支列表
             <div>
-                <div class="btn-circle btn-red" onclick="export2Excel();" style="margin-right: 20px;"><i
+                <div class="btn-circle btn-red" onclick="downloadItems();" style="margin-right: 20px;"><i
                             class="fa fa-download"></i> 导出数据
                 </div>
-<!--                <div class="btn-circle btn-green" onclick="editItem();" style="margin-right: 20px;"><i-->
-<!--                            class="fa fa-plus"></i> 新增收支-->
-<!--                </div>-->
-<!--                <div class="btn-circle btn-blue" onclick="editItem();"><i class="fa fa-plus"></i> 批量录入</div>-->
+                <!--                <div class="btn-circle btn-green" onclick="editItem();" style="margin-right: 20px;"><i-->
+                <!--                            class="fa fa-plus"></i> 新增收支-->
+                <!--                </div>-->
+                <!--                <div class="btn-circle btn-blue" onclick="editItem();"><i class="fa fa-plus"></i> 批量录入</div>-->
             </div>
         </div>
         <div class="content-table" style="padding: 0;">
@@ -368,32 +368,81 @@
         }
 
     </script>
+
+
     <!--    Excel Downloading Parts -->
-    <!--    <script src="--><? //= base_url('assets/plugins/export_table/jquery-3.3.1.js') ?><!--"></script>-->
-    <script src="<?= base_url('assets/plugins/export_table/jquery.dataTables.min.js') ?>"></script>
-    <script src="<?= base_url('assets/plugins/export_table/dataTables.buttons.min.js') ?>"></script>
-    <script src="<?= base_url('assets/plugins/export_table/jszip.min.js') ?>"></script>
-    <script src="<?= base_url('assets/plugins/export_table/pdfmake.min.js') ?>"></script>
-    <script src="<?= base_url('assets/plugins/export_table/vfs_fonts.js') ?>"></script>
-    <script src="<?= base_url('assets/plugins/export_table/buttons.html5.min.js') ?>"></script>
+    <!--    <script src="--><? //= base_url('assets/js/export_table/jquery-3.3.1.js') ?><!--"></script>-->
+    <script src="<?= base_url('assets/js/export_table/jquery.dataTables.min.js') ?>"></script>
+    <script src="<?= base_url('assets/js/export_table/dataTables.buttons.min.js') ?>"></script>
+    <script src="<?= base_url('assets/js/export_table/jszip.min.js') ?>"></script>
+    <script src="<?= base_url('assets/js/export_table/pdfmake.min.js') ?>"></script>
+    <script src="<?= base_url('assets/js/export_table/vfs_fonts.js') ?>"></script>
+    <script src="<?= base_url('assets/js/export_table/buttons.html5.min.js') ?>"></script>
     <script>
-        function exportConfig() {
-            var headerData = [];
-            var listData = [];
-            var headerElems = $('.content-table thead th');
-            var listElems = $('.content-table tbody tr');
-            for (var i = 0; i < headerElems.length; i++) headerData.push($(headerElems[i]).html());
-            for (var i = 0; i < listElems.length; i++) {
-                var colElems = $(listElems[i]).find('td');
-                var rowData = [];
-                if ($(listElems[i]).attr('data-id') == '-1') rowData = ['', ''];
-                for (var j = 0; j < colElems.length; j++) {
-                    rowData.push($(colElems[j]).html());
+        function downloadItems() {
+            if (_isProcessing) return;
+            _isProcessing = true;
+            var frmData = new FormData($('.search-form')[0]);
+            var ajaxURL = $('.search-form').attr('action');
+            ajaxURL = ajaxURL.replace(/projectdata/g, 'downloadProjectData');
+            $.ajax({
+                type: "post",
+                url: ajaxURL,
+                contentType: false,
+                cache: false,
+                processData: false,
+                data: frmData,
+                success: function (res) {
+                    try {
+                        res = JSON.parse(res)
+                    } catch (e) {
+                        alert(JSON.stringify(e));
+                        return;
+                    }
+                    if (res.status == 'success') {
+                        var progressStr = ["未开始", "进行中", "待验收", "已完成"];
+                        var headers = [
+                            '序号', '项目编号', '项目名称',
+                            '项目金额(￥)', '合同金额(￥)', '继续支出(￥)', '其他支出(￥)',
+                            '项目截止日期', '项目完成日期', '项目状态',
+                            '项目毛利润(￥)', '毛利率'
+                        ];
+                        var datas = [];
+                        var retData = res.data;
+                        var scoreSum = 0;
+                        for (var i = 0; i < retData.length; i++) {
+                            var item = retData[i];
+                            datas.push([
+                                i + 1, item.project_no, item.project,
+                                item.project_price, item.contract_price,
+                                0, item.price,
+                                item.project_deadline, item.project_completed_at,
+                                progressStr[item.project_progress],
+                                0,
+                                0
+                            ]);
+                            if (i == retData.length - 1) {
+                                // datas.push([
+                                //     '', '', '总计',
+                                //     '', Math.round(scoreSum * 100) / 100,
+                                //     '', '', '',
+                                //     '', '', '',
+                                //     ''
+                                // ])
+                            }
+                        }
+                        initTableData(headers, datas);
+                        prepareExport2Excel('项目收支统计');
+                        export2Excel();
+                    } else { //failed
+                        alert(res.data);
+                    }
+                    _isProcessing = false;
+                },
+                fail: function () {
+                    _isProcessing = false;
                 }
-                listData.push(rowData);
-            }
-            initTableData(headerData, listData);
-            prepareExport2Excel()
+            });
         }
 
         function initTableData(headerList, dataList) {
@@ -419,7 +468,7 @@
             if (headerHtml == '') headerHtml = '<tr><th></th></tr>';
             if (dataHtml == '') dataHtml = '<tr><td></td></tr>';
             $('.exportTbl').html(
-                '<table id="exportTbl" data-file="工资列表">' +
+                '<table id="exportTbl" data-file="统计数据">' +
                 '<thead>' + headerHtml + '</thead>' +
                 '<tbody>' + dataHtml + '</tbody>' +
                 '</table>'
@@ -449,6 +498,8 @@
                     table.buttons.exportData({})
             }, 5);
         }
+
+        $('.scripts').remove();
     </script>
     <!--    Excel Downloading Parts end-->
 </div>
