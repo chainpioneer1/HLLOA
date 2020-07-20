@@ -130,7 +130,65 @@ class Payment extends CI_Controller
     }
 
     public function downloadMainList()
+    {
+        $ret = array(
+            'data' => '',
+            'status' => 'fail'
+        );
+
         $this->data['title'] = '财务管理 ＞ 公司收支录入';
+        $this->data["subscript"] = "settings/script";
+        $this->data["subcss"] = "settings/css";
+        $this->data['apiRoot'] = $apiRoot = 'payment/index';
+        $this->data["subview"] = $apiRoot;
+        $this->data['mainModel'] = 'tbl_payment';
+
+        $this->data['menu'] = 18;
+
+        $userId = $this->session->userdata('_userid');
+        $roleId = $this->session->userdata('_role_id');
+        $partId = $this->session->userdata('_part_id');
+
+        $filter = array();
+        if ($this->uri->segment(3) == '') $this->session->unset_userdata('filter');
+        $this->session->userdata('filter') != '' && $filter = $this->session->userdata('filter');
+
+        $filter['range_from'] = date('Y-m-01 00:00:00');
+        $filter['range_to'] = date('Y-m-01 00:00:00', strtotime('+1 months'));
+        $startNo = 0;
+        if ($this->uri->segment(3) != '') $startNo = $this->uri->segment(3);
+        if ($_POST) {
+            $this->session->unset_userdata('filter');
+            $filter['queryStr'] = $_POST['search_keyword'];
+            $_POST['range_from'] != '' && $filter['range_from'] = $_POST['range_from'];
+            $_POST['range_to'] != '' && $filter['range_to'] = $_POST['range_to'];
+            $_POST['search_type'] != '' && $filter['tbl_payment.type'] = $_POST['search_type'];
+            $this->session->set_userdata('filter', $filter);
+        }
+        $this->session->userdata('filter') != '' && $filter = $this->session->userdata('filter');
+        $queryStr = $filter['queryStr'] . '';
+        $filterStr = " tbl_payment.create_time >= '{$filter['range_from']}' ";
+        $filterStr .= " and tbl_payment.create_time < '{$filter['range_to']}' ";
+        if (isset($filter['tbl_payment.type'])) $filterStr .= " and tbl_payment.type = '{$filter['tbl_payment.type']}' ";
+        $this->data['search_keyword'] = $filter['queryStr'] . '';
+        $this->data['range_from'] = $filter['range_from'] . '';
+        $this->data['range_to'] = $filter['range_to'] . '';
+        unset($filter['queryStr']);
+        unset($filter['range_from']);
+        unset($filter['range_to']);
+
+        $this->data["list"] = $list = $this->mainModel->getItemsByPage($filterStr,
+            0, 10000,
+            $queryStr, $this->data['range_from'], $this->data['range_to']);
+        $resultList = $list;
+
+        $this->data["list"] = $list;
+
+        $ret['data'] = $resultList = $list;
+        $ret['status'] = 'success';
+        echo json_encode($ret);
+    }
+
 
     public function companydata($progress = 0)
     {
@@ -161,7 +219,7 @@ class Payment extends CI_Controller
                 break;
             case 2: // this quarter
                 $toMonth = sprintf("%02d", ceil(date('n') / 3) * 3 + 1);
-                $fromMonth = sprintf("%02d",$toMonth-3);
+                $fromMonth = sprintf("%02d", $toMonth - 3);
                 $filter['range_from'] = date("Y-{$fromMonth}-01 00:00:00");
                 $filter['range_to'] = date("Y-{$toMonth}-01 00:00:00");
                 break;

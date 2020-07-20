@@ -400,7 +400,7 @@
                         return;
                     }
                     if (res.status == 'success') {
-                        var progressStr = ["未接收", "进行中", "待验收", "已完成"];
+                        var progressStr = ["未开始", "进行中", "待验收", "已完成"];
                         var statusStr = ["主营业务收入", "其他业务收入", "项目成本支出", "费用支出"];
                         var headers = [
                             '序号', '收支对象',
