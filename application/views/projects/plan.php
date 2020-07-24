@@ -94,7 +94,7 @@
             </div>
         </div>
     </div>
-    <div class="edit-area" data-type="view">
+    <div class="edit-area" data-type="view" style="height: auto;margin-bottom: 60px;">
         <div class="content-title"><span>项目详情</span>
             <div>
                 <!--<div style="text-align: right; margin-right: 50px;font-size: 20px;">
@@ -154,6 +154,26 @@
                     </div>
                 </div>
             <?php } ?>
+        </div>
+        <div class="content-title" style="padding-top: 0px;"><span>项目月结清单</span></div>
+        <div class="content-table" data-type="price-month-detail"
+             style="padding-bottom:30px;">
+            <table>
+                <thead>
+                <tr>
+                    <th width="100">序号</th>
+                    <th width="200">项目编号</th>
+                    <th>项目名称</th>
+                    <th width="200">本月增加项目金额(￥)</th>
+                    <th>本月新增项目分数</th>
+                    <th>本月任务总分</th>
+                    <th>本月剩余分数</th>
+                    <th>结算月份</th>
+                    <th width="150">操作</th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
         </div>
     </div>
     <div class="edit-area" data-type="edit-main">
@@ -365,6 +385,66 @@
                 }
                 $('.edit-area .content-table[data-type="price-detail"] tbody').html(detail_html);
 
+                var deadline = makeDateObject(mainItem.deadline);
+                var tmpDate = makeDateObject(mainItem.create_time);
+                var taskScoreTotal = 0;
+                var month_html = '';
+                for (var i = 0; i < 100; i++) {
+                    if (tmpDate > deadline) break;
+                    var monthStr = makeDateString(tmpDate).substr(0, 7);
+
+                    var monthDetail = priceDetail.filter(function (a) {
+                        return a.created.substr(0, 7) == monthStr;
+                    });
+                    var priceMonth = 0;
+                    for (var k = 0; k < monthDetail.length; k++) {
+                        priceMonth += monthDetail[k].price * 1;
+                    }
+
+                    var taskDetail = _taskList.filter(function (a) {
+                        if (a.project_id != mainItem.id) return false;
+                        return a.published_at.substr(0, 7) == monthStr;
+                    });
+                    var taskScoreMonth = 0;
+                    for (var k = 0; k < taskDetail.length; k++) {
+                        taskScoreMonth += taskDetail[k].score * 1;
+                    }
+                    taskScoreTotal+=taskScoreMonth;
+
+                    month_html += '<tr>' +
+                        '<td>' + (i + 1) + '</td>' +
+                        '<td>' + mainItem.no + '</td>' +
+                        '<td>' + mainItem.title + '</td>' +
+                        '<td>' + priceMonth.toFixed(2) + '</td>' +
+                        '<td>' + (priceMonth / 150).toFixed(2) + '</td>' +
+                        '<td>' + taskScoreMonth.toFixed(2) + '</td>' +
+                        '<td>' + (priceMonth / 150 - taskScoreMonth).toFixed(2) + '</td>' +
+                        '<td>' + monthStr + '</td>' +
+                        '<td>' + '<div class="btn-rect btn-green" onclick="viewTasks(this);"'
+                        + ' data-id="' + mainItem.id + '" '
+                        + ' data-pid="' + mainItem.id + '" '
+                        + '>查看任务</div>'
+                        + '</td>' +
+                        '</tr>';
+
+                    tmpDate.setMonth(tmpDate.getMonth() + 1);
+                }
+                month_html += '<tr>' +
+                    '<td colspan="3">总计</td>' +
+                    '<td>' + priceTotal.toFixed(2) + '</td>' +
+                    '<td>' + (priceTotal / 150).toFixed(2) + '</td>' +
+                    '<td>' + taskScoreTotal.toFixed(2) + '</td>' +
+                    '<td>' + (priceTotal / 150 - taskScoreTotal).toFixed(2) + '</td>' +
+                    '<td>' + monthStr + '</td>' +
+                    '<td>' + '<div class="btn-rect btn-green" onclick="viewTasks(this);"'
+                    + ' data-id="' + mainItem.id + '" '
+                    + ' data-pid="' + mainItem.id + '" '
+                    + '>查看任务</div>'
+                    + '</td>' +
+                    '</tr>';
+                $('.edit-area .content-table[data-type="price-month-detail"] tbody').html(month_html);
+
+
                 var contract = mainItem.contract_id;
                 contract = _contractList.filter(function (a) {
                     return a.id == contract;
@@ -386,6 +466,8 @@
                     '<td>' + _titleStr[mainItem.progress] + '</td>' +
                     '</tr>';
                 $('.edit-area .content-table[data-type="summary"] tbody').html(summary_html);
+
+
             }
 
         }

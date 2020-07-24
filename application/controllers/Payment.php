@@ -240,6 +240,9 @@ class Payment extends CI_Controller
             'company_data' => $companyData
         );
 
+        $this->data['range_from'] = $filter['range_from'];
+        $this->data['range_to'] = $filter['range_to'];
+
         if (!$this->checkRole(18)) {
             $this->load->view('_layout_error', $this->data);
         } else {

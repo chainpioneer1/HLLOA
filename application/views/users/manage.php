@@ -248,7 +248,9 @@
                 editElem.find('select').val('');
                 editElem.find('textarea').val('');
                 editElem.find('select[name="status"]').val('1');
+                editElem.find('select[name="role_id"]').val('4');
                 editElem.find('select[name="is_calc_score"]').val('1');
+                tree_select();
                 _editItemId = 0;
             } else {
                 editElem.find('.content-title span').html('编辑人员信息');

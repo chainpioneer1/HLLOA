@@ -736,6 +736,30 @@ div.side-menuitem[data-id="16"][data-sel="1"] .icon {
     vertical-align: middle;
 }
 
+.edit-container .input-area.permission{
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.input-area.permission > div{
+    position: relative;
+    flex: 20%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+.input-area.permission > div input{
+    width: 20%;
+    transform: scale(.8);
+    transform-origin: center;
+}
+.input-area.permission > div input.submenu{
+    margin-left: 50px;
+    width: 20%;
+}
+
 .tree-multi-parent > i {
     width: 30px;
     height: 30px;

@@ -81,8 +81,9 @@
                     <iframe src="http://i.tianqi.com/index.php?c=code&id=13"></iframe>
                 </div>
                 <div class="info-item info-graph">
-                    <div>公司收入</div>
-                    <div>12</div>
+                    <div class="canvas-container">
+                        <canvas id="chart-area-companydata"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
@@ -160,6 +161,7 @@
 </div>
 
 <div class="scripts">
+    <script src="<?= base_url('assets/js/chart/chart.bundle.js') ?>"></script>
     <input hidden class="_mainList" value='<?= str_replace("'", "`", json_encode($list)) ?>'>
     <input hidden class="_filterInfo"
            value='<?= json_encode($this->session->userdata('filter') ?: array()) ?>'>
@@ -200,7 +202,7 @@
                         location.replace(_apiRoot + 'companydata/' + progress);
                     }
                 });
-            })
+            });
 
             $('input[name="_progress"]').val(_progress);
             tabElems.find('.tab-item[data-progress="' + _progress + '"]').attr('data-sel', 1);
@@ -400,6 +402,76 @@
                     });
                 }
             );
+        }
+
+        // ------------ chart functions -------------------
+
+        function drawCompanyData(){
+            var start = makeDateObject('<?= $range_from?>').getTime();
+            var end = makeDateObject('<?= $range_to?>').getTime();
+            var diff = parseInt((end - start) / 3600 / 24 / 1000);
+            var colorInfo = ['#2ea8ff', '#ff852e', '#b39aff', '#45ff2e'];
+            var xLabels = [];
+            var yLabels = ['收入', '支出'];
+            var y1Data = [];
+            var y2Data = [];
+
+            start = makeDateObject('<?= $range_from?>');
+
+            for (var i = 0; i <= diff; i++) {
+                var dateStr = makeDateString(start);
+                xLabels.push(dateStr);
+
+                var today_action = usersInfo.total_actions.filter(function (a) {
+                    if(a.type == '' && a.paid_date_abbr.substr(0, 10) == dateStr){}
+
+                    return a.paid_date_abbr.substr(0, 10) == dateStr;
+                });
+                if (today_action.length > 0) {
+                    y2Data.push(today_action[0].register_count);
+                    y1Data.push(today_action[0].login_count);
+                } else {
+                    y2Data.push(0);
+                    y1Data.push(0);
+                }
+                start = makeDateObject(start.setDate(start.getDate() + 1));
+            }
+
+            var config = {
+                type: 'line',
+                data: {
+                    datasets: [
+                        {
+                            data: y1Data,
+                            borderColor: colorInfo[0],
+                            backgroundColor: colorInfo[0],
+                            fill: false,
+                            label: yLabels[0],
+                            lineTension: 0,
+                        },
+                        {
+                            data: y2Data,
+                            borderColor: colorInfo[1],
+                            backgroundColor: colorInfo[1],
+                            fill: false,
+                            label: yLabels[1],
+                            lineTension: 0,
+                        }
+                    ],
+                    labels: xLabels
+                },
+                options: {
+                    responsive: true,
+                    tooltips: {mode: 'index', intersect: false},
+                    scales: {xAxes: [{stacked: true}], yAxes: [{stacked: false}]},
+                    barThickness: 'flex',
+                    legend: {position: 'bottom'}
+                }
+            };
+
+            var ctx = document.getElementById('chart-area-companydata').getContext('2d');
+            window.myBar1 = new Chart(ctx, config);
+
         }
 
     </script>

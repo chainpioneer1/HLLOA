@@ -98,7 +98,56 @@
         </div>
     </div>
     <div class="edit-area" data-type="view">
-        <div class="content-title"><span></span>
+        <div class="content-title"><span>项目详情</span>
+            <div>
+                <!--<div style="text-align: right; margin-right: 50px;font-size: 20px;">
+                    项目编号: <label name="no"></label>
+                </div>-->
+                <div class="btn-circle btn-grey" data-type="close-panel">
+                    <i class="fa fa-angle-left"></i></div>
+            </div>
+        </div>
+        <div class="content-table" data-type="summary">
+            <table>
+                <thead>
+                <tr>
+                    <th>项目编号</th>
+                    <th>项目名称</th>
+                    <th>项目金额(￥)</th>
+                    <th>项目总分</th>
+                    <th>项目负责人</th>
+                    <th>关联合同</th>
+                    <th>合同编号</th>
+                    <th>合同金额</th>
+                    <th width="100">新建时间</th>
+                    <th width="100">截止时间</th>
+                    <th width="100">项目状态</th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <div class="content-title" style="padding-top: 30px;"><span>项目月结清单</span></div>
+        <div class="content-table" data-type="price-month-detail"
+             style="padding-bottom:30px;">
+            <table>
+                <thead>
+                <tr>
+                    <th width="100">序号</th>
+                    <th width="200">项目编号</th>
+                    <th>项目名称</th>
+                    <th width="200">本月增加项目金额(￥)</th>
+                    <th>本月新增项目分数</th>
+                    <th>本月任务总分</th>
+                    <th>本月剩余分数</th>
+                    <th>结算月份</th>
+                    <th width="150">操作</th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <!--<div class="content-title"><span></span>
             <div>
                 <div style="text-align: right; margin-right: 50px;font-size: 20px;">
                     项目编号: <label name="no"></label>
@@ -126,14 +175,6 @@
                 <label>项目名称:</label>
                 <label name="title"></label>
             </div>
-            <!--            <div class="input-area">-->
-            <!--                <label>项目金额:</label>-->
-            <!--                <label name="init_price"></label>-->
-            <!--            </div>-->
-            <!--            <div class="input-area">-->
-            <!--                <label>合同金额:</label>-->
-            <!--                <label name="work_price"></label>-->
-            <!--            </div>-->
             <div class="input-area">
                 <label>项目发布时间:</label>
                 <label name="published_at"></label>
@@ -189,7 +230,7 @@
                     </div>
                 </div>
             <?php } ?>
-        </div>
+        </div> -->
     </div>
     <div class="edit-area" data-type="edit">
         <div class="content-title"><span></span>
@@ -293,6 +334,7 @@
 
 <div class="scripts">
     <input hidden class="_userList" value='<?= str_replace("'", "`", json_encode($userList)) ?>'>
+    <input hidden class="_contractList" value='<?= str_replace("'", "`", json_encode($contractList)) ?>'>
     <input hidden class="_taskList" value='<?= str_replace("'", "`", json_encode($taskList)) ?>'>
     <input hidden class="_mainList" value='<?= str_replace("'", "`", json_encode($list)) ?>'>
     <input hidden class="_progressCnt" value='<?= json_encode($progressCnt) ?>'>
@@ -310,6 +352,7 @@
             a.title = a.name;
             return true;
         });
+        var _contractList = JSON.parse($('._contractList').val());
         var _mainList = JSON.parse($('._mainList').val());
         var _taskList = JSON.parse($('._taskList').val());
         var _progressCnt = JSON.parse($('._progressCnt').val());
@@ -395,7 +438,7 @@
             $('.useraction-form').submit();
         }
 
-        function viewItem(elem) {
+        function viewItem1(elem) {
             $('.edit-area').hide();
             var editElem = $('.edit-area[data-type="view"]');
 
@@ -442,6 +485,130 @@
             $('.base-container .nav-position-title').html(_navTitle + ' ＞ ' + headerTitle);
 
             editElem.fadeIn('fast');
+        }
+
+        function viewItem(elem) {
+            $('.edit-area').hide();
+            var editElem = $('.edit-area[data-type="view"]');
+
+            $('div[data-type="close-panel"]').off('click');
+            $('div[data-type="close-panel"]').on('click', function () {
+                $('.base-container .nav-position-title').html(_navTitle);
+                editElem.fadeOut('fast');
+            });
+            var headerTitle = '项目详情';
+            var that = $(elem);
+            var pid = that.attr('data-pid');
+            makeDetailTable(pid);
+
+            // editElem.find('.content-title > span').html(headerTitle);
+            $('.base-container .nav-position-title').html(_navTitle + ' ＞ ' + headerTitle);
+            editElem.find('.edit-container .btn-rect').attr('data-pid', pid);
+            editElem.fadeIn('fast');
+        }
+
+        function makeDetailTable(pid) {
+            if (!pid) return;
+            var mainItem = _mainList.filter(function (a) {
+                return a.pid == pid;
+            });
+            if (mainItem.length > 0) {
+                mainItem = mainItem[0];
+                var priceDetail = mainItem.price_detail;
+                if (priceDetail) priceDetail = JSON.parse(priceDetail);
+                else priceDetail = [];
+
+                var priceTotal = 0;
+                for (var i = 0; i < priceDetail.length; i++) {
+                    var item = priceDetail[i];
+                    priceTotal += item.price * 1;
+                }
+
+                var deadline = makeDateObject(mainItem.deadline);
+                var tmpDate = makeDateObject(mainItem.create_time);
+                var month_html = '';
+                var taskScoreTotal = 0;
+                for (var i = 0; i < 100; i++) {
+                    if (tmpDate > deadline) break;
+                    var monthStr = makeDateString(tmpDate).substr(0, 7);
+
+                    var monthDetail = priceDetail.filter(function (a) {
+                        return a.created.substr(0, 7) == monthStr;
+                    });
+                    var priceMonth = 0;
+                    for (var k = 0; k < monthDetail.length; k++) {
+                        priceMonth += monthDetail[k].price * 1;
+                    }
+
+                    var taskDetail = _taskList.filter(function (a) {
+                        if (a.project_id != mainItem.id) return false;
+                        return a.published_at.substr(0, 7) == monthStr;
+                    });
+                    var taskScoreMonth = 0;
+                    for (var k = 0; k < taskDetail.length; k++) {
+                        taskScoreMonth += taskDetail[k].score * 1;
+                    }
+                    taskScoreTotal+=taskScoreMonth;
+
+                    month_html += '<tr>' +
+                        '<td>' + (i + 1) + '</td>' +
+                        '<td>' + mainItem.no + '</td>' +
+                        '<td>' + mainItem.title + '</td>' +
+                        '<td>' + priceMonth.toFixed(2) + '</td>' +
+                        '<td>' + (priceMonth / 150).toFixed(2) + '</td>' +
+                        '<td>' + taskScoreTotal.toFixed(2) + '</td>' +
+                        '<td>' + (priceMonth / 150 - taskScoreMonth).toFixed(2) + '</td>' +
+                        '<td>' + monthStr + '</td>' +
+                        '<td>' + '<div class="btn-rect btn-green" onclick="viewTasks(this);"'
+                        + ' data-id="' + mainItem.id + '" '
+                        + ' data-pid="' + mainItem.id + '" '
+                        + '>查看任务</div>'
+                        + '</td>' +
+                        '</tr>';
+
+                    tmpDate.setMonth(tmpDate.getMonth() + 1);
+                }
+                month_html += '<tr>' +
+                    '<td colspan="3">总计</td>' +
+                    '<td>' + priceTotal.toFixed(2) + '</td>' +
+                    '<td>' + (priceTotal / 150).toFixed(2) + '</td>' +
+                    '<td>' + taskScoreTotal.toFixed(2) + '</td>' +
+                    '<td>' + (priceTotal / 150 - taskScoreTotal).toFixed(2) + '</td>' +
+                    '<td>' + monthStr + '</td>' +
+                    '<td>' + '<div class="btn-rect btn-green" onclick="viewTasks(this);"'
+                    + ' data-id="' + mainItem.id + '" '
+                    + ' data-pid="' + mainItem.id + '" '
+                    + '>查看任务</div>'
+                    + '</td>' +
+                    '</tr>';
+                $('.edit-area .content-table[data-type="price-month-detail"] tbody').html(month_html);
+
+
+                var contract = mainItem.contract_id;
+                contract = _contractList.filter(function (a) {
+                    return a.id == contract;
+                });
+                if (contract.length > 0) contract = contract[0];
+                else contract = {title: '', no: '', total_price: ''};
+
+                var summary_html = '<tr>' +
+                    '<td>' + mainItem.no + '</td>' +
+                    '<td>' + mainItem.title + '</td>' +
+                    '<td>' + priceTotal + '</td>' +
+                    '<td>' + (priceTotal / 150).toFixed(2) + '</td>' +
+                    '<td>' + (mainItem.worker ? mainItem.worker : '') + '</td>' +
+                    '<td>' + contract.title + '</td>' +
+                    '<td>' + contract.no + '</td>' +
+                    '<td>' + contract.total_price + '</td>' +
+                    '<td>' + mainItem.create_time + '</td>' +
+                    '<td>' + mainItem.deadline + '</td>' +
+                    '<td>' + _titleStr[mainItem.progress] + '</td>' +
+                    '</tr>';
+                $('.edit-area .content-table[data-type="summary"] tbody').html(summary_html);
+
+
+            }
+
         }
 
         function editItem(elem) {

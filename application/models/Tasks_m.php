@@ -12,6 +12,79 @@ class Tasks_m extends MY_Model
         parent::__construct();
     }
 
+    public function refreshTasks()
+    {
+        $this->db->select('id, no, title, planner_id, author_id, worker_id');
+        $this->db->select('price_detail');
+        $this->db->from('tbl_projects');
+//        $this->db->where("progress = '1' or progress = '2'");
+        $allProjects = $this->db->get()->result();
+
+        $curMonth = date('Y-m');
+        $this->db->select("id, no, title, project_id, author_id");
+        $this->db->select("sum(score) as month_score");
+        $this->db->from($this->_table_name);
+        $this->db->where("substr(published_at, 1,7) = '{$curMonth}'");
+        $this->db->where("info is null");
+        $this->db->group_by("substr(published_at, 1,7)");
+        $this->db->group_by("project_id");
+        $allTasks = $this->db->get()->result();
+
+
+        $this->db->select("id, project_id, score");
+        $this->db->from($this->_table_name);
+        $this->db->where("substr(create_time, 1,7) = '{$curMonth}'");
+        $this->db->where("info = '__manage__'");
+        $allManTasks = $this->db->get()->result();
+
+        foreach ($allProjects as $project) {
+            // get current month project score;
+            $priceDetail = json_decode($project->price_detail);
+            $curMonthScore = 0;
+            foreach ($priceDetail as $item) {
+                if (substr($item->created, 0, 7) != $curMonth) continue;
+                $curMonthScore += $item->price*1;
+            }
+            $curMonthScore /= 150;
+
+            // get current month task total score;
+            $monthTasks = array_filter($allTasks, function ($task) use ($project) {
+                return $task->project_id == $project->id;
+            }, ARRAY_FILTER_USE_BOTH);
+            $curMonthTaskScore = 0;
+            foreach ($monthTasks as $item) {
+                $curMonthTaskScore += $item->month_score;
+            }
+
+            // calc management task score
+            $curManScore = intval(($curMonthScore - $curMonthTaskScore) * .3 * 100) / 100;
+//            $curManScore = $curMonthTaskScore;
+            // update management task score
+            $monthManTask = array_filter($allManTasks, function ($task) use ($project) {
+                return $task->project_id == $project->id;
+            }, ARRAY_FILTER_USE_BOTH);
+            $arr = array(
+                'no' => $project->no . '_M',
+                'title' => date('m') . '月管理:' . $project->title,
+                'project_id' => $project->id,
+                'author_id' => $project->worker_id,
+                'worker_id' => $project->worker_id,
+                'score' => $curManScore,
+                'info' => '__manage__',
+                'progress' => 3,
+                'status' => 1,
+                'update_time' => date('Y-m-d H:i:s')
+            );
+            if ($monthManTask == null) {
+                $arr['create_time'] = date('Y-m-d H:i:s');
+                $this->insert($arr);
+            } else {
+                if ($curManScore == $monthManTask[0]->score) continue;
+                $this->edit($arr, $monthManTask[0]->id);
+            }
+        }
+    }
+
     public function getItemsByPage($arr = array(), $pageId, $cntPerPage, $queryStr = '')
     {
         $this->db->select("{$this->_table_name}.*");
@@ -89,8 +162,8 @@ class Tasks_m extends MY_Model
         $this->db->select("sum(score) as user_score");
         $this->db->select("max(completed_at) as complete_time");
         $this->db->from("tbl_tasks_complete");
-        if($queryStr != '') {
-            $this->db->where("completed_at >= '{$queryStr['range_from']}' ".
+        if ($queryStr != '') {
+            $this->db->where("completed_at >= '{$queryStr['range_from']}' " .
                 " and completed_at < '{$queryStr['range_to']}'");
         }
         $this->db->group_by("project_id");
@@ -136,8 +209,8 @@ class Tasks_m extends MY_Model
         $this->db->select("sum(score) as user_score");
         $this->db->select("max(completed_at) as complete_time");
         $this->db->from("tbl_tasks_complete");
-        if($queryStr != '') {
-            $this->db->where("completed_at >= '{$queryStr['range_from']}' ".
+        if ($queryStr != '') {
+            $this->db->where("completed_at >= '{$queryStr['range_from']}' " .
                 " and completed_at < '{$queryStr['range_to']}'");
         }
         $this->db->group_by("project_id");

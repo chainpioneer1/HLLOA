@@ -36,6 +36,7 @@ class Tasks extends CI_Controller
             return;
         }
 
+        $this->mainModel->refreshTasks();
         $this->data['title'] = '任务大厅';
         $this->data["subscript"] = "settings/script";
         $this->data["subcss"] = "settings/css";
@@ -161,6 +162,8 @@ class Tasks extends CI_Controller
             redirect(base_url('signin'));
             return;
         }
+
+        $this->mainModel->refreshTasks();
 
         $this->data['title'] = '我的任务';
         $this->data["subscript"] = "settings/script";
@@ -288,6 +291,7 @@ class Tasks extends CI_Controller
             redirect(base_url('signin'));
             return;
         }
+        $this->mainModel->refreshTasks();
 
         $this->data['title'] = '任务列表';
         $this->data["subscript"] = "settings/script";
@@ -466,6 +470,8 @@ class Tasks extends CI_Controller
             return;
         }
 
+        $this->mainModel->refreshTasks();
+
         $this->data['title'] = '任务列表';
         $this->data["subscript"] = "settings/script";
         $this->data["subcss"] = "settings/css";
@@ -546,6 +552,7 @@ class Tasks extends CI_Controller
             redirect(base_url('signin'));
             return;
         }
+        $this->mainModel->refreshTasks();
         $progress = 3;
         $this->data['title'] = '绩效中心';
         $this->data["subscript"] = "settings/script";
@@ -784,6 +791,7 @@ class Tasks extends CI_Controller
             redirect(base_url('signin'));
             return;
         }
+        $this->mainModel->refreshTasks();
 
         $this->data['title'] = '任务列表';
         $this->data["subscript"] = "settings/script";

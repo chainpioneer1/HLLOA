@@ -103,8 +103,10 @@ class Payment_m extends MY_Model
     public function getCompanyData($arr = array())
     {
         $this->db->select('sum(price) as price_total, type, project_id');
+        $this->db->select('date(paid_date) as paid_date_abbr');
         $this->db->where($arr);
         $this->db->from($this->_table_name);
+        $this->db->group_by("substr(paid_date, 1, 10)");
         $this->db->group_by("type");
         $query = $this->db->get();
         return $query->result();

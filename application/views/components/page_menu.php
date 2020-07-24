@@ -50,6 +50,9 @@ $_permission = json_decode($this->session->userdata('_permission'));
     if ($_permission->m12 == 1) { ?>
         <div class="side-menuitem" data-id="12" data-target="posts" data-parent="07"><span></span>公告信息管理</div>
     <?php }
+    if ($_permission->m21 == 1) { ?>
+        <div class="side-menuitem" data-id="21" data-target="userroles" data-parent="07"><span></span>账号类型管理</div>
+    <?php }
     if ($_permission->m16 == 1) { ?>
         <div class="side-menuitem" data-id="16" data-target=""><span class="icon"></span> 财务管理</div>
     <?php }
@@ -91,7 +94,10 @@ $_permission = json_decode($this->session->userdata('_permission'));
 
         function selectMenu(id) {
             id = makeNDigit(id, 2);
-            if (parseInt(id) > 7 && parseInt(id) < 14) {
+            if (parseInt(id) == 21) {
+                $('.side-menuitem[data-id="07"]').attr('data-sel', 1);
+                $('.side-menuitem[data-parent="16"]').hide();
+            } else if (parseInt(id) > 7 && parseInt(id) < 14) {
                 $('.side-menuitem[data-id="07"]').attr('data-sel', 1);
                 $('.side-menuitem[data-parent="16"]').hide();
             } else if (parseInt(id) > 16 && parseInt(id) < 21) {

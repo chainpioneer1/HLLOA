@@ -215,6 +215,7 @@ class Projects extends CI_Controller
 
         $this->data['menu'] = $menu;
         $this->data['userList'] = $this->users_m->getItems();
+        $this->data['contractList'] = $this->contracts_m->getItems();
 
         $filter = array();
         if ($this->uri->segment(3) == '') $this->session->unset_userdata('filter');
@@ -509,6 +510,7 @@ class Projects extends CI_Controller
         $this->data['progress'] = $progress;
 
         $this->data['userList'] = $this->users_m->getItems();
+        $this->data['contractList'] = $this->contracts_m->getItems();
         $user_id = $this->session->userdata("_userid");
 
         $filter = array();
@@ -579,6 +581,7 @@ class Projects extends CI_Controller
             $output .= '<div class="content-item"><div style="background-image:' . $bgStr . ';">';
             $output .= '<div class="btn-transparent" '
                 . ' data-id="' . $unit->id . '" '
+                . ' data-pid="' . $unit->pid . '" '
                 . ' onclick="viewItem(this);"></div>';
 
             $output .= '<div class="project-score">' . (($projScore != 0) ? $projScore : 0) . '</div>';
