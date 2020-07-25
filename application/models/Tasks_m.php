@@ -73,6 +73,7 @@ class Tasks_m extends MY_Model
                 'info' => '__manage__',
                 'progress' => 3,
                 'status' => 1,
+                'completed_at' => date('Y-m-d H:i:s'),
                 'update_time' => date('Y-m-d H:i:s')
             );
             if ($monthManTask == null) {
@@ -166,6 +167,7 @@ class Tasks_m extends MY_Model
             $this->db->where("completed_at >= '{$queryStr['range_from']}' " .
                 " and completed_at < '{$queryStr['range_to']}'");
         }
+        $this->db->where('id < 0');
         $this->db->group_by("project_id");
         $subQuery2 = $this->db->get_compiled_select();
 
@@ -213,6 +215,7 @@ class Tasks_m extends MY_Model
             $this->db->where("completed_at >= '{$queryStr['range_from']}' " .
                 " and completed_at < '{$queryStr['range_to']}'");
         }
+        $this->db->where('id < 0');
         $this->db->group_by("project_id");
         $subQuery2 = $this->db->get_compiled_select();
 

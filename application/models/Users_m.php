@@ -114,6 +114,7 @@ class Users_m extends MY_Model
         $subQuery1 = $this->db->get_compiled_select();
 
         $this->db->from("tbl_tasks_complete");
+        $this->db->where("id < 0");
         $subQuery2 = $this->db->get_compiled_select();
         $unionQuery = "(";
         for ($i = 0; $i < 100; $i++) {
@@ -183,7 +184,9 @@ class Users_m extends MY_Model
         $subQuery1 = $this->db->get_compiled_select();
 
         $this->db->from("tbl_tasks_complete");
+        $this->db->where('id < 0');
         $subQuery2 = $this->db->get_compiled_select();
+
         $unionQuery = "(";
         for ($i = 0; $i < 100; $i++) {
             $from = $this->add_date($range_from, $i);
