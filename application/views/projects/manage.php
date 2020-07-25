@@ -256,11 +256,12 @@
                 <div class="input-area title-score">
                     <label name="total_score" style="font-weight: normal;"></label>
                     <label>(分) 项目总分</label>
-                </div><br>
+                </div>
+                <br>
                 <?php if ($progress == 0) { ?>
                     <div class="input-area">
                         <label>项目名称:</label>
-                        <label name="title"  style="font-weight: normal;width: 295px;text-align: left;"></label>
+                        <label name="title" style="font-weight: normal;width: 295px;text-align: left;"></label>
                     </div><br>
                     <div class="input-area">
                         <label>项目负责人:</label>
@@ -388,7 +389,7 @@
                 var worker = mainItem.worker;
                 if (worker) worker = worker.replace(/,/g, ';');
                 else worker = '';
-                if(worker.indexOf(';')>-1) editElem.find('*[data-type="old"]').show();
+                if (worker.indexOf(';') > -1) editElem.find('*[data-type="old"]').show();
                 else editElem.find('*[data-type="old"]').hide();
                 editElem.find('label[name="no"]').html(mainItem.no);
                 editElem.find('label[name="title"]').html(mainItem.title);
@@ -489,13 +490,14 @@
 
                     var taskDetail = _taskList.filter(function (a) {
                         if (a.project_id != mainItem.id) return false;
+                        if (a.info == '__manage__') return false;
                         return a.published_at.substr(0, 7) == monthStr;
                     });
                     var taskScoreMonth = 0;
                     for (var k = 0; k < taskDetail.length; k++) {
                         taskScoreMonth += taskDetail[k].score * 1;
                     }
-                    taskScoreTotal+=taskScoreMonth;
+                    taskScoreTotal += taskScoreMonth;
 
                     month_html += '<tr>' +
                         '<td>' + (i + 1) + '</td>' +
@@ -575,9 +577,9 @@
                     var content_html = '<div class="tree-multi-search" data-width="315">' +
                         '<select name="worker_id[]" placeholder="请选择"></select>' +
                         '</div>';
-                        // '<i class="fa fa-user-' + type + '" ' +
-                        // ' style="background:' + bg + ';"' +
-                        // ' onclick="appendUser(this)"></i>';
+                    // '<i class="fa fa-user-' + type + '" ' +
+                    // ' style="background:' + bg + ';"' +
+                    // ' onclick="appendUser(this)"></i>';
                     parentElem.append(content_html);
                     var newElem = parentElem.find('select[name="worker_id[]"]');
                     newElem = $(newElem[newElem.length - 1]);
@@ -620,7 +622,7 @@
                 if (mainItem.length > 0) {
                     mainItem = mainItem[0];
                     var workers = mainItem.worker_ids;
-                    if(workers) workers = workers.split(',');
+                    if (workers) workers = workers.split(',');
                     else workers = [0];
                     for (var i = 0; i < workers.length; i++) {
                         appendUser();
