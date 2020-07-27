@@ -410,7 +410,7 @@
                     for (var k = 0; k < taskDetail.length; k++) {
                         taskScoreMonth += taskDetail[k].score * 1;
                     }
-                    taskScoreTotal+=taskScoreMonth;
+                    taskScoreTotal += taskScoreMonth;
 
                     month_html += '<tr>' +
                         '<td>' + (i + 1) + '</td>' +

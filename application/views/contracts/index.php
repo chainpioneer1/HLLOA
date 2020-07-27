@@ -80,7 +80,7 @@
                 <!--<div style="text-align: right; margin-right: 50px;font-size: 20px;">
                     项目编号: <label name="no"></label>
                 </div>-->
-                <div class="btn-circle btn-blue" style="font-size: 16px;margin-right:20px;"
+                <div class="btn-circle btn-blue" style="font-size: 16px;margin-right:20px;" data-type="attatchment"
                      onclick="showData(this);">
                     <i class="fa fa-file"></i> 查看附件
                 </div>
@@ -322,6 +322,10 @@
             });
             if (mainItem.length > 0) {
                 mainItem = mainItem[0];
+                $('.edit-area .content-title .btn-circle[data-type="attatchment"]').hide();
+                if(mainItem.data){
+                    $('.edit-area .content-title .btn-circle[data-type="attatchment"]').show();
+                }
 
                 var priceDetail = mainItem.price_detail;
                 if (priceDetail) priceDetail = JSON.parse(priceDetail);
@@ -358,7 +362,7 @@
                     '<td>' + mainItem.total_price + '</td>' +
                     '<td>' + priceTotal + '</td>' +
                     '<td>' + mainItem.client_name + '</td>' +
-                    '<td>' + (mainItem.worker ? mainItem.worker : '') + '</td>' +
+                    '<td>' + (mainItem.project_worker ? mainItem.project_worker : '') + '</td>' +
                     '<td>' + mainItem.expire_date + '</td>' +
                     '<td>' + mainItem.signed_date + '</td>' +
                     '<td>' + statusStr + '</td>' +
@@ -489,10 +493,12 @@
                     tree_select();
 
                     editElem.find('input[type="file"]').val('');
-                    var ext = getFiletypeFromURL(mainItem.data);
-                    editElem.find('.doc_preview').removeAttr('data-type');
-                    if (ext == 'pdf') editElem.find('.doc_preview').attr('data-type', ext);
-                    editElem.find('.doc_preview').attr('data-sel', 1);
+                    if(mainItem.data) {
+                        var ext = getFiletypeFromURL(mainItem.data);
+                        editElem.find('.doc_preview').removeAttr('data-type');
+                        if (ext == 'pdf') editElem.find('.doc_preview').attr('data-type', ext);
+                        editElem.find('.doc_preview').attr('data-sel', 1);
+                    }
                 }
             }
 

@@ -167,14 +167,14 @@ class Projects extends CI_Controller
                     $output .= '<label>截止时间</label>';
                     $output .= '<label>' . $unit->deadline . '</label>';
                     $output .= '</div>';
-//                    $output .= '<div class="project-btns">';
-//                    $output .= '<div class="btn-rect btn-white" '
-//                        . ' data-pid="' . $unit->pid . '"'
-//                        . ' onclick="viewTasks(this);">查看任务</div>';
+                    $output .= '<div class="project-btns">';
+                    $output .= '<div class="btn-rect btn-white" '
+                        . ' data-pid="' . $unit->pid . '"'
+                        . ' onclick="viewTasks(this);">查看任务</div>';
 //                    $output .= '<div class="btn-rect btn-white"'
 //                        . ' data-pid="' . $unit->pid . '"'
 //                        . ' onclick="completeItem(this);">确认验收</div>';
-//                    $output .= '</div>';
+                    $output .= '</div>';
                     break;
                 case 3:
                     $output .= '<div>';
@@ -185,12 +185,12 @@ class Projects extends CI_Controller
                     $output .= '<label>截止时间</label>';
                     $output .= '<label>' . $unit->deadline . '</label>';
                     $output .= '</div>';
-//                    $output .= '<div class="project-btns">';
-//                    $output .= '<div class="btn-rect btn-white" '
-//                        . ' data-pid="' . $unit->pid . '"'
-//                        . ' style="width: 200px;" '
-//                        . ' onclick="viewTasks(this);">查看任务</div>';
-//                    $output .= '</div>';
+                    $output .= '<div class="project-btns">';
+                    $output .= '<div class="btn-rect btn-white" '
+                        . ' data-pid="' . $unit->pid . '"'
+                        . ' style="width: 200px;" '
+                        . ' onclick="viewTasks(this);">查看任务</div>';
+                    $output .= '</div>';
                     break;
             }
 
