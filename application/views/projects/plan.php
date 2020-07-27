@@ -436,12 +436,8 @@
                     '<td>' + (priceTotal / 150).toFixed(2) + '</td>' +
                     '<td>' + taskScoreTotal.toFixed(2) + '</td>' +
                     '<td>' + (priceTotal / 150 - taskScoreTotal).toFixed(2) + '</td>' +
-                    '<td>' + monthStr + '</td>' +
-                    '<td>' + '<div class="btn-rect btn-green" onclick="viewTasks(this);"'
-                    + ' data-id="' + mainItem.id + '" '
-                    + ' data-pid="' + mainItem.id + '" '
-                    + '>查看任务</div>'
-                    + '</td>' +
+                    '<td></td>' +
+                    '<td></td>' +
                     '</tr>';
                 $('.edit-area .content-table[data-type="price-month-detail"] tbody').html(month_html);
 
