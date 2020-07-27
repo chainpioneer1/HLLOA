@@ -189,7 +189,7 @@
                 <div class="input-area">
                     <label>任务分数:</label>
                     <input name="score" placeholder="请输入任务分数" type="number"/>
-                    <div class="txt-red">注: 本项目剩余 <span>63</span> 分</div>
+                    <div class="txt-red">注: 本月项目剩余 <span>63</span> 分</div>
                 </div>
                 <div class="input-area">
                     <label>任务截止时间:</label>
@@ -377,14 +377,27 @@
 
                 editElem.find('label[name="project"]').html(_projectItem.title + " (" + _projectItem.no + ")");
 
-                var allTasks = _taskList.filter(function (a) {
-                    return a.project_id == _project;
-                });
-                var taskScore = 0;
-                for (var i = 0; i < allTasks.length; i++) {
-                    taskScore += allTasks[i].score * 1;
+                var curMonth = makeDateString().substr(0, 7);
+
+                var priceDetail = JSON.parse(_projectItem.price_detail);
+                var curMonthScore = 0;
+                for (var i = 0; i < priceDetail.length; i++) {
+                    var item = priceDetail[i];
+                    if (item.created.substr(0, 7) != curMonth) continue;
+                    curMonthScore += item.price * 1;
                 }
-                _remainedScore = Math.round((_projectItem.total_score - taskScore) * 100) / 100;
+                curMonthScore = curMonthScore / 150;
+
+                var taskScore = 0;
+                var allTasks = _taskList.filter(function (a) {
+                    if (a.info == '__manage__') return false;
+                    if (a.create_time.substr(0, 7) != curMonth) return false;
+                    if(a.project_id != _project) return false;
+                    taskScore+= a.score*1;
+                    return true;
+                });
+
+                _remainedScore = Math.round((curMonthScore - taskScore) * 100) / 100;
                 editElem.find('div.txt-red span').html(_remainedScore.toFixed(2));
 
                 editElem.find('label[name="no"]').hide();
@@ -404,15 +417,29 @@
                 if (mainItem.length > 0) {
                     mainItem = mainItem[0];
                     _editItemId = mainItem.id;
-                    var allTasks = _taskList.filter(function (a) {
-                        return a.project_id == mainItem.project_id;
-                    });
-                    var taskScore = 0;
-                    for (var i = 0; i < allTasks.length; i++) {
-                        if (allTasks[i].id == mainItem.id) continue;
-                        taskScore += allTasks[i].score * 1;
+
+                    var curMonth = makeDateString().substr(0, 7);
+
+                    var priceDetail = JSON.parse(_projectItem.price_detail);
+                    var curMonthScore = 0;
+                    for (var i = 0; i < priceDetail.length; i++) {
+                        var item = priceDetail[i];
+                        if (item.created.substr(0, 7) != curMonth) continue;
+                        curMonthScore += item.price * 1;
                     }
-                    _remainedScore = Math.round((mainItem.total_score - taskScore) * 100) / 100;
+                    curMonthScore = curMonthScore / 150;
+
+                    var taskScore = 0;
+                    var allTasks = _taskList.filter(function (a) {
+                        if (a.info == '__manage__') return false;
+                        if (a.create_time.substr(0, 7) != curMonth) return false;
+                        if(a.project_id != _project) return false;
+                        taskScore+= a.score*1;
+                        return true;
+                    });
+
+                    _remainedScore = Math.round((curMonthScore - taskScore) * 100) / 100;
+
                     editElem.find('div.txt-red span').html(_remainedScore.toFixed(2));
 
                     editElem.find('label[name="no"]').html(mainItem.no);

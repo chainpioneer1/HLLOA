@@ -30,7 +30,6 @@ class Tasks_m extends MY_Model
         $this->db->group_by("project_id");
         $allTasks = $this->db->get()->result();
 
-
         $this->db->select("id, project_id, score");
         $this->db->from($this->_table_name);
         $this->db->where("substr(create_time, 1,7) = '{$curMonth}'");
@@ -48,21 +47,21 @@ class Tasks_m extends MY_Model
             $curMonthScore /= 150;
 
             // get current month task total score;
-            $monthTasks = array_filter($allTasks, function ($task) use ($project) {
+            $monthTasks = array_values(array_filter($allTasks, function ($task) use ($project) {
                 return $task->project_id == $project->id;
-            }, ARRAY_FILTER_USE_BOTH);
+            }, ARRAY_FILTER_USE_BOTH));
             $curMonthTaskScore = 0;
             foreach ($monthTasks as $item) {
                 $curMonthTaskScore += $item->month_score;
             }
-
             // calc management task score
             $curManScore = intval(($curMonthScore - $curMonthTaskScore) * .3 * 100) / 100;
+
 //            $curManScore = $curMonthTaskScore;
             // update management task score
-            $monthManTask = array_filter($allManTasks, function ($task) use ($project) {
+            $monthManTask = array_values(array_filter($allManTasks, function ($task) use ($project) {
                 return $task->project_id == $project->id;
-            }, ARRAY_FILTER_USE_BOTH);
+            }, ARRAY_FILTER_USE_BOTH));
             $arr = array(
                 'no' => $project->no . '_M',
                 'title' => date('m') . '月管理:' . $project->title,
@@ -77,10 +76,11 @@ class Tasks_m extends MY_Model
                 'update_time' => date('Y-m-d H:i:s')
             );
             if ($monthManTask == null) {
+                $arr['published_at'] = date('Y-m-d H:i:s');
                 $arr['create_time'] = date('Y-m-d H:i:s');
                 $this->insert($arr);
             } else {
-                if ($curManScore == $monthManTask[0]->score) continue;
+                if (floatval($curManScore) == floatval($monthManTask[0]->score)) continue;
                 $this->edit($arr, $monthManTask[0]->id);
             }
         }
@@ -93,6 +93,7 @@ class Tasks_m extends MY_Model
         $this->db->select("tbl_user.name as worker");
         $this->db->select("tbl_projects.title as project");
         $this->db->select("tbl_projects.total_score as total_score");
+        $this->db->select("tbl_projects.price_detail as project_price");
         $this->db->select("tbl_projects.author_id as project_author_id");
         $this->db->select("tbl_projects.worker_id as project_worker_id");
         $this->db->where($arr);

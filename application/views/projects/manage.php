@@ -490,7 +490,7 @@
 
                     var taskDetail = _taskList.filter(function (a) {
                         if (a.project_id != mainItem.id) return false;
-                        if (a.info == '__manage__') return false;
+                        // if (a.info == '__manage__') return false;
                         return a.published_at.substr(0, 7) == monthStr;
                     });
                     var taskScoreMonth = 0;

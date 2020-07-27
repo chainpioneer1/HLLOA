@@ -499,6 +499,8 @@ class Projects extends CI_Controller
             return;
         }
 
+        $this->tasks_m->refreshTasks();
+
         $this->data['title'] = '我的项目';
         $this->data["subscript"] = "settings/script";
         $this->data["subcss"] = "settings/css";
@@ -565,18 +567,33 @@ class Projects extends CI_Controller
         $userId = $this->session->userdata("_userid");
         $output = '';
         $i = 0;
+        $curMonth = date('Y-m');
         foreach ($items as $unit):
             $i++;
             $editable = ($unit->status == 0);
             $progress = $unit->progress;
             $bgStr = 'url(' . base_url('assets/images/project/bg' . ($unit->id % 11 + 1) . '.jpg') . ')';
 
-            $task_score = 0;
-            foreach ($taskList as $taskItem) {
-                if ($taskItem->project_id != $unit->id) continue;
-                $task_score += floatval($taskItem->score);
+            // calculate project month score
+            $priceDetail = json_decode($unit->price_detail);
+            $curMonthScore = 0;
+            foreach ($priceDetail as $item) {
+                if (substr($item->created, 0, 7) != $curMonth) continue;
+                $curMonthScore += $item->price * 1;
             }
-            $projScore = round(($unit->total_score - $task_score) * 100) / 100;
+            $curMonthScore /= 150;
+
+            // get current month tasks
+            $monthTasks = array_filter($taskList, function ($task) use ($unit, $curMonth) {
+                if ($task->info == '__manage__') return false;
+                if (substr($task->create_time, 0, 7) != $curMonth) return false;
+                return $task->project_id == $unit->id;
+            }, ARRAY_FILTER_USE_BOTH);
+            // calculate task month score
+            $curMonthTaskScore = 0;
+            foreach ($monthTasks as $item) $curMonthTaskScore += $item->score;
+            // calculate project remained score
+            $projScore = round(($curMonthScore - $curMonthTaskScore) * 100) / 100;
 
             $output .= '<div class="content-item"><div style="background-image:' . $bgStr . ';">';
             $output .= '<div class="btn-transparent" '
