@@ -640,12 +640,9 @@ class Projects extends CI_Controller
                         . ' onclick="editTasks(this);">任务管理'
                         . '<div class="task-alert"></div>'
                         . '</div>';
-                    $output .= '<div class="btn-rect btn-white" '
-                        . ' data-id="' . $unit->id . '" '
-                        . ' onclick="editItem(this);">新增任务</div>';
-//                    $output .= '<div class="btn-rect btn-white"'
-//                        . ' data-id="' . $unit->id . '"'
-//                        . ' onclick="provideItem(this);">提交项目</div>';
+                    $output .= '<div class="btn-rect btn-white"'
+                        . ' data-id="' . $unit->id . '"'
+                        . ' onclick="provideItem(this);">提交项目</div>';
                     $output .= '</div>';
                     break;
                 case 2:
