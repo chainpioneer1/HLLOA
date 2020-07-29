@@ -471,6 +471,7 @@
                     var item = priceDetail[i];
                     priceTotal += item.price * 1;
                 }
+                priceTotal = Math.round(priceTotal * 100) / 100;
 
                 var deadline = makeDateObject(mainItem.deadline);
                 var tmpDate = makeDateObject(mainItem.create_time);
@@ -487,6 +488,7 @@
                     for (var k = 0; k < monthDetail.length; k++) {
                         priceMonth += monthDetail[k].price * 1;
                     }
+                    priceMonth = Math.round(priceMonth * 100) / 100;
 
                     var taskDetail = _taskList.filter(function (a) {
                         if (a.project_id != mainItem.id) return false;
@@ -498,6 +500,7 @@
                         taskScoreMonth += taskDetail[k].score * 1;
                     }
                     taskScoreTotal += taskScoreMonth;
+                    taskScoreMonth = Math.round(taskScoreMonth * 100) / 100;
 
                     month_html += '<tr>' +
                         '<td>' + (i + 1) + '</td>' +
@@ -517,6 +520,7 @@
 
                     tmpDate.setMonth(tmpDate.getMonth() + 1);
                 }
+                taskScoreTotal = Math.round(taskScoreTotal * 100) / 100;
                 month_html += '<tr>' +
                     '<td colspan="3">总计</td>' +
                     '<td>' + priceTotal.toFixed(2) + '</td>' +

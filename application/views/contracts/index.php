@@ -350,6 +350,7 @@
                         '</tr>';
                 }
                 $('.edit-area .content-table[data-type="price-detail"] tbody').html(detail_html);
+                priceTotal = Math.round(priceTotal * 100) / 100;
 
                 var statusStr = _statusList.filter(function (a) {
                     return a.id == mainItem.progress;
@@ -360,7 +361,7 @@
                     '<td>' + mainItem.no + '</td>' +
                     '<td>' + mainItem.title + '</td>' +
                     '<td>' + mainItem.total_price + '</td>' +
-                    '<td>' + priceTotal + '</td>' +
+                    '<td>' + priceTotal.toFixed(2) + '</td>' +
                     '<td>' + mainItem.client_name + '</td>' +
                     '<td>' + (mainItem.project_worker ? mainItem.project_worker : '') + '</td>' +
                     '<td>' + mainItem.expire_date + '</td>' +

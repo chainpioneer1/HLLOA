@@ -54,9 +54,9 @@
             <!--            <div class="tab-item" data-type="all" data-sel="1">全部-->
             <!--                <div class="tab-number">9</div>-->
             <!--            </div>-->
-<!--                        <div class="tab-item" data-progress="0">未开始-->
-<!--                            <div class="tab-number">0</div>-->
-<!--                        </div>-->
+            <!--                        <div class="tab-item" data-progress="0">未开始-->
+            <!--                            <div class="tab-number">0</div>-->
+            <!--                        </div>-->
             <div class="tab-item" data-progress="1">进行中
                 <div class="tab-number">0</div>
             </div>
@@ -523,6 +523,7 @@
                     var item = priceDetail[i];
                     priceTotal += item.price * 1;
                 }
+                priceTotal = Math.round(priceTotal * 100) / 100;
 
                 var deadline = makeDateObject(mainItem.deadline);
                 var tmpDate = makeDateObject(mainItem.create_time);
@@ -539,6 +540,7 @@
                     for (var k = 0; k < monthDetail.length; k++) {
                         priceMonth += monthDetail[k].price * 1;
                     }
+                    priceMonth = Math.round(priceMonth * 100) / 100;
 
                     var taskDetail = _taskList.filter(function (a) {
                         if (a.project_id != mainItem.id) return false;
@@ -549,7 +551,8 @@
                     for (var k = 0; k < taskDetail.length; k++) {
                         taskScoreMonth += taskDetail[k].score * 1;
                     }
-                    taskScoreTotal+=taskScoreMonth;
+                    taskScoreTotal += taskScoreMonth;
+                    taskScoreMonth = Math.round(taskScoreMonth * 100) / 100;
 
                     month_html += '<tr>' +
                         '<td>' + (i + 1) + '</td>' +
@@ -569,6 +572,7 @@
 
                     tmpDate.setMonth(tmpDate.getMonth() + 1);
                 }
+                taskScoreTotal = Math.round(taskScoreTotal * 100) / 100;
                 month_html += '<tr>' +
                     '<td colspan="3">总计</td>' +
                     '<td>' + priceTotal.toFixed(2) + '</td>' +
@@ -657,8 +661,8 @@
                     var allTasks = _taskList.filter(function (a) {
                         if (a.info == '__manage__') return false;
                         if (a.create_time.substr(0, 7) != curMonth) return false;
-                        if(a.project_id != mainItem.id) return false;
-                        taskScore+= a.score*1;
+                        if (a.project_id != mainItem.id) return false;
+                        taskScore += a.score * 1;
                         return true;
                     });
 

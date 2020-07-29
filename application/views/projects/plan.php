@@ -94,7 +94,7 @@
             </div>
         </div>
     </div>
-    <div class="edit-area" data-type="view" style="height: auto;margin-bottom: 60px;">
+    <div class="edit-area" data-type="view" style="height: auto;margin-bottom: 30px;padding-bottom: 120px;">
         <div class="content-title"><span>项目详情</span>
             <div>
                 <!--<div style="text-align: right; margin-right: 50px;font-size: 20px;">
@@ -384,6 +384,7 @@
                         '</tr>';
                 }
                 $('.edit-area .content-table[data-type="price-detail"] tbody').html(detail_html);
+                priceTotal = Math.round(priceTotal * 100) / 100;
 
                 var deadline = makeDateObject(mainItem.deadline);
                 var tmpDate = makeDateObject(mainItem.create_time);
@@ -400,6 +401,7 @@
                     for (var k = 0; k < monthDetail.length; k++) {
                         priceMonth += monthDetail[k].price * 1;
                     }
+                    priceMonth = Math.round(priceMonth * 100) / 100;
 
                     var taskDetail = _taskList.filter(function (a) {
                         if (a.project_id != mainItem.id) return false;
@@ -411,6 +413,7 @@
                         taskScoreMonth += taskDetail[k].score * 1;
                     }
                     taskScoreTotal += taskScoreMonth;
+                    taskScoreMonth = Math.round(taskScoreMonth * 100) / 100;
 
                     month_html += '<tr>' +
                         '<td>' + (i + 1) + '</td>' +
@@ -430,6 +433,8 @@
 
                     tmpDate.setMonth(tmpDate.getMonth() + 1);
                 }
+                taskScoreTotal = Math.round(taskScoreTotal * 100) / 100;
+
                 month_html += '<tr>' +
                     '<td colspan="3">总计</td>' +
                     '<td>' + priceTotal.toFixed(2) + '</td>' +
