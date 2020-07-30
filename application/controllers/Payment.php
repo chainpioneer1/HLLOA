@@ -340,9 +340,9 @@ class Payment extends CI_Controller
             $profitRate = 0;
             $contractPrice = 0;
             if($unit->contract_price){
-                $contractPrice = intval($unit->contract_price*100)/100;
-                $profit = intval(($contractPrice - $scoreSum - $unit->price)*100)/100;
-                $profitRate = intval($profit / $contractPrice*100)/100;
+                $contractPrice = round($unit->contract_price*100)/100;
+                $profit = round(($contractPrice - $scoreSum - $unit->price)*100)/100;
+                $profitRate = round($profit / $contractPrice*100)/100;
             }
             $output .= '<tr data-id="' . $unit->project_id . '">';
             $output .= '<td>' . sprintf("%02d", $startNo) . '</td>';
