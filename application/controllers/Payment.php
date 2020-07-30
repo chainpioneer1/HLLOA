@@ -18,6 +18,7 @@ class Payment extends CI_Controller
         $this->load->model("userprice_m");
         $this->load->model("payment_m");
         $this->load->model("projects_m");
+        $this->load->model("tasks_m");
         $this->lang->load('main', $language);
         $this->load->library("pagination");
         $this->load->library("session");
@@ -308,7 +309,9 @@ class Payment extends CI_Controller
             $ret['pageId'], $ret['cntPerPage'],
             $queryStr, $this->data['range_from'], $this->data['range_to']);
         $resultList = $list;
-        $this->data["tbl_content"] = $this->output_content_project($resultList, $startNo);
+        $allScoreSum = $this->tasks_m->getScoreSum('tbl_tasks.progress = 3');
+
+        $this->data["tbl_content"] = $this->output_content_project($resultList, $startNo, $allScoreSum);
 
         if (!$this->checkRole(20)) {
             $this->load->view('_layout_error', $this->data);
@@ -317,7 +320,7 @@ class Payment extends CI_Controller
         }
     }
 
-    public function output_content_project($items, $startNo = 0)
+    public function output_content_project($items, $startNo = 0, $allScoreSum = array())
     {
         $userId = $this->session->userdata("_userid");
         $statusStr = ["主营业务收入", "其他业务收入", "项目成本支出", "费用支出"];
@@ -328,22 +331,35 @@ class Payment extends CI_Controller
             $i++;
             $startNo++;
             $editable = ($unit->status == 0);
-            $output .= '<tr data-id="' . $unit->id . '">';
+            $scoreSum = array_values(array_filter($allScoreSum, function ($_item) use ($unit){
+                return $_item->project_id == $unit->project_id;
+            },ARRAY_FILTER_USE_BOTH));
+            if($scoreSum) $scoreSum = $scoreSum[0]->scoreSum;
+            else $scoreSum = 0;
+            $profit = 0;
+            $profitRate = 0;
+            $contractPrice = 0;
+            if($unit->contract_price){
+                $contractPrice = intval($unit->contract_price*100)/100;
+                $profit = intval(($contractPrice - $scoreSum - $unit->price)*100)/100;
+                $profitRate = intval($profit / $contractPrice*100)/100;
+            }
+            $output .= '<tr data-id="' . $unit->project_id . '">';
             $output .= '<td>' . sprintf("%02d", $startNo) . '</td>';
             $output .= '<td>' . $unit->project_no . '</td>';
             $output .= '<td>' . $unit->project . '</td>';
             $output .= '<td>' . $unit->project_price . '</td>';
-            $output .= '<td>' . $unit->contract_price . '</td>';
-            $output .= '<td>' . 0 . '</td>';
+            $output .= '<td>' . $contractPrice . '</td>';
+            $output .= '<td>' . ($scoreSum * 150) . '</td>';
             $output .= '<td>' . $unit->price . '</td>';
             $output .= '<td>' . $unit->project_deadline . '</td>';
             $output .= '<td>' . $unit->project_completed_at . '</td>';
             $output .= '<td>' . $progressStr[$unit->project_progress] . '</td>';
-            $output .= '<td>' . 0 . '</td>';
-            $output .= '<td>' . 0 . '</td>';
+            $output .= '<td>' . $profit . '</td>';
+            $output .= '<td>' . $profitRate . '</td>';
             $output .= '<td>';
             $output .= '<div class="btn-rect btn-green" onclick="viewItem(this);"'
-                . ' data-id="' . $unit->id . '" '
+                . ' data-id="' . $unit->project_id . '" '
                 . '>查看详情</div>';
 //            $output .= '<div class="btn-rect btn-red" onclick="deleteItem(this);"'
 //                . ' data-id="' . $unit->id . '" '

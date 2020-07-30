@@ -139,6 +139,7 @@ class Tasks_m extends MY_Model
     public function getScoreSum($arr = array(), $queryStr = '')
     {
         $this->db->select("sum({$this->_table_name}.score) as scoreSum");
+        $this->db->select("{$this->_table_name}.project_id");
         $this->db->where($arr);
         if ($queryStr != '') {
             $this->db->where(
@@ -153,6 +154,7 @@ class Tasks_m extends MY_Model
             ->join("tbl_projects", "{$this->_table_name}.project_id = tbl_projects.id", "left")
             ->where("{$this->_table_name}.title != ''");
         $this->db->order_by($this->_order_by);
+        $this->db->group_by('tbl_tasks.project_id');
         $query = $this->db->get();
         return $query->result();
     }
