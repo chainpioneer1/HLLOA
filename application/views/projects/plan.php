@@ -580,12 +580,9 @@
         function editItem(elem) {
             $('.edit-area[data-type="view"]').fadeOut();
             var editElem = $('.edit-area[data-type="edit-main"]');
-
-            makeSelectElem(editElem.find('select[name="contract_id"]'), _contractList,
-                function (e) {
-                    var that = editElem.find('select[name="contract_id"]');
-                    var id = that.val();
-                });
+            var tmpContractList = _contractList.filter(function (a) {
+                return a.project_id == null;
+            });
 
             $('div[data-type="close-panel"]').off('click');
             $('div[data-type="close-panel"]').on('click', function () {
@@ -596,6 +593,11 @@
             var workerParent = editElem.find('.tree-multi-parent');
             workerParent.html('');
             if (!elem) {
+                makeSelectElem(editElem.find('select[name="contract_id"]'), tmpContractList,
+                    function (e) {
+                        var that = editElem.find('select[name="contract_id"]');
+                        var id = that.val();
+                    });
                 editElem.find('input').val('');
                 editElem.find('select').val('');
                 editElem.find('textarea').val('');
@@ -609,6 +611,17 @@
                 });
                 if (mainItem.length > 0) {
                     mainItem = mainItem[0];
+                    if (mainItem.contract_id) {
+                        var projContract = _contractList.filter(function (a) {
+                            return a.id == mainItem.contract_id;
+                        });
+                        if (projContract.length) tmpContractList.push(projContract[0]);
+                    }
+                    makeSelectElem(editElem.find('select[name="contract_id"]'), tmpContractList,
+                        function (e) {
+                            var that = editElem.find('select[name="contract_id"]');
+                            var id = that.val();
+                        });
 
                     _editItemId = mainItem.pid;
                     editElem.find('input[name="no"]').val(mainItem.no);

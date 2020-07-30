@@ -389,11 +389,13 @@
                 curMonthScore = curMonthScore / 150;
 
                 var taskScore = 0;
+                var taskNo = 0;
                 var allTasks = _taskList.filter(function (a) {
+                    if (a.project_id != _project) return false;
                     if (a.info == '__manage__') return false;
+                    taskNo++;
                     if (a.create_time.substr(0, 7) != curMonth) return false;
-                    if(a.project_id != _project) return false;
-                    taskScore+= a.score*1;
+                    taskScore += a.score * 1;
                     return true;
                 });
 
@@ -403,7 +405,14 @@
                 editElem.find('label[name="no"]').hide();
                 editElem.find('label[name="title"]').hide();
                 editElem.find('input[name="no"]').show();
+                editElem.find('input[name="no"]').val(_projectItem.no + makeNDigit(taskNo + 1, 4));
                 editElem.find('input[name="title"]').show();
+                var lastDay = makeDateString(makeDateObject()).substr(0, 7) + '-01 23:30:00';
+                lastDay = makeDateObject(lastDay);
+                lastDay.setMonth(lastDay.getMonth() + 1);
+                lastDay.setDate(lastDay.getDate() - 1);
+
+                editElem.find('input[name="deadline"]').handleDtpicker('setDate', lastDay);
 
                 tree_search();
                 tree_select();
@@ -433,8 +442,8 @@
                     var allTasks = _taskList.filter(function (a) {
                         if (a.info == '__manage__') return false;
                         if (a.create_time.substr(0, 7) != curMonth) return false;
-                        if(a.project_id != _project) return false;
-                        taskScore+= a.score*1;
+                        if (a.project_id != _project) return false;
+                        taskScore += a.score * 1;
                         return true;
                     });
 

@@ -86,6 +86,7 @@ class Contracts extends CI_Controller
             $output .= '<td>' . $unit->total_price . '</td>';
             $output .= '<td class="paid_price">' . $unit->paid_price . '</td>';
             $output .= '<td>' . $unit->client_name . '</td>';
+            $output .= '<td>' . $unit->project . '</td>';
             $output .= '<td>' . $unit->project_worker . '</td>';
             $output .= '<td>' . $unit->expire_date . '</td>';
             $output .= '<td>' . $unit->signed_date . '</td>';

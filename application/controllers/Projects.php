@@ -777,6 +777,8 @@ class Projects extends CI_Controller
                         $editArr['title'] = $this->input->post('title');
                         if ($this->input->post('contract_id'))
                             $editArr['contract_id'] = $this->input->post('contract_id');
+                        else
+                            $editArr['contract_id'] = null;
                         $editArr['deadline'] = $this->input->post('deadline');
                         $editArr['update_time'] = date("Y-m-d H:i:s");
                     }
