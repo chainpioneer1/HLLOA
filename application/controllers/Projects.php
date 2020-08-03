@@ -824,7 +824,7 @@ class Projects extends CI_Controller
             foreach ($priceDetail as $item) {
                 $totalPrice += floatval($item->price);
             }
-            $totalScore = intval($totalPrice / 150 * 100) / 100;
+            $totalScore = round($totalPrice / 150 * 100) / 100;
             $priceDetail = json_encode($priceDetail);
             foreach ($oldItem as $item) {
                 $this->mainModel->edit(array(
