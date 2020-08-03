@@ -17,7 +17,7 @@ class Tasks_m extends MY_Model
         $this->db->select('id, no, title, planner_id, author_id, worker_id');
         $this->db->select('price_detail');
         $this->db->from('tbl_projects');
-//        $this->db->where("progress = '1' or progress = '2'");
+        $this->db->where("progress = '1' or progress = '2'");
         $allProjects = $this->db->get()->result();
 
         $curMonth = date('Y-m');

@@ -341,7 +341,7 @@ class Payment extends CI_Controller
             $contractPrice = 0;
             if($unit->contract_price){
                 $contractPrice = round($unit->contract_price*100)/100;
-                $profit = round(($contractPrice - $scoreSum - $unit->price)*100)/100;
+                $profit = round(($contractPrice - $scoreSum*150 - $unit->price)*100)/100;
                 $profitRate = round($profit / $contractPrice*100)/100;
             }
             $output .= '<tr data-id="' . $unit->project_id . '">';

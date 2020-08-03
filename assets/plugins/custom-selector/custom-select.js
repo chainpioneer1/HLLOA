@@ -129,7 +129,7 @@ function tree_search(ele, value, name, group, list) {
         var searchField = document.createElement('div');
         searchField.setAttribute('class', 'tree-search-field');
         optionItems.appendChild(searchField);
-        searchField.innerHTML = "<input placeholder=''/>" +
+        searchField.innerHTML = "<input placeholder='' oninput='treeSearchBtn(this)'/>" +
             "<button type='button' onclick='treeSearchBtn(this)'><i class='fa fa-search'></i></button>";
 
         // search content
@@ -288,7 +288,7 @@ function tree_multi_search(ele, value, name, group, list) {
         var searchField = document.createElement('div');
         searchField.setAttribute('class', 'tree-search-field');
         optionItems.appendChild(searchField);
-        searchField.innerHTML = "<input placeholder=''/>" +
+        searchField.innerHTML = "<input placeholder='' oninput='treeSearchBtn(this)'/>" +
             "<button type='button' onclick='treeSearchBtn(this)'><i class='fa fa-search'></i></button>";
 
         // search content
@@ -428,22 +428,35 @@ function clearTreeMultiSearch(ele) {
     tree_multi_search();
 }
 
+var _treeTmr = 0;
+
 function treeSearchBtn(ele) {
     var search_key = $(ele).parent().find('input').val();
-    console.log(search_key);
     var searchContent = $(ele).parent().parent().find('.tree-search-content')[0];
     $(searchContent).find('.tree-parent').each(function () {
-        $(this).removeClass('tree-open').removeClass('tree-close').addClass('tree-open');
-        $(this).find('i').removeClass('fa-plus-circle').addClass('fa-minus-circle');
+        $(this).removeClass('tree-open').removeClass('tree-close').addClass('tree-close');
+        $(this).find('i').removeClass('fa-minus-circle').addClass('fa-plus-circle');
     });
     $(searchContent).find('.tree-child').each(function () {
-        console.log(this.innerHTML);
         if (this.innerHTML.indexOf(search_key) >= 0) {
             $(this).removeClass('tree-close').removeClass('tree-open').addClass('tree-open')
         } else {
             $(this).removeClass('tree-close').removeClass('tree-open').addClass('tree-close')
         }
-    })
+    });
+    $(searchContent).find('div.tree-child.tree-open').each(function (idx, elem) {
+        var that = $(elem);
+        for (var i = 0; i < 100; i++) {
+            that = that.prev();
+            if (that.attr('class').indexOf('tree-parent') >= 0) {
+                that.removeClass('tree-open').removeClass('tree-close').addClass('tree-open');
+                that.find('i').removeClass('fa-plus-circle').addClass('fa-minus-circle');
+                break;
+            }
+        }
+    });
+    $(searchContent).find('div.tree-parent.tree-open').show();
+    $(searchContent).find('div.tree-parent.tree-close').hide();
 }
 
 function removeDuplicated(arr, subKey) {

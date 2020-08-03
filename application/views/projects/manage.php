@@ -559,7 +559,7 @@
             }
 
         }
-
+        var _prevAddedUserId = 0;
         function appendUser(elem) {
             var that, type;
             if (!elem) {
@@ -585,6 +585,8 @@
                     newElem = $(newElem[newElem.length - 1]);
                     makeTreeMultiSearchSelect(newElem, _userList,
                         '', 'part', 'id', 'title', function (e) {
+                        var id = newElem.val();
+                        _prevAddedUserId = id;
                         });
                     break;
                 case 'minus':
@@ -630,6 +632,8 @@
                         workerElem = $(workerElem[workerElem.length - 1]);
                         workerElem.val(workers[i]);
                     }
+                    if(_prevAddedUserId>0)
+                        workerParent.find('select[name="worker_id[]"]').val(_prevAddedUserId);
 
                     _editItemId = mainItem.pid;
                     editElem.find('input[name="total_score"]').val(mainItem.total_score);

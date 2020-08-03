@@ -352,6 +352,8 @@
             editElem.fadeIn('fast');
         }
 
+        var _prevAddedUserId = 0;
+
         function editItem(elem) {
             $('.edit-area[data-type="view"]').fadeOut();
             var editElem = $('.edit-area[data-type="edit"]');
@@ -360,6 +362,7 @@
                 _userList, '', 'part', 'id', 'title', function (e) {
                     var that = editElem.find('select[name="worker_id"]');
                     var id = that.val();
+                    _prevAddedUserId = id;
                 });
             $('div[data-type="close-panel"]').off('click');
             $('div[data-type="close-panel"]').on('click', function () {
@@ -373,6 +376,7 @@
                 editElem.find('select').val('');
                 editElem.find('textarea').val('');
                 editElem.find('select[name="priority"]').val('0');
+                if (_prevAddedUserId > 0) editElem.find('select[name="worker_id"]').val(_prevAddedUserId);
                 _editItemId = 0;
 
                 editElem.find('label[name="project"]').html(_projectItem.title + " (" + _projectItem.no + ")");
@@ -456,8 +460,9 @@
                     editElem.find('label[name="project"]').html(mainItem.project);
                     editElem.find('input[name="no"]').val(mainItem.no);
                     editElem.find('input[name="title"]').val(mainItem.title);
-                    if (mainItem.worker_id != '0')
+                    if (mainItem.worker_id != '0') {
                         editElem.find('select[name="worker_id"]').val(mainItem.worker_id);
+                    }
                     editElem.find('input[name="score"]').val(mainItem.score);
                     editElem.find('input[name="deadline"]').val(mainItem.deadline);
                     editElem.find('textarea[name="description"]').val(mainItem.description);
