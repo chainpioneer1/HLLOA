@@ -391,6 +391,7 @@
                 var taskScoreTotal = 0;
                 var month_html = '';
                 for (var i = 0; i < 100; i++) {
+                    if (tmpDate > makeDateObject()) break;
                     if (tmpDate > deadline) break;
                     var monthStr = makeDateString(tmpDate).substr(0, 7);
 
@@ -457,8 +458,8 @@
                 var summary_html = '<tr>' +
                     '<td>' + mainItem.no + '</td>' +
                     '<td>' + mainItem.title + '</td>' +
-                    '<td>' + (priceTotal?priceTotal:'') + '</td>' +
-                    '<td>' + (priceTotal?((priceTotal / 150).toFixed(2)):'') + '</td>' +
+                    '<td>' + (priceTotal ? priceTotal : '') + '</td>' +
+                    '<td>' + (priceTotal ? ((priceTotal / 150).toFixed(2)) : '') + '</td>' +
                     '<td>' + (mainItem.worker ? mainItem.worker : '') + '</td>' +
                     '<td>' + contract.title + '</td>' +
                     '<td>' + contract.no + '</td>' +
