@@ -17,22 +17,22 @@ class Tasks_m extends MY_Model
         $this->db->select('id, no, title, planner_id, author_id, worker_id');
         $this->db->select('price_detail');
         $this->db->from('tbl_projects');
-        $this->db->where("progress = '1' or progress = '2'");
+        $this->db->where("progress = '3'");
         $allProjects = $this->db->get()->result();
 
         $curMonth = date('Y-m');
         $this->db->select("id, no, title, project_id, author_id");
         $this->db->select("sum(score) as month_score");
         $this->db->from($this->_table_name);
-        $this->db->where("substr(published_at, 1,7) = '{$curMonth}'");
+//        $this->db->where("substr(published_at, 1,7) = '{$curMonth}'");
         $this->db->where("info is null");
-        $this->db->group_by("substr(published_at, 1,7)");
+//        $this->db->group_by("substr(published_at, 1,7)");
         $this->db->group_by("project_id");
         $allTasks = $this->db->get()->result();
 
         $this->db->select("id, project_id, score");
         $this->db->from($this->_table_name);
-        $this->db->where("substr(create_time, 1,7) = '{$curMonth}'");
+//        $this->db->where("substr(create_time, 1,7) = '{$curMonth}'");
         $this->db->where("info = '__manage__'");
         $allManTasks = $this->db->get()->result();
 
@@ -41,7 +41,7 @@ class Tasks_m extends MY_Model
             $priceDetail = json_decode($project->price_detail);
             $curMonthScore = 0;
             foreach ($priceDetail as $item) {
-                if (substr($item->created, 0, 7) != $curMonth) continue;
+//                if (substr($item->created, 0, 7) != $curMonth) continue;
                 $curMonthScore += $item->price*1;
             }
             $curMonthScore /= 150;
@@ -64,7 +64,7 @@ class Tasks_m extends MY_Model
             }, ARRAY_FILTER_USE_BOTH));
             $arr = array(
                 'no' => $project->no . '_M',
-                'title' => date('m') . '月管理:' . $project->title,
+                'title' => '管理:' . $project->title,
                 'project_id' => $project->id,
                 'author_id' => $project->worker_id,
                 'worker_id' => $project->worker_id,
