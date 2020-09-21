@@ -55,7 +55,7 @@ class Tasks_m extends MY_Model
                 $curMonthTaskScore += $item->month_score;
             }
             // calc management task score
-            $curManScore = intval(($curMonthScore - $curMonthTaskScore) * .3 * 100) / 100;
+            $curManScore = round(($curMonthScore - $curMonthTaskScore) * .3 * 100) / 100;
 
 //            $curManScore = $curMonthTaskScore;
             // update management task score
