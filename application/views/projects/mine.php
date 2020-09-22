@@ -113,7 +113,8 @@
                 <tr>
                     <th>项目编号</th>
                     <th>项目名称</th>
-                    <th>项目金额(￥)</th>
+                    <th>项目收入(￥)</th>
+                    <th>项目费用(￥)</th>
                     <th>项目总分</th>
                     <th>项目负责人</th>
                     <th>关联合同</th>
@@ -136,7 +137,7 @@
                     <th width="100">序号</th>
                     <th width="200">项目编号</th>
                     <th>项目名称</th>
-                    <th width="200">本月增加项目金额(￥)</th>
+                    <th width="200">本月增加绩效金额(￥)</th>
                     <th>本月新增项目分数</th>
                     <th>本月任务总分</th>
                     <th>本月剩余分数</th>
@@ -519,28 +520,38 @@
                 else priceDetail = [];
 
                 var priceTotal = 0;
+                var priceOut = 0;
                 for (var i = 0; i < priceDetail.length; i++) {
                     var item = priceDetail[i];
                     priceTotal += item.price * 1;
+                    if (item.price_other)
+                        priceOut += item.price_other * 1;
                 }
                 priceTotal = Math.round(priceTotal * 100) / 100;
+                priceOut = Math.round(priceOut * 100) / 100;
 
                 var deadline = makeDateObject(mainItem.deadline);
+                var curDate = makeDateObject();
                 var tmpDate = makeDateObject(mainItem.create_time);
                 var month_html = '';
                 var taskScoreTotal = 0;
                 for (var i = 0; i < 100; i++) {
                     if (tmpDate > deadline) break;
+                    if (tmpDate > curDate) break;
                     var monthStr = makeDateString(tmpDate).substr(0, 7);
 
                     var monthDetail = priceDetail.filter(function (a) {
                         return a.created.substr(0, 7) == monthStr;
                     });
                     var priceMonth = 0;
+                    var priceMonthOut = 0;
                     for (var k = 0; k < monthDetail.length; k++) {
                         priceMonth += monthDetail[k].price * 1;
+                        if (monthDetail[k].price_other)
+                            priceMonthOut += monthDetail[k].price_other * 1;
                     }
                     priceMonth = Math.round(priceMonth * 100) / 100;
+                    priceMonthOut = Math.round(priceMonthOut * 100) / 100;
 
                     var taskDetail = _taskList.filter(function (a) {
                         if (a.project_id != mainItem.id) return false;
@@ -558,10 +569,10 @@
                         '<td>' + (i + 1) + '</td>' +
                         '<td>' + mainItem.no + '</td>' +
                         '<td>' + mainItem.title + '</td>' +
-                        '<td>' + priceMonth.toFixed(2) + '</td>' +
-                        '<td>' + (priceMonth / 150).toFixed(2) + '</td>' +
-                        '<td>' + taskScoreTotal.toFixed(2) + '</td>' +
-                        '<td>' + (priceMonth / 150 - taskScoreMonth).toFixed(2) + '</td>' +
+                        '<td>' + (priceMonth * .6 - priceMonthOut).toFixed(2) + '</td>' +
+                        '<td>' + ((priceMonth * .6 - priceMonthOut) / 150).toFixed(2) + '</td>' +
+                        '<td>' + taskScoreMonth.toFixed(2) + '</td>' +
+                        '<td>' + ((priceMonth * .6 - priceMonthOut) / 150 - taskScoreMonth).toFixed(2) + '</td>' +
                         '<td>' + monthStr + '</td>' +
                         '<td>' + '<div class="btn-rect btn-green" onclick="viewTasks(this);"'
                         + ' data-id="' + mainItem.id + '" '
@@ -575,10 +586,10 @@
                 taskScoreTotal = Math.round(taskScoreTotal * 100) / 100;
                 month_html += '<tr>' +
                     '<td colspan="3">总计</td>' +
-                    '<td>' + priceTotal.toFixed(2) + '</td>' +
-                    '<td>' + (priceTotal / 150).toFixed(2) + '</td>' +
+                    '<td>' + (priceTotal * .6 - priceOut).toFixed(2) + '</td>' +
+                    '<td>' + ((priceTotal * .6 - priceOut) / 150).toFixed(2) + '</td>' +
                     '<td>' + taskScoreTotal.toFixed(2) + '</td>' +
-                    '<td>' + (priceTotal / 150 - taskScoreTotal).toFixed(2) + '</td>' +
+                    '<td>' + ((priceTotal * .6 - priceOut) / 150 - taskScoreTotal).toFixed(2) + '</td>' +
                     '<td></td>' +
                     '<td></td>' +
                     '</tr>';
@@ -595,8 +606,9 @@
                 var summary_html = '<tr>' +
                     '<td>' + mainItem.no + '</td>' +
                     '<td>' + mainItem.title + '</td>' +
-                    '<td>' + priceTotal + '</td>' +
-                    '<td>' + (priceTotal / 150).toFixed(2) + '</td>' +
+                    '<td>' + (true ? priceTotal : '') + '</td>' +
+                    '<td>' + (true ? priceOut : '') + '</td>' +
+                    '<td>' + (true ? (((priceTotal * .6 - priceOut) / 150).toFixed(2)) : '') + '</td>' +
                     '<td>' + (mainItem.worker ? mainItem.worker : '') + '</td>' +
                     '<td>' + contract.title + '</td>' +
                     '<td>' + contract.no + '</td>' +

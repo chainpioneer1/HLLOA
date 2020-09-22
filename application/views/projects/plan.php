@@ -399,11 +399,13 @@
                 priceOut = Math.round(priceOut * 100) / 100;
 
                 var deadline = makeDateObject(mainItem.deadline);
+                var curDate = makeDateObject();
                 var tmpDate = makeDateObject(mainItem.create_time.substr(0, 7) + '-01');
                 var taskScoreTotal = 0;
                 var month_html = '';
                 for (var i = 0; i < 100; i++) {
                     if (tmpDate > deadline) break;
+                    if (tmpDate > curDate) break;
                     var monthStr = makeDateString(tmpDate).substr(0, 7);
 
                     var monthDetail = priceDetail.filter(function (a) {
