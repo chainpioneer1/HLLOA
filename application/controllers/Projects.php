@@ -813,18 +813,25 @@ class Projects extends CI_Controller
             $pid = $this->input->post('pid');
             $oldItem = $this->mainModel->get_where(array('pid' => $pid));
             $priceDetail = json_decode($oldItem[0]->price_detail);
-            array_push($priceDetail, [
+            $appendItem = [
                 'price' => $this->input->post('price'),
                 'description' => $this->input->post('description'),
                 'created' => date('Y-m-d H:i:s')
-            ]);
+            ];
+            if ($this->input->post('price_other') > 0) {
+                $appendItem['price_other'] = $this->input->post('price_other');
+            }
+            array_push($priceDetail, $appendItem);
             $priceDetail = json_decode(json_encode($priceDetail));
             $totalScore = 0;
             $totalPrice = 0;
+            $outPrice = 0;
             foreach ($priceDetail as $item) {
                 $totalPrice += floatval($item->price);
+                if (isset($item->price_other))
+                    $outPrice += floatval($item->price_other);
             }
-            $totalScore = round($totalPrice / 150 * 100) / 100;
+            $totalScore = round(($totalPrice*.6 - $outPrice) / 150 * 100) / 100;
             $priceDetail = json_encode($priceDetail);
             foreach ($oldItem as $item) {
                 $this->mainModel->edit(array(
