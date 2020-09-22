@@ -377,7 +377,7 @@
                 for (var i = 0; i < priceDetail.length; i++) {
                     var item = priceDetail[i];
                     priceTotal += item.price * 1;
-                    if(item.price_other)
+                    if (item.price_other)
                         priceOut += item.price_other * 1;
                     else item.price_other = '';
                     var userItem = _userList.filter(function (a) {
@@ -399,7 +399,7 @@
                 priceOut = Math.round(priceOut * 100) / 100;
 
                 var deadline = makeDateObject(mainItem.deadline);
-                var tmpDate = makeDateObject(mainItem.create_time);
+                var tmpDate = makeDateObject(mainItem.create_time.substr(0, 7) + '-01');
                 var taskScoreTotal = 0;
                 var month_html = '';
                 for (var i = 0; i < 100; i++) {
@@ -413,7 +413,7 @@
                     var priceMonthOut = 0;
                     for (var k = 0; k < monthDetail.length; k++) {
                         priceMonth += monthDetail[k].price * 1;
-                        if(monthDetail[k].price_other)
+                        if (monthDetail[k].price_other)
                             priceMonthOut += monthDetail[k].price_other * 1;
                     }
                     priceMonth = Math.round(priceMonth * 100) / 100;
@@ -435,10 +435,10 @@
                         '<td>' + (i + 1) + '</td>' +
                         '<td>' + mainItem.no + '</td>' +
                         '<td>' + mainItem.title + '</td>' +
-                        '<td>' + (priceMonth*.6 - priceMonthOut).toFixed(2) + '</td>' +
-                        '<td>' + ((priceMonth*.6 - priceMonthOut) / 150).toFixed(2) + '</td>' +
+                        '<td>' + (priceMonth * .6 - priceMonthOut).toFixed(2) + '</td>' +
+                        '<td>' + ((priceMonth * .6 - priceMonthOut) / 150).toFixed(2) + '</td>' +
                         '<td>' + taskScoreMonth.toFixed(2) + '</td>' +
-                        '<td>' + ((priceMonth*.6 - priceMonthOut) / 150 - taskScoreMonth).toFixed(2) + '</td>' +
+                        '<td>' + ((priceMonth * .6 - priceMonthOut) / 150 - taskScoreMonth).toFixed(2) + '</td>' +
                         '<td>' + monthStr + '</td>' +
                         '<td>' + '<div class="btn-rect btn-green" onclick="viewTasks(this);"'
                         + ' data-id="' + mainItem.id + '" '
@@ -454,10 +454,10 @@
 
                 month_html += '<tr>' +
                     '<td colspan="3">总计</td>' +
-                    '<td>' + (priceTotal*.6 - priceOut).toFixed(2) + '</td>' +
-                    '<td>' + ((priceTotal*.6 - priceOut) / 150).toFixed(2) + '</td>' +
+                    '<td>' + (priceTotal * .6 - priceOut).toFixed(2) + '</td>' +
+                    '<td>' + ((priceTotal * .6 - priceOut) / 150).toFixed(2) + '</td>' +
                     '<td>' + taskScoreTotal.toFixed(2) + '</td>' +
-                    '<td>' + ((priceTotal*.6 - priceOut) / 150 - taskScoreTotal).toFixed(2) + '</td>' +
+                    '<td>' + ((priceTotal * .6 - priceOut) / 150 - taskScoreTotal).toFixed(2) + '</td>' +
                     '<td></td>' +
                     '<td></td>' +
                     '</tr>';
