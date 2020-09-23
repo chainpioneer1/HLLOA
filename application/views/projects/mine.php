@@ -662,12 +662,15 @@
 
                     var priceDetail = JSON.parse(mainItem.price_detail);
                     var curMonthScore = 0;
+                    var curMonthScoreOut = 0;
                     for (var i = 0; i < priceDetail.length; i++) {
                         var item = priceDetail[i];
                         if (item.created.substr(0, 7) != curMonth) continue;
                         curMonthScore += item.price * 1;
+                        if (item.price_other)
+                            curMonthScoreOut += item.price * 1;
                     }
-                    curMonthScore = curMonthScore / 150;
+                    curMonthScore = (curMonthScore * .6 - curMonthScoreOut) / 150;
 
                     var taskScore = 0;
                     var allTasks = _taskList.filter(function (a) {
