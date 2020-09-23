@@ -40,11 +40,14 @@ class Tasks_m extends MY_Model
             // get current month project score;
             $priceDetail = json_decode($project->price_detail);
             $curMonthScore = 0;
+            $curMonthScoreOut = 0;
             foreach ($priceDetail as $item) {
 //                if (substr($item->created, 0, 7) != $curMonth) continue;
                 $curMonthScore += $item->price*1;
+                if(isset($item->price_other))
+                    $curMonthScoreOut += $item->price_other *1;
             }
-            $curMonthScore /= 150;
+            $curMonthScore  = ($curMonthScore *.6 - $curMonthScoreOut)/ 150;
 
             // get current month task total score;
             $monthTasks = array_values(array_filter($allTasks, function ($task) use ($project) {
