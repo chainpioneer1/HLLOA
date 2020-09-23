@@ -668,7 +668,7 @@
                         if (item.created.substr(0, 7) != curMonth) continue;
                         curMonthScore += item.price * 1;
                         if (item.price_other)
-                            curMonthScoreOut += item.price * 1;
+                            curMonthScoreOut += item.price_other * 1;
                     }
                     curMonthScore = (curMonthScore * .6 - curMonthScoreOut) / 150;
 
