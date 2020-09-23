@@ -577,11 +577,14 @@ class Projects extends CI_Controller
             // calculate project month score
             $priceDetail = json_decode($unit->price_detail);
             $curMonthScore = 0;
+            $curMonthScoreOut = 0;
             foreach ($priceDetail as $item) {
                 if (substr($item->created, 0, 7) != $curMonth) continue;
                 $curMonthScore += $item->price * 1;
+                if (isset($item->price_other))
+                    $curMonthScoreOut += $item->price_other * 1;
             }
-            $curMonthScore /= 150;
+            $curMonthScore = ($curMonthScore * .6 - $curMonthScoreOut)/ 150;
 
             // get current month tasks
             $monthTasks = array_filter($taskList, function ($task) use ($unit, $curMonth) {
@@ -831,7 +834,7 @@ class Projects extends CI_Controller
                 if (isset($item->price_other))
                     $outPrice += floatval($item->price_other);
             }
-            $totalScore = round(($totalPrice*.6 - $outPrice) / 150 * 100) / 100;
+            $totalScore = round(($totalPrice * .6 - $outPrice) / 150 * 100) / 100;
             $priceDetail = json_encode($priceDetail);
             foreach ($oldItem as $item) {
                 $this->mainModel->edit(array(
