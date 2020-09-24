@@ -480,11 +480,13 @@
 
                 var deadline = makeDateObject(mainItem.deadline);
                 var curDate = makeDateObject();
+                var completeDate = makeDateObject();
+                if(mainItem.progress ==3) completeDate = makeDateObject(mainItem.completed_at);
                 var tmpDate = makeDateObject(mainItem.create_time.substr(0,7)+'-01');
                 var month_html = '';
                 var taskScoreTotal = 0;
                 for (var i = 0; i < 100; i++) {
-                    if (tmpDate > deadline) break;
+                    if (tmpDate > completeDate) break;
                     if (tmpDate > curDate) break;
                     var monthStr = makeDateString(tmpDate).substr(0, 7);
 
