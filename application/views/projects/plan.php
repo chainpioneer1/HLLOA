@@ -522,13 +522,25 @@
                 headerTitle, '', function () {
                     var priceDetail = mainItem.price_detail;
                     if (priceDetail) priceDetail = JSON.parse(priceDetail);
-                    else priceDetail = '[]';
+                    else priceDetail = [];
                     var modalElem = $('.edit-area.modal-container[data-type="edit"]');
                     var priceItem = {
                         price: modalElem.find('input[name="price"]').val(),
                         price_other: modalElem.find('input[name="price_other"]').val(),
                         description: modalElem.find('textarea[name="description"]').val()
                     }
+                    var errMsg = '';
+                    if (!priceItem.price && !priceItem.price_other) errMsg = '请输入金额数据';
+                    if (priceItem.price < 0) errMsg = '增加收入不能负数';
+                    if (priceItem.price_other < 0) errMsg = '其他费用不能负数';
+                    if (errMsg) {
+                        showConfirm(baseURL + 'assets/images/modal/modal-edit-top.png',
+                            '提示', errMsg, function () {
+                                appendPrice(elem);
+                            });
+                        return true;
+                    }
+
                     priceDetail.push(priceItem);
 
                     $.ajax({
@@ -560,8 +572,7 @@
                     });
                 }, function () {
                     $('.base-container .nav-position-title').html(_navTitle + ' ＞ 项目详情');
-                }
-            );
+                });
             editElem.fadeIn('fast');
         }
 

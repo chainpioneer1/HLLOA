@@ -113,16 +113,16 @@
                 <tr>
                     <th>项目编号</th>
                     <th>项目名称</th>
-                    <th>项目收入(￥)</th>
-                    <th>项目费用(￥)</th>
+<!--                    <th>项目收入(￥)</th>-->
+<!--                    <th>项目费用(￥)</th>-->
                     <th>项目总分</th>
                     <th>项目负责人</th>
-                    <th>关联合同</th>
-                    <th>合同编号</th>
-                    <th>合同金额</th>
-                    <th width="100">新建时间</th>
-                    <th width="100">截止时间</th>
-                    <th width="100">项目状态</th>
+<!--                    <th>关联合同</th>-->
+<!--                    <th>合同编号</th>-->
+<!--                    <th>合同金额</th>-->
+                    <th>新建时间</th>
+                    <th>截止时间</th>
+                    <th>项目状态</th>
                 </tr>
                 </thead>
                 <tbody></tbody>
@@ -137,7 +137,7 @@
                     <th width="100">序号</th>
                     <th width="200">项目编号</th>
                     <th>项目名称</th>
-                    <th width="200">本月增加绩效金额(￥)</th>
+<!--                    <th width="200">本月增加绩效金额(￥)</th>-->
                     <th>本月新增项目分数</th>
                     <th>本月任务总分</th>
                     <th>本月剩余分数</th>
@@ -569,7 +569,7 @@
                         '<td>' + (i + 1) + '</td>' +
                         '<td>' + mainItem.no + '</td>' +
                         '<td>' + mainItem.title + '</td>' +
-                        '<td>' + (priceMonth * .6 - priceMonthOut).toFixed(2) + '</td>' +
+                        // '<td>' + (priceMonth * .6 - priceMonthOut).toFixed(2) + '</td>' +
                         '<td>' + ((priceMonth * .6 - priceMonthOut) / 150).toFixed(2) + '</td>' +
                         '<td>' + taskScoreMonth.toFixed(2) + '</td>' +
                         '<td>' + ((priceMonth * .6 - priceMonthOut) / 150 - taskScoreMonth).toFixed(2) + '</td>' +
@@ -586,7 +586,7 @@
                 taskScoreTotal = Math.round(taskScoreTotal * 100) / 100;
                 month_html += '<tr>' +
                     '<td colspan="3">总计</td>' +
-                    '<td>' + (priceTotal * .6 - priceOut).toFixed(2) + '</td>' +
+                    // '<td>' + (priceTotal * .6 - priceOut).toFixed(2) + '</td>' +
                     '<td>' + ((priceTotal * .6 - priceOut) / 150).toFixed(2) + '</td>' +
                     '<td>' + taskScoreTotal.toFixed(2) + '</td>' +
                     '<td>' + ((priceTotal * .6 - priceOut) / 150 - taskScoreTotal).toFixed(2) + '</td>' +
@@ -606,13 +606,13 @@
                 var summary_html = '<tr>' +
                     '<td>' + mainItem.no + '</td>' +
                     '<td>' + mainItem.title + '</td>' +
-                    '<td>' + (true ? priceTotal : '') + '</td>' +
-                    '<td>' + (true ? priceOut : '') + '</td>' +
+                    // '<td>' + (true ? priceTotal : '') + '</td>' +
+                    // '<td>' + (true ? priceOut : '') + '</td>' +
                     '<td>' + (true ? (((priceTotal * .6 - priceOut) / 150).toFixed(2)) : '') + '</td>' +
                     '<td>' + (mainItem.worker ? mainItem.worker : '') + '</td>' +
-                    '<td>' + contract.title + '</td>' +
-                    '<td>' + contract.no + '</td>' +
-                    '<td>' + contract.total_price + '</td>' +
+                    // '<td>' + contract.title + '</td>' +
+                    // '<td>' + contract.no + '</td>' +
+                    // '<td>' + contract.total_price + '</td>' +
                     '<td>' + mainItem.create_time + '</td>' +
                     '<td>' + mainItem.deadline + '</td>' +
                     '<td>' + _titleStr[mainItem.progress] + '</td>' +
