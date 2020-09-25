@@ -136,7 +136,7 @@
                     <th width="200">项目费用(￥)</th>
                     <th width="200">增加收入(￥)</th>
                     <th width="200">新建时间</th>
-                    <th width="150">创建人</th>
+                    <th width="150">项目创建人</th>
                     <th>备注</th>
                 </tr>
                 </thead>
