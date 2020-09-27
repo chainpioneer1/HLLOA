@@ -144,13 +144,13 @@
             </table>
         </div>
         <div class="edit-container" style="border:none;padding:30px 80px;text-align: center">
-            <?php if (true || $progress == 0) { ?>
+            <?php if ($progress != 3) { ?>
                 <div class="input-area" style="margin: 0;text-align: center;">
                     <div class="btn-rect btn-orange" name="btns" onclick="appendPrice(this);">
                         <i class="fa fa-plus"></i> 新增项目金额计划
                     </div>
                 </div>
-            <?php } else { ?>
+            <?php } else if(false){ ?>
                 <div class="input-area" style="margin: 0;text-align: center;">
                     <div class="btn-rect btn-blue" name="btns" style="width: 210px;" onclick="viewTasks(this);">查看任务
                     </div>
