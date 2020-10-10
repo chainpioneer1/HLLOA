@@ -116,4 +116,10 @@ function initializePickers() {
         $('#MonthPicker_Button_')[0].click();
     });
 
+    $('input[name="search_keyword"]').on('keypress', function (e) {
+        if(e.which == 13 || e.keyCode == 13){
+            $(this).parent().find('.fa-search').parent().click();
+        }
+    })
+
 }
