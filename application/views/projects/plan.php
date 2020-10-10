@@ -169,7 +169,7 @@
                     <th width="200">本月增加绩效金额(￥)</th>
                     <th>本月新增项目分数</th>
                     <th>本月任务总分</th>
-                    <th>本月剩余分数</th>
+                    <th>项目剩余分数</th>
                     <th>结算月份</th>
                     <th width="150">操作</th>
                 </tr>
@@ -442,7 +442,8 @@
                         '<td>' + (priceMonth * .6 - priceMonthOut).toFixed(2) + '</td>' +
                         '<td>' + ((priceMonth * .6 - priceMonthOut) / 150).toFixed(2) + '</td>' +
                         '<td>' + taskScoreMonth.toFixed(2) + '</td>' +
-                        '<td>' + ((priceMonth * .6 - priceMonthOut) / 150 - taskScoreMonth).toFixed(2) + '</td>' +
+                        // '<td>' + ((priceMonth * .6 - priceMonthOut) / 150 - taskScoreMonth).toFixed(2) + '</td>' +
+                        '<td></td>' +
                         '<td>' + monthStr + '</td>' +
                         '<td>' + '<div class="btn-rect btn-green" onclick="viewTasks(this);"'
                         + ' data-id="' + mainItem.id + '" '

@@ -579,7 +579,7 @@ class Projects extends CI_Controller
             $curMonthScore = 0;
             $curMonthScoreOut = 0;
             foreach ($priceDetail as $item) {
-                if (substr($item->created, 0, 7) != $curMonth) continue;
+//                if (substr($item->created, 0, 7) != $curMonth) continue;
                 $curMonthScore += $item->price * 1;
                 if (isset($item->price_other))
                     $curMonthScoreOut += $item->price_other * 1;
@@ -589,7 +589,7 @@ class Projects extends CI_Controller
             // get current month tasks
             $monthTasks = array_filter($taskList, function ($task) use ($unit, $curMonth) {
                 if ($task->info == '__manage__') return false;
-                if (substr($task->create_time, 0, 7) != $curMonth) return false;
+//                if (substr($task->create_time, 0, 7) != $curMonth) return false;
                 return $task->project_id == $unit->id;
             }, ARRAY_FILTER_USE_BOTH);
             // calculate task month score

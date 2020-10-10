@@ -388,7 +388,7 @@
                 var curMonthScoreOut = 0;
                 for (var i = 0; i < priceDetail.length; i++) {
                     var item = priceDetail[i];
-                    if (item.created.substr(0, 7) != curMonth) continue;
+                    // if (item.created.substr(0, 7) != curMonth) continue;
                     curMonthScore += item.price * 1;
                     if (item.price_other)
                         curMonthScoreOut += item.price_other * 1;
@@ -401,7 +401,7 @@
                     if (a.project_id != _project) return false;
                     if (a.info == '__manage__') return false;
                     taskNo++;
-                    if (a.create_time.substr(0, 7) != curMonth) return false;
+                    // if (a.create_time.substr(0, 7) != curMonth) return false;
                     taskScore += a.score * 1;
                     return true;
                 });
@@ -441,7 +441,7 @@
                     var curMonthScoreOut = 0;
                     for (var i = 0; i < priceDetail.length; i++) {
                         var item = priceDetail[i];
-                        if (item.created.substr(0, 7) != curMonth) continue;
+                        // if (item.created.substr(0, 7) != curMonth) continue;
                         curMonthScore += item.price * 1;
                         if (item.price_other)
                             curMonthScoreOut += item.price_other * 1;
@@ -451,7 +451,7 @@
                     var taskScore = 0;
                     var allTasks = _taskList.filter(function (a) {
                         if (a.info == '__manage__') return false;
-                        if (a.create_time.substr(0, 7) != curMonth) return false;
+                        // if (a.create_time.substr(0, 7) != curMonth) return false;
                         if (a.project_id != _project) return false;
                         taskScore += a.score * 1;
                         return true;
